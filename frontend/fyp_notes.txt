@@ -1,0 +1,14 @@
+12th december 
+1. created a serializer for userregister, userlogin, userlogout and user and applied validations
+2. models for user app 
+3. Api view for user app using restframework
+
+1. make the user authentication , register,login using drf
+- UserSerializer
+-RegisterSerializer : to validate data from frontend before saving in db
+- 
+made a routes and api view
+check the user register and token api in postman
+
+create a react app for frontend
+install all the requirements
