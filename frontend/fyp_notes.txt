@@ -12,3 +12,8 @@ check the user register and token api in postman
 
 create a react app for frontend
 install all the requirements
+
+
+python -m pip install django-cors-headers
+pip install djangorestframework-simplejwt
+pip install django-ckeditor-5

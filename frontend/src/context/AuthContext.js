@@ -1,11 +1,11 @@
 import {createContext, useState, useEffect} from "react";
-import jwt_decode from "jwt-decode";
+import { jwtDecode as jwt_decode} from 'jwt-decode';
 import {useHistory} from "react-router-dom";
 const swal = require('sweetalert2')
 
 const AuthContext = createContext();
 
-export default AuthContext
+
 
 export const AuthProvider = ({ children }) => {
     const [authTokens, setAuthTokens] = useState(() =>
@@ -146,3 +146,5 @@ export const AuthProvider = ({ children }) => {
     )
 
 }
+
+export default AuthContext;

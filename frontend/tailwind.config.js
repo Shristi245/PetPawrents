@@ -11,6 +11,9 @@ module.exports = {
         brightGreen: "#539165",
         lightText: "#959595",
         },
+        fontFamily: {
+          poppins: ["poetsen-one", "sans-serif"],
+        },
     },
   },
   plugins: [],
