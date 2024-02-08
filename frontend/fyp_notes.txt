@@ -17,3 +17,6 @@ install all the requirements
 python -m pip install django-cors-headers
 pip install djangorestframework-simplejwt
 pip install django-ckeditor-5
+
+
+otp verification is on process
