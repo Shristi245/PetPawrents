@@ -1,19 +1,33 @@
-import React, { useContext } from "react";
+import React, {useState, useContext } from "react";
+import { useHistory } from "react-router-dom";
 import AuthContext from "../context/AuthContext";
 
-function Login() {
-  const { loginUser } = useContext(AuthContext);
-  const handleSubmit = (e) => {
+function PetRegister() {
+  const history = useHistory();
+  const { PetInfo } = useContext(AuthContext);
+  const [petName, setPetName] = useState("");
+  const [petType, setPetType] = useState("");
+  const [age, setAge] = useState("");
+  const [height, setHeight] = useState("");
+  const [weight, setWeight] = useState("");
+
+  const handleRegister = (e) => {
     e.preventDefault();
-    const email = e.target.elements.email.value;
-    const password = e.target.elements.password.value;
-
-    email.length > 0 && loginUser(email, password);
-
-    console.log(email);
-    console.log(password);
+    PetInfo(petName, petType, age, height, weight);
+    history.push("/login");
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Handle any general form submission actions here
+    // This function can be extended to perform additional actions if needed
+    console.log("Form submitted");
+  };
+
+  // Function to handle skipping the registration process
+  const handleSkip = () => {
+    history.push("/login"); // Redirect the user to the login page
+  };
   return (
   
     <section className="h-[100vh] flex flex-col items-center justify-center w-full">
@@ -40,7 +54,9 @@ function Login() {
                 class="peer block min-h-[auto] w-full rounded border-b bg-transparent px-3 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
                 id="exampleFormControlInput22"
                 name="petName"
-                placeholder="Pet Name" />
+                placeholder="Pet Name" 
+                onChange={e => setPetName(e.target.value)}
+                />
               <label
                 for="exampleFormControlInput22"
                 class="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[2.15] text-neutral-400 transition-all duration-200 ease-out peer-focus:-translate-y-[1.15rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[te-input-state-active]:-translate-y-[1.15rem] peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-200 dark:peer-focus:text-primary"
@@ -55,7 +71,9 @@ function Login() {
                 class="peer block min-h-[auto] w-full rounded border-b bg-transparent px-3 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
                 id="exampleFormControlInput22"
                 name="pet type"
-                placeholder="Pet Type" />
+                placeholder="Pet Type" 
+                onChange={e => setPetType(e.target.value)}
+                />
               <label
                 for="exampleFormControlInput22"
                 class="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[2.15] text-neutral-400 transition-all duration-200 ease-out peer-focus:-translate-y-[1.15rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[te-input-state-active]:-translate-y-[1.15rem] peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-200 dark:peer-focus:text-primary"
@@ -71,7 +89,9 @@ function Login() {
                 class="peer block min-h-[auto] w-full rounded border-b bg-transparent px-3 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
                 id="exampleFormControlInput2"
                 name="age"
-                placeholder="Age" />
+                placeholder="Age" 
+                onChange={e => setAge(e.target.value)}
+                />
               <label
                 for="exampleFormControlInput2"
                 class="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[2.15] text-neutral-400 transition-all duration-200 ease-out peer-focus:-translate-y-[1.15rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[te-input-state-active]:-translate-y-[1.15rem] peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-200 dark:peer-focus:text-primary"
@@ -86,7 +106,9 @@ function Login() {
                 class="peer block min-h-[auto] w-full rounded border-b bg-transparent px-3 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
                 id="exampleFormControlInput22"
                 name="height"
-                placeholder="Height" />
+                placeholder="Height"
+                onChange={e => setHeight(e.target.value)}
+                />
               <label
                 for="exampleFormControlInput22"
                 class="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[2.15] text-neutral-400 transition-all duration-200 ease-out peer-focus:-translate-y-[1.15rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[te-input-state-active]:-translate-y-[1.15rem] peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-200 dark:peer-focus:text-primary"
@@ -102,7 +124,9 @@ function Login() {
                 class="peer block min-h-[auto] w-full rounded border-b bg-transparent px-3 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
                 id="exampleFormControlInput22"
                 name="weight"
-                placeholder="Weight" />
+                placeholder="Weight"
+                onChange={e => setWeight(e.target.value)}
+                />
               <label
                 for="exampleFormControlInput22"
                 class="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[2.15] text-neutral-400 transition-all duration-200 ease-out peer-focus:-translate-y-[1.15rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[te-input-state-active]:-translate-y-[1.15rem] peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-200 dark:peer-focus:text-primary"
@@ -117,7 +141,7 @@ function Login() {
               </div>
 
               <div className="text-right">
-                <a href="/login">Skip></a>
+              <button onClick={handleSkip} className="text-blue-500">Skip</button>
               </div>
               
             </div>
@@ -126,7 +150,7 @@ function Login() {
 
      
             <div className="login-button flex justify-center w-full my-3 hover:scale-110">
-              <button className="w-[40%]  rounded-md py-2 bg-[#56A6B8] text-white">
+              <button onClick={handleRegister} className="w-[40%]  rounded-md py-2 bg-[#56A6B8] text-white">
                 Register
               </button>
             </div>
@@ -142,5 +166,5 @@ function Login() {
   );
 }
 
-export default Login;
+export default PetRegister;
 

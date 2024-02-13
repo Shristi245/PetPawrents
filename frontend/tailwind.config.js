@@ -7,13 +7,10 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        brightBackground: "#FDF8EE",
-        brightGreen: "#539165",
-        lightText: "#959595",
+        blue: "#56A6B8",
+    
         },
-        fontFamily: {
-          poppins: ["poetsen-one", "sans-serif"],
-        },
+       
     },
   },
   plugins: [],

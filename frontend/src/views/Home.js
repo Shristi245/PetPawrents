@@ -3,7 +3,7 @@ import React from 'react';
 
 const Home = () => {
   return (
-    <div className="bg-gray-100 min-h-screen">
+    <div className="bg-white min-h-screen">
       {/* Header Section */}
       <header className="bg-amber-400 text-white text-center py-16">
         <div className="container mx-auto">
@@ -39,13 +39,32 @@ const Home = () => {
       </section>
 
       {/* Call-to-Action Section */}
-      <section className="bg-gray-800 text-white py-16">
-        <div className="container mx-auto text-center">
-          <h2 className="text-3xl font-bold mb-4">Get Started Today</h2>
-          <p className="text-lg mb-8">Join our community of pet lovers and provide the best care for your furry friends.</p>
-          <button className="bg-blue-500 text-white py-2 px-6 rounded-full">Sign Up</button>
+      <div className='container mx-auto text-start mb-5'>
+        <div className='bg-slate-500 py-8 flex-row px-20 rounded'>
+          <div className="w-[100%] md:grid md:grid-cols-2 lg:grid-cols-2 gap-20 px-20 ">
+
+            <div className="w-[100%] max-w-md mx-auto sm:mx-0 mb-8 sm:mb-0 ">
+              <h1>01. Schedule Grooming</h1>      
+              <p>Our web app allows you to easily schedule grooming appointments for your pets. Simply choose a date and time that works best for you, and our professional groomers will take care of the rest.</p>
+              <br/>
+            
+              <h1>02. Online Payment Options</h1> 
+              <p>Our web app provides secure online payment options, allowing you to conveniently pay for grooming services right from your device. Say goodbye to carrying cash or worrying about payment methods.</p>
+              <br/>
+            
+              <h1>03. Real-Time Updates</h1> 
+              <p>Stay informed about your pet's grooming session with real-time updates. Our web app sends you notifications regarding your pet's progress, ensuring transparency and peace of mind.</p>
+            </div>
+          
+            <div className="w-[100%] max-w-md mx-auto sm:mx-0 lg:grid-cols-6 sm:mt-5">
+              <img src="/images/calender.png" alt="" className="mx-auto" />
+            </div>
+
+          </div>
         </div>
-      </section>
+      </div>
+
+
     </div>
   );
 };

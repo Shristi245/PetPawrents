@@ -27,7 +27,7 @@ export const AuthProvider = ({ children }) => {
     const history = useHistory();
 
     const loginUser = async (email, password) => {
-        const response = await fetch("http://127.0.0.1:8000/user/token/", {
+        const response = await fetch("http://127.0.0.1:8000/token/", {
             method: "POST",
             headers:{
                 "Content-Type":"application/json"
@@ -59,7 +59,7 @@ export const AuthProvider = ({ children }) => {
             console.log(response.status);
             console.log("there was a server issue");
             swal.fire({
-                title: "Username or passowrd does not exists",
+                title: "Username or password does not exists",
                 icon: "error",
                 toast: true,
                 timer: 6000,
@@ -70,20 +70,20 @@ export const AuthProvider = ({ children }) => {
         }
     }
 
-    const registerUser = async (email, username, password, password2) => {
-        const response = await fetch("http://127.0.0.1:8000/user/register/", {
+    const registerUser = async (email, username, phone_number, password, password2) => {
+        const response = await fetch("http://127.0.0.1:8000/register/", {
             method: "POST",
             headers: {
                 "Content-Type":"application/json"
             },
             body: JSON.stringify({
-                email, username, password, password2
+                email, username, phone_number, password, password2
             })
         })
         if(response.status === 201){
-            history.push("/login")
+            history.push("/pet")
             swal.fire({
-                title: "Registration Successful, Login Now",
+                title: "Enter your pet credentials.",
                 icon: "success",
                 toast: true,
                 timer: 6000,
@@ -105,6 +105,44 @@ export const AuthProvider = ({ children }) => {
             })
         }
     }
+
+    
+    const PetInfo = async (petname, pettype, age, height, weight) => {
+        const response = await fetch("http://127.0.0.1:8000/pet/", {
+            method: "POST",
+            headers: {
+                "Content-Type":"application/json"
+            },
+            body: JSON.stringify({
+                petname, pettype, age, height, weight
+            })
+        })
+        if(response.status === 201){
+            history.push("/login")
+            swal.fire({
+                title: "",
+                icon: "success",
+                toast: true,
+                timer: 6000,
+                position: 'top-right',
+                timerProgressBar: true,
+                showConfirmButton: false,
+            })
+        } else {
+            console.log(response.status);
+            console.log("there was a server issue");
+            swal.fire({
+                title: "An Error Occured " + response.status,
+                icon: "error",
+                toast: true,
+                timer: 6000,
+                position: 'top-right',
+                timerProgressBar: true,
+                showConfirmButton: false,
+            })
+        }
+    }
+
 
     const logoutUser = () => {
         setAuthTokens(null)
@@ -128,6 +166,7 @@ export const AuthProvider = ({ children }) => {
         authTokens,
         setAuthTokens,
         registerUser,
+        PetInfo,
         loginUser,
         logoutUser,
     }
