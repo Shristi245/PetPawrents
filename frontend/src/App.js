@@ -12,6 +12,8 @@ import Login from './views/Login';
 import Register from './views/Register';
 import PetCredentials from './views/PetCredentials';
 import Dashboard from './views/Dashboard';
+import About from './views/About'
+import Service from './views/Service'
 
   function App() {
     return (
@@ -19,11 +21,13 @@ import Dashboard from './views/Dashboard';
         <AuthProvider>
           <Navbar />
           <Switch>
-            <PrivateRoute component = {Dashboard} path="/dashboard" exact/>
+            <Route component = {Dashboard} path="/dashboard" exact/>
             <Route component={Home} path="/" exact />
             <Route component={Login} path="/login" />
             <Route component={Register} path="/register" />
             <Route component={PetCredentials} path="/pet" />
+            <Route component={About} path="/about"/>
+            <Route component={Service} path="/services" />
 
 
             

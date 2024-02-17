@@ -2,60 +2,85 @@ import React from 'react'
 
 const Footer = () => {
   return (
-    <footer className="bg-blue">
-        <div className="container mx-auto px-4 py-6 lg:py-8">
-            <div className="md:flex ">
+    <footer className="bg-[#56A6B8] pt-8">
+        <div className="container mx-auto px-2 py-6 lg:py-4">
+            <div className="md:flex  ">
 
                 {/* Logo and Address */}
-                <div className="mb-6 md:mb-0">
-                    <div className="flex items-center">
-                        <img src='/images/final_logo.png' className="h-[6rem] me-3" alt="Pet Pawrents Logo" />
-                        <span className="text-2xl font-semibold whitespace-nowrap dark:text-white">Pet Pawrents</span>
+                <div className="mb-6 md:mb-0 pt-9 w-[20rem]">
+                    <div className=" items-center">
+                        <span className="text-4xl ">Pet Pawrents</span>
+                        <p className="mt-3 text-black  text-lg">Get Your Pets Looking Fabulous</p>
+                        <p className=" text-black ">Kathmandu | Nepal</p>
+
                     </div>
-                    <p className="mt-2 text-gray-500 dark:text-gray-400">Your address here</p>
+
+                    <div className='pt-9'>
+                        <img src='/images/final_logo.png' className="h-[8rem] me-3" alt="Pet Pawrents Logo" />
+                    </div>
+                    
                 </div>
 
                 {/* Navigation Links */}
-                <div className="grid grid-cols-2 gap-8 sm:gap-6 sm:grid-cols-4 ">
-                    <div class="ml-20">
-                    <h2 className="mb-6 text font-semibold text-gray-900 uppercase dark:text-white">Resources</h2>
-                    <ul className="text-gray-500 dark:text-gray-400 font-medium">
+                <div className="grid grid-cols-2 gap-8 sm:gap-6 sm:grid-cols-4 pt-4 px-2">
+                    <div class="ml-9">
+                    <h2 className="mb-6 text-2xl  uppercase ">Quick Links</h2>
+                    <ul className="text-black text-xl font-medium">
                         <li className="mb-4">
-                        <a href="https://flowbite.com/" className="hover:underline">Pet Pawrents</a>
+                        <a href="" className="hover:underline">Home</a>
                         </li>
-                        <li>
-                        <a href="https://tailwindcss.com/" className="hover:underline">Tailwind CSS</a>
+
+                        <li className="mb-4">
+                        <a href="" className="hover:underline">Contact Us</a>
                         </li>
+
+                        <li className="mb-4">
+                        <a href="" className="hover:underline">About</a>
+                        </li>
+
+                        <li className="mb-4">
+                        <a href="" className="hover:underline">Services</a>
+                        </li>
+                       
+                        
                     </ul>
                     </div>
 
-                    <div class="ml-20">
-                    <h2 className="mb-6 text font-semibold text-gray-900 uppercase dark:text-white">Follow us</h2>
-                    <ul className="text-gray-500 dark:text-gray-400 font-medium">
+                    <div class="ml-9">
+                    <h2 className="mb-6 text-2xl uppercase ">Account</h2>
+                    <ul className="text-black  text-xl font-medium">
                         <li className="mb-4">
-                        <a href="https://github.com/themesberg/flowbite" className="hover:underline ">Github</a>
+                        <a href="https://github.com/themesberg/flowbite" className="hover:underline ">Sign In</a>
                         </li>
                         <li>
-                        <a href="https://discord.gg/4eeurUVvTy" className="hover:underline">Discord</a>
+                        <a href="https://discord.gg/4eeurUVvTy" className="hover:underline">Sign Up</a>
                         </li>
                     </ul>
                     </div>
                     
-                    <div class="ml-20">
-                    <h2 className="mb-6 text font-semibold text-gray-900 uppercase dark:text-white">Legal</h2>
-                    <ul className="text-gray-500 dark:text-gray-400 font-medium">
+                    <div class="ml-9">
+                    <h2 className="mb-6 text-2xl  uppercase ">Services</h2>
+                    <ul className="text-black text-xl font-medium">
                         <li className="mb-4">
-                        <a href="#" className="hover:underline">Privacy Policy</a>
+                        <a href="#" className="hover:underline">Grooming </a>
                         </li>
-                        <li>
-                        <a href="#" className="hover:underline">Terms &amp; Conditions</a>
+                        <li className='mb-4'>
+                        <a href="#" className="hover:underline">Vaccination </a>
+                        </li>
+
+                        <li className='mb-4'>
+                        <a href="#" className="hover:underline">Veterinary </a>
+                        </li>
+
+                        <li className='mb-4'>
+                        <a href="#" className="hover:underline">Pet Products </a>
                         </li>
                     </ul>
                     </div>
 
-                    <div class="ml-20">
-                    <h2 className="mb-6 text font-semibold text-gray-900 uppercase dark:text-white">Legal</h2>
-                    <ul className="text-gray-500 dark:text-gray-400 font-medium">
+                    <div class="ml-9">
+                    <h2 className="mb-6 text-2xl  uppercase ">Connect with us</h2>
+                    <ul className="text-black text-xl font-medium">
                         <li className="mb-4">
                         <a href="#" className="hover:underline">Privacy Policy</a>
                         </li>
@@ -106,8 +131,7 @@ const Footer = () => {
             className="text-center p-3"
             style={{ backgroundColor: "rgba(0, 0, 0, 0.2)" }}
             >
-            © 2019 - till date Copyright:
-            desphixs.com
+            © 2023 Pet Pawrents. All Rights Reserved.
             
       </div>
         
