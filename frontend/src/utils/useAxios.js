@@ -5,13 +5,13 @@ import {useContext} from "react"
 import AuthContext from "../context/AuthContext"
 
 
-const baseURL = "http://127.0.0.1:8000/user"
+const userUrl = process.env.BASE_URL+"user";
 
 const useAxios = () => {
     const {authTokens, setUser, setAuthTokens} = useContext(AuthContext)
 
     const axiosInstance = axios.create({
-        baseURL,
+        userUrl,
         headers: {Authorization: `Bearer ${authTokens?.access}`}
     }).access
 
@@ -21,7 +21,7 @@ const useAxios = () => {
 
         if (isExpired) return req
 
-        const response = await axios.post(`${baseURL}/token/refresh/`, {
+        const response = await axios.post(`${userUrl}/token/refresh/`, {
             refresh: authTokens.refresh
         })
         localStorage.setItem("authToken", JSON.stringify(response.data))

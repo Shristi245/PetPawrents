@@ -32,7 +32,7 @@ const Home = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12">
 
             {/* Feature 1 pet grooming */}
-            <div className="p-6 bg-white rounded-[39px] shadow-lg flex flex-col items-center ">
+            <div className="p-6 bg-white rounded-[39px] shadow-lg flex flex-col items-center transition-transform duration-200 ease-in-out transform hover:scale-90">
               <img src="/images/scissor.png" alt="Grooming Services" className="mb-4"/>
               <h3 className="text-xl font-bold mb-2">Pet Grooming</h3>
               <p className="text-center ">Our expert groomers use premium equipment to provide grooming services for your pet, ensuring they look and feel their best. </p>
@@ -40,21 +40,21 @@ const Home = () => {
 
 
             {/* Feature 2  vaccination */}
-            <div className="p-6 bg-white rounded-[39px] shadow-lg flex flex-col items-center">
+            <div className="p-6 bg-white rounded-[39px] shadow-lg flex flex-col items-center transition-transform duration-200 ease-in-out transform hover:scale-90">
               <img src='images/vaccination.png' alt='' className="mb-4"/>
               <h3 className="text-xl font-bold mb-2">Vaccination</h3>
               <p>Our pet vaccination service offers essential vaccinations for your pet's health and happiness, administered by our experienced team in a safe and comfortable environment.</p>
             </div>
 
             {/* Feature 3  food*/}
-            <div className="p-6 bg-white rounded-[39px] shadow-lg flex flex-col items-center">
+            <div className="p-6 bg-white rounded-[39px] shadow-lg flex flex-col items-center transition-transform duration-200 ease-in-out transform hover:scale-90">
               <img src='images/food.png' alt='' className="mb-4" />
               <h3 className="text-xl font-bold mb-2">Food</h3>
               <p>We offer a wide range of high-quality foods to cater to your pet's specific dietary needs.We prioritize nutrition and taste to keep your furry friends happy and healthy.</p>
             </div>
 
              {/* Feature 4  veterinary*/}
-             <div className="p-6 bg-white rounded-[39px] shadow-lg flex flex-col items-center ">
+             <div className="p-6 bg-white rounded-[39px] shadow-lg flex flex-col items-center transition-transform duration-200 ease-in-out transform hover:scale-90">
               <img src='images/veterinary.png' alt='' className="mb-4"/>
               <h3 className="text-xl font-bold mb-2">Veterinary</h3>
               <p>We provide expert veterinary care for your pets, ensuring their well-being through medical services, surgeries, and preventive care.</p>
@@ -63,8 +63,21 @@ const Home = () => {
         </div>
       </section>
 
+
+      {/* emo Section */}
+      <div className='container mx-auto px-9 mt-32'>
+        <div className=' grid grid-cols-1 md:grid-cols-6 lg:grid-cols-6 gap-4 '>
+            <img src='images/grooming.png' alt=''/>
+            <img src='images/dryer.png' alt=''/>
+            <img src='images/comb.png' alt=''/>
+            <img src='images/shower.png' alt=''/>
+            <img src='images/catbath.png' alt=''/>
+            <img src='images/towel.png' alt=''/>
+        </div>
+      </div>
+
       {/* Call-to-Action Section */}
-      <div className='px-12 mx-auto mb-5'>
+      <div className='px-12 mx-auto mb-5 mt-32'>
         <div className=' py-2 flex-row bg-[#56A6B8] rounded-[50px] justify-between'>
           <div className=" md:grid md:grid-cols-2 lg:grid-cols-2 gap-2 px-16 mb-9 ">
 

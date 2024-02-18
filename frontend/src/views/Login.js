@@ -30,7 +30,7 @@ function Login() {
 
         <div className="flex flex-col">
           <div className=" w-[100%] flex justify-center">
-            <img className="w-[25%] " src="/images/sleep-cat.png " alt="" />
+            <img className="w-[25%] ml-16" src="/images/sleep-cat.png " alt="" />
           </div>
 
           <div className="w-[80%] h-[80%] border p-9 shadow " >
