@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
 import AuthContext from "../context/AuthContext";
+import { Link } from "react-router-dom/cjs/react-router-dom.min";
 
 function Login() {
   const { loginUser } = useContext(AuthContext);
@@ -67,17 +68,17 @@ function Login() {
               </label>
             </div>
               <div className="text-right">
-                Forgot Password?
+                Forgot Password?<Link to="/reset-password"></Link>
               </div>
 
               <div className="login-button flex justify-center w-full my-3 hover:scale-110">
-                <button className="w-[40%]  rounded-md py-2 bg-[#56A6B8] text-white">
+                <button type = "submit" className="w-[40%]  rounded-md py-2 bg-[#56A6B8] text-white">
                   Login
                 </button>
               </div>
 
               <div className="text-center">
-                Don't have an account? <a href="/register">Register</a>
+                Don't have an account? <Link to="/register">Register</Link>
               </div>
             </form>
           </div>

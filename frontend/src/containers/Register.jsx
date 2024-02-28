@@ -1,49 +1,34 @@
-// import React, { useContext } from "react";
-// import AuthContext from "../context/AuthContext";
-
-// function Register() {
-//   const { registerUser } = useContext(AuthContext);
-//   const handleSubmit = (e) => {
-//     e.preventDefault();
-//     const email = e.target.elements.email.value;
-//     const password = e.target.elements.password.value;
-
-//     email.length > 0 && registerUser(email, password);
-
-//     console.log(email);
-//     console.log(password);
-//   };
-
-
-import {useState, useContext} from 'react'
-import { Link } from 'react-router-dom'
-import AuthContext from '../context/AuthContext'
-
+import React, { useState, useContext } from 'react';
+import AuthContext from '../context/AuthContext';
+import { useHistory } from 'react-router-dom';
 
 function Register() {
-  const [firstname, setFirstname] = useState("")
-  const [lastname, setLastname] = useState("")
-  const [email, setEmail] = useState("")
-  const [username, setUsername] = useState("")
-  const [phonenumber, setPhonenumber] = useState("")
-  const [password, setPassword] = useState("")
-  const [password2, setPassword2] = useState("")
+  const [firstname, setFirstname] = useState('');
+  const [lastname, setLastname] = useState('');
+  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
+  const [phonenumber, setPhonenumber] = useState('');
+  const [password, setPassword] = useState('');
+  const [password2, setPassword2] = useState('');
+  const { registerUser } = useContext(AuthContext);
+  // const history = useHistory();
 
-  const {registerUser} = useContext(AuthContext)
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (password !== password2) {
+      alert('Passwords do not match');
+      return;
+    }
+    try {
+      await registerUser(firstname, lastname, email, username, phonenumber, password, password2);
+      // history.push('/pet'); // Redirect upon successful registration
+    } catch (error) {
+      console.error('Registration failed:', error);
+      // Handle registration failure (e.g., display error message)
+      alert('Registration failed. Please try again.');
+    }
+  };
 
-  console.log(firstname);
-  console.log(lastname);
-  console.log(email);
-  console.log(phonenumber);
-  console.log(username);
-  console.log(password);
-  console.log(password2);
-
-
-  const handleSubmit = async e => {
-    e.preventDefault()
-    registerUser(email, username, password, password2)
-  }
 
   return (
   
@@ -71,7 +56,7 @@ function Register() {
                   type="text"
                   class="peer block min-h-[auto] w-full rounded border-b bg-transparent  px-3 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
                   id="exampleFormControlInput22"
-                  name="firstName"
+                  name="first_name"
                   placeholder="First Name" 
                   onChange={e => setFirstname(e.target.value)}
                 
@@ -90,7 +75,7 @@ function Register() {
                 type="text"
                 class="peer block min-h-[auto] w-full rounded border-b bg-transparent px-3 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
                 id="exampleFormControlInput22"
-                name="lastName"
+                name="last_name"
                 placeholder="Last Name" 
                 onChange={e => setLastname(e.target.value)}
                 />
@@ -143,7 +128,7 @@ function Register() {
                 type="tel"
                 class="peer block min-h-[auto] w-full rounded border-b bg-transparent px-3 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
                 id="exampleFormControlInput22"
-                name="phonenumber"
+                name="phone_number"
                 placeholder="Phone Number"
                 onChange={e => setPhonenumber(e.target.value)}
                 />
@@ -192,7 +177,7 @@ function Register() {
 
             <div className="login-button flex justify-center w-full my-3 hover:scale-110">
               <button className="w-[40%]  rounded-md py-2 bg-[#56A6B8] text-white">
-                <a href="/pet">Next</a>
+                <a href="/pet" className='w-[40%]'>Next</a>
               </button>
             </div>
 

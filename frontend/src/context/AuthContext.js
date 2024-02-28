@@ -1,6 +1,7 @@
 import {createContext, useState, useEffect} from "react";
 import { jwtDecode as jwt_decode} from 'jwt-decode';
 import {useHistory} from "react-router-dom";
+
 const swal = require('sweetalert2')
 
 const AuthContext = createContext();
@@ -14,6 +15,12 @@ export const AuthProvider = ({ children }) => {
             : null
     );
     
+    //  // Add 'role' to user state
+    // const [role, setRole] = useState(() =>
+    //     localStorage.getItem("authTokens")
+    //         ? jwt_decode(localStorage.getItem("authTokens")).role
+    //         : null
+    // );
 
     const [user, setUser] = useState(() => 
         localStorage.getItem("authTokens")
@@ -70,18 +77,25 @@ export const AuthProvider = ({ children }) => {
         }
     }
 
-    const registerUser = async (email, username, phone_number, password, password2) => {
+    const registerUser = async (first_name, last_name, email, username, phone_number, password, password2) => {
+
+    
+
         const response = await fetch("http://127.0.0.1:8000/register/", {
             method: "POST",
             headers: {
                 "Content-Type":"application/json"
             },
             body: JSON.stringify({
-                email, username, phone_number, password, password2
+                first_name, last_name, email, username, phone_number, password, password2
             })
         })
+
+        console.log(response)
+
+        
         if(response.status === 201){
-            history.push("/pet")
+            // history.push("/pet")
             swal.fire({
                 title: "Enter your pet credentials.",
                 icon: "success",
@@ -92,8 +106,7 @@ export const AuthProvider = ({ children }) => {
                 showConfirmButton: false,
             })
         } else {
-            console.log(response.status);
-            console.log("there was a server issue");
+
             swal.fire({
                 title: "An Error Occured " + response.status,
                 icon: "error",
@@ -107,14 +120,14 @@ export const AuthProvider = ({ children }) => {
     }
 
     
-    const PetInfo = async (petname, pettype, age, height, weight) => {
+    const PetInfo = async (petName, petType, age, height, weight) => {
         const response = await fetch("http://127.0.0.1:8000/pet/", {
             method: "POST",
             headers: {
                 "Content-Type":"application/json"
             },
             body: JSON.stringify({
-                petname, pettype, age, height, weight
+                petName, petType, age, height, weight
             })
         })
         if(response.status === 201){
@@ -160,11 +173,15 @@ export const AuthProvider = ({ children }) => {
         })
     }
 
+
+    
     const contextData = {
         user, 
         setUser,
         authTokens,
         setAuthTokens,
+        // role, // Include role in context
+        // setRole, // Function to set role
         registerUser,
         PetInfo,
         loginUser,

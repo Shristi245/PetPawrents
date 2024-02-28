@@ -2,20 +2,16 @@
 import React, { useState } from "react";
 
 const AdminDashboard = () => {
-    const [darkMode, setDarkMode] = useState(false);
     const [showDropdown, setShowDropdown] = useState(false);
   
-    const toggleDarkMode = () => {
-      setDarkMode(!darkMode);
-      // You can implement your dark mode logic here
-    };
+ 
   
     const toggleDropdown = () => {
       setShowDropdown(!showDropdown);
     };
 
   return (
-    <div className="flex h-screen mb-9">
+    <div className="flex h-screen mb-32">
         {/* Side Menu */}
         <div className="bg-[#56A6B8] text-white w-70 flex flex-col rounded-[30px] mt-16">
             {/* Sidebar Header */}
@@ -45,7 +41,7 @@ const AdminDashboard = () => {
                     <div className=" flex "> 
                         <img src="images/1.jpg" alt="" className="h-9 w-9"/>
                         <li className="px-4 py-2 text-[18px] hover:text-gray-600 flex ">
-                        Users
+                            <a href="/admin-dashboard-users" alt="" className="w-full"></a>Users
                         </li>
                     </div>
 
@@ -96,10 +92,9 @@ const AdminDashboard = () => {
                     </svg>
                     </button>
                 </div>
-                {/* Dark Mode Toggle */}
+             
+                {/* User Profile */}
                 <div className="flex items-center">
-                
-                    {/* User Profile */}
                     <div className="relative">
                         <button className="text-white hover:text-amber-400 focus:outline-none" onClick={toggleDropdown}>
                             <img
@@ -117,8 +112,7 @@ const AdminDashboard = () => {
                     </div>
                 </div>
             </div>
-            {/* Your main content goes here */}
-            <h1 className="text-2xl font-semibold">Welcome to the Admin Dashboard</h1>
+     
         </div>
     </div>
   );

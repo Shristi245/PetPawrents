@@ -1,6 +1,6 @@
 import React from 'react';
 
-function Navbar() {
+function Navbar({ isAuthenticated }) {
   return (
     <nav className="bg-[#FEC200] p-4 pr-5">
       <div className="container mx-auto flex flex-wrap items-center justify-between">
@@ -22,7 +22,11 @@ function Navbar() {
           <a href="" className="text-white mr-4">
             <img src="/images/wishlist.png" alt="" />
           </a>
-          <a href="/login" className="text-white mr-4 text-xl hover:bg-[#417EC5] px-4 md:py-2 md:px-5 py-1 rounded-[24px] transition-transform duration-200 ease-in-out transform hover:scale-90">Login</a>
+          {isAuthenticated ? (
+            <a href="/dashboard" className="text-white hover:text-black mr-4 text-xl hover:bg-[#417EC5] px-4 md:py-2 md:px-5 py-1 rounded-[24px] transition-transform duration-200 ease-in-out transform hover:scale-90">Dashboard</a>
+          ) : (
+            <a href="/register" className="text-white hover:text-black mr-4 text-xl hover:bg-[#417EC5] px-4 md:py-2 md:px-5 py-1 rounded-[24px] transition-transform duration-200 ease-in-out transform hover:scale-90">Get Started</a>
+          )}
         </div>
       </div>
     </nav>

@@ -18,5 +18,9 @@ python -m pip install django-cors-headers
 pip install djangorestframework-simplejwt
 pip install django-ckeditor-5
 
+for viewss
+pip install drf-spectacular
+
+
 
 otp verification is on process

@@ -13,6 +13,7 @@ router = DefaultRouter()
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('user.urls')),
+    path('', include('admin.urls')),
     path('', include(router.urls)),
     path('ckeditor/', include('ckeditor_uploader.urls')),
     path("ckeditor5/", include('django_ckeditor_5.urls')),

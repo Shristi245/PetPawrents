@@ -1,9 +1,10 @@
+import random
 from django.db import models
 from django.db.models.signals import post_save
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import RegexValidator
-from .utils import generate_otp, send_otp_phone
-# # from user.manager import UserManager
+# from user.utils import send_otp_phone
+from user.manager import UserManager
 
 
 
@@ -34,26 +35,40 @@ phone_regex = RegexValidator(
 )
 
 class AppUser(AbstractUser):
-    username = models.CharField(max_length=100)
+    first_name = models.CharField(max_length=100, null=False, blank=False,)
+    last_name = models.CharField(max_length=100, null=False, blank=False,)
+    username = models.CharField(max_length=100, unique=True)
     email = models.EmailField(unique=True)
     phone_number = models.CharField(unique=True, max_length=100, null=False, blank=False, validators=[phone_regex])
-    is_verified = models.BooleanField(default=False)
-    otp = models.CharField(max_length=200, null=True, blank=True)
+    email_verified = models.BooleanField(default=False)
+    otp = models.CharField(max_length=6, null=True, blank=True)
     
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
 
-    # objects= UserManager()
+    objects= UserManager()
 
     def __str__(self):
         return self.username
     
-    def generate_and_send_otp(self):
-            otp = generate_otp()
-            self.otp = otp
-            self.save()
-            send_otp_phone(self.phone_number, otp)
+    # def generate_and_send_otp(self):
+    #     self.otp = str(random.randint(1000, 9999))  # Generate OTP
+    #     self.save()  # Save the generated OTP to the user instance
+    #     send_otp_phone(self.phone_number, self.otp)  # Send OTP to the user's phone number
+    
+
+class Pet(models.Model):
+    petname = models.CharField(max_length=100)
+    pettype = models.CharField(max_length=100)
+    age = models.PositiveIntegerField()
+    height = models.DecimalField(max_digits=5, decimal_places=2)
+    weight = models.DecimalField(max_digits=5, decimal_places=2)
+    owner = models.ForeignKey(AppUser, related_name='pets', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
+
 
 
 class Profile(models.Model):

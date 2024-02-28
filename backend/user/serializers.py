@@ -3,7 +3,9 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.conf import settings
 from rest_framework import serializers
 from user.models import AppUser
-import random
+from .models import Profile
+
+# import random
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
@@ -55,7 +57,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = AppUser
-        fields = ('username', 'email', 'phone_number', 'password', 'password2')
+        fields = ('first_name', 'last_name', 'username', 'email', 'phone_number', 'password', 'password2')
         
 
     def validate(self, data):
@@ -64,15 +66,24 @@ class RegisterSerializer(serializers.ModelSerializer):
         return data
 
     def create(self, validated_data):
-        otp = random.randint(1000, 9999)
+        # otp = random.randint(1000, 9999)
         user = AppUser.objects.create(
+            first_name=validated_data['first_name'],
+            last_name=validated_data['last_name'],
             username=validated_data['username'],
             email=validated_data['email'],
             phone_number = validated_data['phone_number'],
-            otp = otp
+            # otp = otp
         )
 
         
         user.set_password(validated_data['password'])
-        user.generate_and_send_otp()  # Generate and send OTP after user creation
+        # user.generate_and_send_otp()  # Generate and send OTP after user creation
         return user
+    
+    
+# profile serializer
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = '__all__' # Include other fields as needed

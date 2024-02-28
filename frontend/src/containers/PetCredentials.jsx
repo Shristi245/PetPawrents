@@ -5,6 +5,7 @@ import AuthContext from "../context/AuthContext";
 function PetRegister() {
   const history = useHistory();
   const { PetInfo } = useContext(AuthContext);
+  
   const [petName, setPetName] = useState("");
   const [petType, setPetType] = useState("");
   const [age, setAge] = useState("");
