@@ -15,12 +15,6 @@ export const AuthProvider = ({ children }) => {
             : null
     );
     
-    //  // Add 'role' to user state
-    // const [role, setRole] = useState(() =>
-    //     localStorage.getItem("authTokens")
-    //         ? jwt_decode(localStorage.getItem("authTokens")).role
-    //         : null
-    // );
 
     const [user, setUser] = useState(() => 
         localStorage.getItem("authTokens")
@@ -34,7 +28,7 @@ export const AuthProvider = ({ children }) => {
     const history = useHistory();
 
     const loginUser = async (email, password) => {
-        const response = await fetch("http://127.0.0.1:8000/token/", {
+        const response = await fetch("http://127.0.0.1:8000/jwt/token/", {
             method: "POST",
             headers:{
                 "Content-Type":"application/json"
@@ -44,7 +38,8 @@ export const AuthProvider = ({ children }) => {
             })
         })
         const data = await response.json()
-        console.log(data);
+
+        localStorage.setItem("loginDetails", JSON.stringify(data))
 
         if(response.status === 200){
             console.log("Logged In");
@@ -77,25 +72,21 @@ export const AuthProvider = ({ children }) => {
         }
     }
 
-    const registerUser = async (first_name, last_name, email, username, phone_number, password, password2) => {
+    const registerUser = async (first_name, last_name, email, username, mobile, password) => {
 
-    
-
-        const response = await fetch("http://127.0.0.1:8000/register/", {
+        const response = await fetch("http://127.0.0.1:8000/registration/", {
             method: "POST",
-            headers: {
+            headers:{
                 "Content-Type":"application/json"
             },
             body: JSON.stringify({
-                first_name, last_name, email, username, phone_number, password, password2
+                first_name, last_name, email, username, mobile, password
             })
         })
 
-        console.log(response)
-
         
         if(response.status === 201){
-            // history.push("/pet")
+            history.push("/pet")
             swal.fire({
                 title: "Enter your pet credentials.",
                 icon: "success",

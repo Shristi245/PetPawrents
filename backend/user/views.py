@@ -1,103 +1,125 @@
-
-from .serializers import MyTokenObtainPairSerializer
-from rest_framework.permissions import AllowAny,IsAuthenticated
-from rest_framework_simplejwt.views import TokenObtainPairView
-from user.models import AppUser
-from .serializers import UserSerializer, RegisterSerializer
-
-
-from rest_framework.decorators import api_view
+from django.utils.decorators import method_decorator
+from django.utils.translation import gettext_lazy as _
+from django.views.decorators.debug import sensitive_post_parameters
+from drf_spectacular.utils import extend_schema
+from rest_framework import status, viewsets
+from rest_framework.decorators import action
+from rest_framework.generics import (
+    CreateAPIView,
+    GenericAPIView,
+    RetrieveAPIView,
+    UpdateAPIView,
+)
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework import status
 from rest_framework.views import APIView
-from rest_framework.decorators import api_view, permission_classes
-from django.contrib.auth import authenticate
-from rest_framework.authtoken.models import Token
-from rest_framework import generics
-from .models import Profile
-from .serializers import ProfileSerializer
-# from user.utils import generate_otp, send_otp_phone
-import logging
 
-logger = logging.getLogger(__name__)
-
-
-
-class MyObtainTokenPairView(TokenObtainPairView):
-    permission_classes = (AllowAny,)
-    serializer_class = MyTokenObtainPairSerializer
-
-
-# class RegisterView(APIView):
-#     serializer_class = RegisterSerializer
-
-#     def post(self, request):
-#         try:
-#             data = request.data
-#             serializer = RegisterSerializer(data=data)
-#             if serializer.is_valid():
-#                 serializer.save()
-#                 phone_number = serializer.data['phone_number']
-#                 otp_value = serializer.data['otp']
-#                 send_otp_phone(phone_number=phone_number, otp=otp_value)
-#                 return Response({"message": "User created successfully. OTP sent to your phone number."}, status=status.HTTP_201_CREATED)
-#             else:
-#                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-            
-#         except Exception as e:
-#             print(e)
-#             return Response({"message": "Something went wrong"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        
-
-class RegisterView(APIView):
-    serializer_class = RegisterSerializer
-
-    def post(self, request):
-        serializer = self.serializer_class(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response({"message": "User created successfully."}, status=status.HTTP_201_CREATED)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+from .serializers import (
+    # PasswordChangeSerializer,
+    PasswordResetConfirmSerializer,
+    PasswordResetSerializer,
+    # ResendEmailVerificationCodeSrializer,
+    TokenObtainPairSerializer,
+    UserRegistrationSerializer,
+    UserSerializer,
+    # VerirfyOtpSerializer,
+)
 
 
 
-# Profileview
-class ProfileDetailView(generics.RetrieveAPIView):
-    queryset = Profile.objects.all()
-    serializer_class = ProfileSerializer
+# from rest_framework.throttling import ScopedRateThrottle
+
+sensitive_post_parameters_m = method_decorator(
+    sensitive_post_parameters(
+        "password", "old_password", "new_password1", "new_password2"
+    )
+)
 
 
-
-
-
-# Get All Routes
-@api_view(['GET'])
-def getRoutes(request):
+class UserRegistrationView(CreateAPIView):
     """
-    Get the list of available routes.
-    Parameters:
-    - request: The HTTP request object.
-    Returns:
-    - Response object containing a list of routes.
+    Creates user with given email and send 4 digit verification code.
     """
-    routes = [
+
+    serializer_class = UserRegistrationSerializer
+    permission_classes = ()
+
+    @sensitive_post_parameters_m
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        headers = self.get_success_headers(serializer.data)
+        return Response(
+            {"detail": _("Verification email sent.")},
+            status=status.HTTP_201_CREATED,
+            headers=headers,
+        )
+
+
+class TokenObtainPairView(CreateAPIView):
+    """
+    Takes a set of user credentials and returns an access and refresh JSON web
+    token pair to prove the authentication of those credentials and email_verified status.
+    """
+
+    serializer_class = TokenObtainPairSerializer
+    permission_classes = ()
+
+    @sensitive_post_parameters_m
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+    @extend_schema(request=TokenObtainPairSerializer)
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(
+            data=request.data, context={"request": request}
+        )
+        serializer.is_valid(raise_exception=True)
+        return Response(serializer.validated_data, status=status.HTTP_200_OK)
     
-        '/user/token/',
-        '/user/register/',
-        '/user/token/refresh/'
-    ]
-    return Response(routes)
 
+class PasswordResetView(APIView):
+    """
+    Sends password reset link if the registered email is provided.
 
-@api_view(['GET', 'POST'])
-@permission_classes([IsAuthenticated])
-def testEndPoint(request):
-    if request.method == 'GET':
-        data = f"Congratulation {request.user}, your API just responded to GET request"
-        return Response({'response': data}, status=status.HTTP_200_OK)
-    elif request.method == 'POST':
-        text = "Hello buddy"
-        data = f'Congratulation your API just responded to POST request with text: {text}'
-        return Response({'response': data}, status=status.HTTP_200_OK)
-    return Response({}, status.HTTP_400_BAD_REQUEST)
+    POST params: email
+    :returns success/failure message
+    """
+
+    permission_classes = ()
+
+    def get_serializer(self, *args, **kwargs):
+        return PasswordResetSerializer(*args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data, context={"request": request})
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({"detail": "Password reset link sent."}, status=status.HTTP_200_OK)
+    
+    
+class PasswordResetConfirmView(GenericAPIView):
+    """
+    Password reset e-mail link is confirmed, therefore
+    this resets the user's password.
+
+    Accepts the following POST parameters: token, uid, new_password1, new_password2
+    Returns the success/fail message.
+    """
+
+    serializer_class = PasswordResetConfirmSerializer
+    permission_classes = ()
+
+    @sensitive_post_parameters_m
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({"detail": _("Password has been reset with the new password.")})
