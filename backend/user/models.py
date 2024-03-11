@@ -2,6 +2,10 @@ from django.contrib.auth.models import AbstractUser
 from django.db.models import BooleanField, CharField, EmailField
 from django.utils.translation import gettext_lazy as _
 from .managers import CustomUserManager
+from django.db import models
+from django.db.models.signals import post_save
+
+
 
 # Create your models here.
 class User(AbstractUser):
@@ -22,4 +26,38 @@ class User(AbstractUser):
     objects = CustomUserManager()
 
     def __str__(self):
-        return self.username or self.email or self.mobile or ""
+        return self.username
+
+
+
+class Pet(models.Model):
+    petname = models.CharField(max_length=100)
+    pettype = models.CharField(max_length=100)
+    age = models.PositiveIntegerField()
+    height = models.DecimalField(max_digits=5, decimal_places=2)
+    weight = models.DecimalField(max_digits=5, decimal_places=2)
+    owner = models.ForeignKey(User, related_name='pets', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.petname
+    
+
+
+class Profile(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name='notes')
+    full_name = models.CharField(max_length=1000)
+    bio = models.CharField(max_length=100)
+    image = models.ImageField(upload_to="user_images", default="default.jpg")
+    verified = models.BooleanField(default=False)
+
+    def __str__ (self): 
+        return self.full_name
+    
+# def create_user_profile(sender, instance, created, **kwargs):
+#     if created:
+#         Profile.objects.create(user=instance)
+# def save_user_profile(sender, instance, **kwargs):
+#     instance.profile.save()
+
+# post_save.connect(create_user_profile, sender=User)
+# post_save.connect(save_user_profile, sender=User)

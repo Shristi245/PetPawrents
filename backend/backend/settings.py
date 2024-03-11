@@ -64,6 +64,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework_swagger',       # Swagger 
+    'drf_yasg',                     # Yet Another Swagger generator
 
     #own
 
@@ -71,7 +73,10 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
     'user.apps.UserConfig',
     'core.apps.CoreConfig',
+    'appointment.apps.AppointmentConfig',
+    'administrator.apps.AdministratorConfig',
     'corsheaders',
+    'django_rest_passwordreset',
     
 ]
 
@@ -88,12 +93,20 @@ MIDDLEWARE = [
 
 ]
 
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'Basic': {
+            'type': 'basic'
+        }
+    }
+}
+
 ROOT_URLCONF = 'backend.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [BASE_DIR, 'templates/',],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -151,7 +164,11 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ]
+    ],
+
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+    'rest_framework.authentication.TokenAuthentication',
+    ],
 }
 
 
@@ -203,8 +220,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-MEDIA_URL ='/images/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media') # Directory where uploaded media is saved.
+MEDIA_URL = '/media/' # Public URL at the browser
 
 
 # STATICFILES_DIRS =[
@@ -219,8 +236,10 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 
+CORS_ORIGIN_ALLOW_ALL = True 
 
 CORS_ALLOWED_ORIGINS = [
+    "http://127.0.0.1:8000",
     "http://172.16.19.170:3000",
     "http://localhost:3000",
 ]
@@ -236,7 +255,6 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = 'shristi200302@gmail.com'
 EMAIL_HOST_PASSWORD = 'zgvkzfwxcskdwyim'
 EMAIL_USE_TLS = True
-
 
 
 #dJOSER
@@ -321,14 +339,14 @@ MANAGERS = ADMINS
 # https://docs.djangoproject.com/en/dev/ref/settings/#default-from-email
 DEFAULT_FROM_EMAIL = env(
     "DJANGO_DEFAULT_FROM_EMAIL",
-    default="hotel_booking <noreply@example.com>",
+    default="Pet_Pawrents <noreply@example.com>",
 )
 # https://docs.djangoproject.com/en/dev/ref/settings/#server-email
 SERVER_EMAIL = env("DJANGO_SERVER_EMAIL", default=DEFAULT_FROM_EMAIL)
 # https://docs.djangoproject.com/en/dev/ref/settings/#email-subject-prefix
 EMAIL_SUBJECT_PREFIX = env(
     "DJANGO_EMAIL_SUBJECT_PREFIX",
-    default="[hotel_booking]",
+    default="[Pet_Pawrents]",
 )
 
 

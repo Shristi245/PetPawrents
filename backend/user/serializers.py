@@ -1,31 +1,21 @@
-# from io import BytesIO
-
-# import jwt
-# import requests
-from django.conf import settings
 from django.contrib.auth import authenticate
-from django.contrib.auth.forms import PasswordResetForm, SetPasswordForm
 from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth.signals import user_logged_in
-from django.contrib.auth.tokens import default_token_generator
-# from django.core import files
-from django.utils.encoding import force_str
-from django.utils.http import urlsafe_base64_decode
 from django.utils.translation import gettext_lazy as _
 from rest_framework import serializers
-from rest_framework.exceptions import AuthenticationFailed, ValidationError
+from rest_framework.exceptions import ValidationError
 from rest_framework_simplejwt.tokens import RefreshToken
-from django.utils.http import urlsafe_base64_encode
-from django.template.loader import render_to_string
-from django.core.mail import EmailMessage
-from django.utils.encoding import force_bytes
+from django_rest_passwordreset.serializers import PasswordTokenSerializer
+from .models import Profile
+
+
 
 from user.models import User
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ["id", "name", "email", "is_staff", "is_superuser"]
+        fields = ["id", "first_name", "last_name", "mobile", "username", "email", "is_staff", "is_superuser"]
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
@@ -126,72 +116,54 @@ class TokenObtainPairSerializer(serializers.Serializer):
         return RefreshToken.for_user(user)
     
 
-class PasswordResetSerializer(serializers.Serializer):
-    """Serializer for requesting a password reset e-mail."""
 
-    email = serializers.EmailField()
+class ChangePasswordSerializer(serializers.Serializer):
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)
 
-    def validate_email(self, value):
-        # Validate email and create PasswordResetForm instance
-        self.reset_form = PasswordResetForm(data=self.initial_data)
-        if not self.reset_form.is_valid():
-            raise serializers.ValidationError(self.reset_form.errors)
 
-        return value
+class ResetPasswordEmailSerializer(serializers.Serializer):
+    email = serializers.EmailField(required=True)
 
-    def send_email(self, reset_link):
-        request = self.context.get("request")
-        # Construct email parameters
-        email_subject = "Password Reset"
-        email_body = render_to_string('password_reset_email.html', {'reset_link': reset_link})
-        email = EmailMessage(subject=email_subject, body=email_body, to=[self.validated_data['email']])
-        email.send()
 
-    def save(self):
-        # Generate reset link
-        user = self.reset_form.get_users(self.validated_data['email'])
-      
-        print("------------------")
-        print(str(user))
-        print("------------------")
-
-        uid = urlsafe_base64_encode(force_bytes(user.id))
-        token = default_token_generator.make_token(user)
-        reset_link = f"http://127.0.0.1:8000/password-reset/confirm/{uid}/{token}/"
-
-        # Send email with reset link
-        self.send_email(reset_link)
-
+    
 class PasswordResetConfirmSerializer(serializers.Serializer):
+    email = serializers.EmailField(max_length =100)
     new_password1 = serializers.CharField(max_length=128)
     new_password2 = serializers.CharField(max_length=128)
-    uid = serializers.CharField()
-    token = serializers.CharField()
-
-    set_password_form_class = SetPasswordForm
+  
+    
 
     def validate(self, attrs):
-        self._errors = {}
+        attrs = super().validate(attrs)
+        new_password1 = attrs.get("new_password1")
+        new_password2 = attrs.get("new_password2")
 
-        # Decode the uidb64 to uid to get User object
-        try:
-            uid = force_str(urlsafe_base64_decode(attrs["uid"]))
-            self.user = User.objects.get(pk=uid)
-        except (TypeError, ValueError, OverflowError, User.DoesNotExist):
-            raise ValidationError({"uid": ["Invalid value"]})
-
-        # Construct SetPasswordForm instance
-        self.set_password_form = self.set_password_form_class(
-            user=self.user, data=attrs
-        )
-        if not self.set_password_form.is_valid():
-            raise serializers.ValidationError(self.set_password_form.errors)
-        if not default_token_generator.check_token(self.user, attrs["token"]):
-            raise ValidationError({"token": ["Invalid value"]})
-
+        if new_password1 != new_password2:
+            raise ValidationError({"new_password2": _("The two password fields didn't match.")})
+        
+   
         return attrs
 
-    def save(self):
-        return self.set_password_form.save()
+class ProfileSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Profile
+        fields = '__all__'
+
+
+
+        def create(self, validated_data):
+            profile = Profile.objects.create(
+            user=validated_data['user'],
+            full_name = validated_data['full_name'],
+            bio=validated_data['bio'],
+            image=validated_data['image']
+        )
+
+            profile.set_password(validated_data['password'])
+            profile.save()
+
+            return profile
 
 

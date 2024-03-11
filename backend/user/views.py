@@ -2,8 +2,32 @@ from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.debug import sensitive_post_parameters
 from drf_spectacular.utils import extend_schema
-from rest_framework import status, viewsets
-from rest_framework.decorators import action
+from rest_framework import status
+
+from django.contrib.auth.tokens import default_token_generator
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.models import User
+from django.contrib.auth.tokens import default_token_generator
+from django.core.mail import EmailMessage
+from django.template.loader import render_to_string
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
+from django.utils.http import urlsafe_base64_decode
+from rest_framework import generics, status
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.exceptions import ValidationError
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from user.models import User
+from django.core.mail import send_mail
+from django.contrib.auth import get_user_model
+from rest_framework import generics, permissions
+from .models import Profile
+from .serializers import ProfileSerializer
+
+from user.serializers import ChangePasswordSerializer, ResetPasswordEmailSerializer
+
+
 from rest_framework.generics import (
     CreateAPIView,
     GenericAPIView,
@@ -13,13 +37,25 @@ from rest_framework.generics import (
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework import status
+from django.contrib.auth import update_session_auth_hash
+from .serializers import ChangePasswordSerializer
+
+from django.contrib.auth.models import User
+
 
 from .serializers import (
     # PasswordChangeSerializer,
     PasswordResetConfirmSerializer,
-    PasswordResetSerializer,
+    # PasswordResetSerializer,
     # ResendEmailVerificationCodeSrializer,
     TokenObtainPairSerializer,
+    ChangePasswordSerializer,
+    # ProfileSerializer,
+    # PetSerializer,
+    # ResetPasswordEmailSerializer,
     UserRegistrationSerializer,
     UserSerializer,
     # VerirfyOtpSerializer,
@@ -82,44 +118,105 @@ class TokenObtainPairView(CreateAPIView):
         return Response(serializer.validated_data, status=status.HTTP_200_OK)
     
 
-class PasswordResetView(APIView):
-    """
-    Sends password reset link if the registered email is provided.
 
-    POST params: email
-    :returns success/failure message
-    """
 
-    permission_classes = ()
+#api/profile  and api/profile/update
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getProfile(request):
+    profile = request.profile
+    serializer = ProfileSerializer(profile, many=False)
+    return Response(serializer.data)
 
-    def get_serializer(self, *args, **kwargs):
-        return PasswordResetSerializer(*args, **kwargs)
-
-    def post(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data, context={"request": request})
-        serializer.is_valid(raise_exception=True)
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def updateProfile(request):
+    profile = request.profile
+    serializer = ProfileSerializer(profile, data=request.data, partial=True)
+    if serializer.is_valid():
         serializer.save()
-        return Response({"detail": "Password reset link sent."}, status=status.HTTP_200_OK)
+    return Response(serializer.data)
+
+# class PetListCreateAPIView(generics.ListCreateAPIView):
+#     queryset = Pet.objects.all()
+#     serializer_class = PetSerializer
+#     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+#     def perform_create(self, serializer):
+#         serializer.save(owner=self.request.user)
+
+# class PetDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+#     queryset = Pet.objects.all()
+#     serializer_class = PetSerializer
+#     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def change_password(request):
+    serializer = ChangePasswordSerializer(data=request.data)
+    if serializer.is_valid():
+        # Check old password
+        if not request.user.check_password(serializer.validated_data.get("old_password")):
+            return Response({"old_password": ["Wrong password."]}, status=status.HTTP_400_BAD_REQUEST)
+        # set_password also hashes the password that the user will get
+        request.user.set_password(serializer.validated_data.get("new_password"))
+        request.user.save()
+        # Keep the user logged in after changing the password
+        update_session_auth_hash(request, request.user)
+        return Response({"detail": "Password updated successfully"}, status=status.HTTP_200_OK)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+User = get_user_model()  # Get the custom user model
+
+@api_view(['POST'])
+def reset_password_email(request):
+    serializer = ResetPasswordEmailSerializer(data=request.data)
+    if serializer.is_valid():
+        email = serializer.validated_data['email']
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            serializer.errors['email'] = ['User with this email does not exist.']
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        # Generate reset link
+        uid = urlsafe_base64_encode(force_bytes(user.id))
+        token = default_token_generator.make_token(user)
+        reset_link = f"http://localhost:3000/confirm-password?token={token}"
+
+        # Send email with reset link
+        email_subject = "Password Reset Request"
+        email_body = render_to_string('password_reset_email.txt', {'reset_link': reset_link})
+        send_mail(email_subject, email_body, None, [email])
+
+        return Response({"detail": "Password reset link sent successfully"}, status=status.HTTP_200_OK)
     
-    
-class PasswordResetConfirmView(GenericAPIView):
-    """
-    Password reset e-mail link is confirmed, therefore
-    this resets the user's password.
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    Accepts the following POST parameters: token, uid, new_password1, new_password2
-    Returns the success/fail message.
-    """
 
-    serializer_class = PasswordResetConfirmSerializer
-    permission_classes = ()
+        
+class ResetPassword(APIView):
+    def post(self,request):
 
-    @sensitive_post_parameters_m
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
+        serializer = PasswordResetConfirmSerializer(data=request.data)
 
-    def post(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response({"detail": _("Password has been reset with the new password.")})
+
+        token = request.data.get("token");
+
+        print(serializer.is_valid())
+
+        if serializer.is_valid() and token:
+            user = User.objects.get(email = request.data.get('email'))
+
+            if user is not None and default_token_generator.check_token(user, request.data.get("token")):
+                password = serializer.validated_data['new_password1']
+                user.set_password(password)
+                user.save()
+
+                return Response({"detail": "Password has been reset with the new password."}, status=status.HTTP_200_OK)
+            
+            return Response({"detail": "User not found or token is invalid."}, status=status.HTTP_404_NOT_FOUND)
+        
+        return Response({"detail":"Email or Password or Token is not valid"}, status=status.HTTP_400_BAD_REQUEST)

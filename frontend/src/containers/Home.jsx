@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom/cjs/react-router-dom.min';
 
 
 const Home = () => {
@@ -10,13 +11,19 @@ const Home = () => {
           <div class="text-white text-start  md:py-16  md:ml-44 lg:w-2/5 xl:w-2/5">
             <h2 class="lg:text-7xl md:text-5xl text-black mb-4">Your Pet is Part of our Family</h2>
             <p class="lg:text-2xl md:text-xl">Let us treat your pet like our family with the best service, care, and hospitality.</p><br/>
-            <button class="bg-[#417EC5] text-white text-xl py-2 px-4 md:py-3 md:px-6 rounded-[24px] mt-4 md:mt-8 hover:bg-[#673405]  animate-bounce ">Book a Schedule</button>
+            <Link to ="/book-appointment">
+              <button class="bg-[#417EC5] text-white text-xl py-2 px-4 md:py-3 md:px-6 rounded-[24px] mt-4 md:mt-8 hover:bg-[#673405]  animate-bounce ">Book a Schedule</button>
+            </Link>
           </div>
 
           {/* Buttons at the bottom-middle */}
           <div className="absolute bottom-0 left-0 right-0 flex flex-col md:flex-row justify-center items-center mb-8 p-9 md:space-x-14 md:ml-56">
-            <button className="bg-[#417EC5] text-[#FDF99B] text-xl py-2 px-4 md:py-3 md:px-6 rounded-[24px] mb-4 md:mb-0 md:ml-0 hover:bg-[#673405] hover:text-white transition-transform duration-200 ease-in-out transform hover:scale-90">Learn More</button>
-            <button className="bg-[#417EC5] text-[#FDF99B] text-xl py-2 px-4 md:py-3 md:px-9 rounded-[24px] hover:bg-[#673405] hover:text-white transition-transform duration-200 ease-in-out transform hover:scale-90">Adopt</button>
+            <Link to="/services">
+              <button className="bg-[#417EC5] text-[#FDF99B] text-xl py-2 px-4 md:py-3 md:px-6 rounded-[24px] mb-4 md:mb-0 md:ml-0 hover:bg-[#673405] hover:text-white transition-transform duration-200 ease-in-out transform hover:scale-90">Learn More</button>
+            </Link>
+            <Link>
+              <button className="bg-[#417EC5] text-[#FDF99B] text-xl py-2 px-4 md:py-3 md:px-9 rounded-[24px] hover:bg-[#673405] hover:text-white transition-transform duration-200 ease-in-out transform hover:scale-90">Adopt</button>
+            </Link>
           </div>
 
         </div>
