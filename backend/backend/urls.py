@@ -15,6 +15,7 @@ urlpatterns = [
     path('', include('user.urls')),
     path('', include('appointment.urls')),
     path('api/', include('administrator.urls')),
+    path('', include('products.urls')),
     path('api/password_reset/', include('django_rest_passwordreset.urls', namespace='password_reset')),
     path('', include(router.urls)),
     path('ckeditor/', include('ckeditor_uploader.urls')),

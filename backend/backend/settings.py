@@ -74,6 +74,7 @@ INSTALLED_APPS = [
     'user.apps.UserConfig',
     'core.apps.CoreConfig',
     'appointment.apps.AppointmentConfig',
+    'products.apps.ProductsConfig',
     'administrator.apps.AdministratorConfig',
     'corsheaders',
     'django_rest_passwordreset',
