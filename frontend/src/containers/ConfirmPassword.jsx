@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import {
   useLocation,
-  useParams,
+  // useParams,
 } from "react-router-dom/cjs/react-router-dom.min";
+const swal = require("sweetalert2");
 
 const ResetPasswordConfirmPage = () => {
   const [email, setEmail] = useState("");
@@ -44,10 +45,17 @@ const ResetPasswordConfirmPage = () => {
       // console.log(response);
 
       if (response.ok) {
-        console.log("Password reset successfull.");
-        // Redirect to login page after password reset is confirmed
         history.push("/login");
-    } else {
+        swal.fire({
+          title: "Password reset sucessfully. Please Login to Continue.",
+          icon: "success",
+          toast: true,
+          timer: 6000,
+          position: "top-right",
+          timerProgressBar: true,
+          showConfirmButton: false,
+        });
+      } else {
         const errorData = await response.json();
         console.error("Error resetting password:", errorData); // Log entire response content
         throw new Error(errorData.detail); // Throw error with specific detail message
@@ -59,14 +67,22 @@ const ResetPasswordConfirmPage = () => {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-100">
-      <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-        <h2 className="text-2xl font-bold mb-4 text-center">Reset Password</h2>
+    <div
+      className="flex justify-center items-center h-screen bg-gray-100 bg-cover"
+      style={{ backgroundImage: "url('images/reset-bg.png')" }}
+    >
+      <div
+        className="bg-white shadow-md rounded-[32px] px-8 pt-6 pb-8 mb-4 w-[35%] border bg-cover sm:w-96 lg:w-[37%] lg:h-[60%] transition-transform duration-200 ease-in-out transform hover:scale-110"
+        style={{ backgroundImage: "url('images/donate.jpg')" }}
+      >
+        <h2 className="text-2xl font-bold mb-4 text-center text-black">
+          Reset Your Password
+        </h2>
         {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label
-              className="block text-gray-700 text-sm font-bold mb-2"
+              className="block text-black text-lg font-bold mb-2"
               htmlFor="email"
             >
               Email Address
@@ -83,7 +99,7 @@ const ResetPasswordConfirmPage = () => {
           </div>
           <div className="mb-4">
             <label
-              className="block text-gray-700 text-sm font-bold mb-2"
+              className="block text-black text-lg  font-bold mb-2"
               htmlFor="newPassword1"
             >
               New Password
@@ -100,7 +116,7 @@ const ResetPasswordConfirmPage = () => {
           </div>
           <div className="mb-6">
             <label
-              className="block text-gray-700 text-sm font-bold mb-2"
+              className="block text-black text-lg font-bold mb-2"
               htmlFor="newPassword2"
             >
               Confirm New Password
@@ -117,7 +133,7 @@ const ResetPasswordConfirmPage = () => {
           </div>
           <div className="flex items-center justify-center">
             <button
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              className="bg-blue-500 hover:bg-blue-700 text-white bg-black font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
               type="submit"
             >
               Reset Password

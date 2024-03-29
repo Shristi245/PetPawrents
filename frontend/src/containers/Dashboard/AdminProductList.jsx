@@ -19,6 +19,27 @@ const AdminProductList = () => {
     fetchProducts();
   }, []);
 
+  // Function to update product information
+  // const updateProduct = async (productId, newData) => {
+  //   try {
+  //     const response = await fetch(`http://127.0.0.1:8000/products/${productId}`, {
+  //       method: "PUT",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify(newData),
+  //     });
+  //     if (response.ok) {
+  //       // If update is successful, fetch products again to reflect changes
+  //       fetchProducts();
+  //       console.log("Product updated successfully!");
+  //     } else {
+  //       console.error("Failed to update product");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error updating product:", error);
+  //   }
+  // };
   return (
     <div className="flex h-screen mb-32">
       <AdminSideMenu />
@@ -35,6 +56,7 @@ const AdminProductList = () => {
         <div className="grid grid-cols-3 gap-4">
           {products?.map((product) => (
             <ProductCard
+              id={product.id}
               key={uuid()}
               image={product.image}
               title={product.title}

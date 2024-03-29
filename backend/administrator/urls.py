@@ -1,10 +1,12 @@
 from django.urls import path
-from .views import UserListView, TotalUsersView, AppointmentListView
+from .views import UserDetailView, UserListView, TotalUsersView, UserDeleteView, TotalAppointmentsView, TotalProductsView, TotalPetsforAdoptionsView
 
 urlpatterns = [
     path('users/', UserListView.as_view(), name='user-list'),
+    path('users/<int:pk>/delete/', UserDeleteView.as_view(), name='user-delete'),
+    path('users/<int:pk>/', UserDetailView.as_view(), name='user-detail'),  # Add this line
     path('users/total/', TotalUsersView.as_view(), name='total_users'),
-    path('appointments/', AppointmentListView.as_view(), name='appointment-list'), 
-
-
+    path('appointments/total/', TotalAppointmentsView.as_view(), name='total_appointments'),
+    path('products/total/', TotalProductsView.as_view(), name='total_products'),
+    path('adoptiondetails/total/', TotalPetsforAdoptionsView.as_view(), name='total_petforadoptions'),
 ]

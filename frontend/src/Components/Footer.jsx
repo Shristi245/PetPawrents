@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom/cjs/react-router-dom.min";
 
 const Footer = () => {
   return (
@@ -30,27 +31,27 @@ const Footer = () => {
               <h2 className="mb-6 text-2xl  uppercase ">Quick Links</h2>
               <ul className="text-black text-xl font-medium">
                 <li className="mb-4">
-                  <a href="" className="hover:underline">
+                  <Link to="/" className="hover:underline">
                     Home
-                  </a>
+                  </Link>
                 </li>
 
                 <li className="mb-4">
-                  <a href="" className="hover:underline">
+                  <Link to="/contact" className="hover:underline">
                     Contact Us
-                  </a>
+                  </Link>
                 </li>
 
                 <li className="mb-4">
-                  <a href="" className="hover:underline">
+                  <Link to="/about" className="hover:underline">
                     About
-                  </a>
+                  </Link>
                 </li>
 
                 <li className="mb-4">
-                  <a href="" className="hover:underline">
+                  <Link to="/services" className="hover:underline">
                     Services
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </div>
@@ -59,20 +60,14 @@ const Footer = () => {
               <h2 className="mb-6 text-2xl uppercase ">Account</h2>
               <ul className="text-black  text-xl font-medium">
                 <li className="mb-4">
-                  <a
-                    href="https://github.com/themesberg/flowbite"
-                    className="hover:underline "
-                  >
+                  <Link to="/login" className="hover:underline ">
                     Sign In
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a
-                    href="https://discord.gg/4eeurUVvTy"
-                    className="hover:underline"
-                  >
+                  <Link to="/register" className="hover:underline">
                     Sign Up
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </div>
@@ -80,28 +75,12 @@ const Footer = () => {
             <div class="ml-9">
               <h2 className="mb-6 text-2xl  uppercase ">Services</h2>
               <ul className="text-black text-xl font-medium">
-                <li className="mb-4">
-                  <a href="#" className="hover:underline">
-                    Grooming{" "}
-                  </a>
-                </li>
-                <li className="mb-4">
-                  <a href="#" className="hover:underline">
-                    Vaccination{" "}
-                  </a>
-                </li>
+                <li className="mb-4">Grooming </li>
+                <li className="mb-4">Vaccination </li>
 
-                <li className="mb-4">
-                  <a href="#" className="hover:underline">
-                    Veterinary{" "}
-                  </a>
-                </li>
+                <li className="mb-4">Veterinary </li>
 
-                <li className="mb-4">
-                  <a href="#" className="hover:underline">
-                    Pet Products{" "}
-                  </a>
-                </li>
+                <li className="mb-4">Pet Products </li>
               </ul>
             </div>
 
@@ -109,14 +88,17 @@ const Footer = () => {
               <h2 className="mb-6 text-2xl  uppercase ">Connect with us</h2>
               <ul className="text-black text-xl font-medium">
                 <li className="mb-4">
-                  <a href="#" className="hover:underline">
-                    Privacy Policy
-                  </a>
+                  <Link to="#" className="hover:underline">
+                    Facebook
+                  </Link>
                 </li>
                 <li>
-                  <a href="#" className="hover:underline">
-                    Terms &amp; Conditions
-                  </a>
+                  <Link to="#" className="hover:underline">
+                    Instagram
+                  </Link>
+                </li>
+                <li>
+                  <Link to="">Discord</Link>
                 </li>
               </ul>
             </div>
@@ -126,8 +108,8 @@ const Footer = () => {
         <div class="flex justify-end pt-6 ">
           <div class="flex mt-4 sm:mt-0 ">
             <a
-              href="#"
-              class="text-gray-500 hover:text-gray-900 dark:hover:text-white"
+              href="https://www.facebook.com/"
+              class="text-gray-700 hover:text-gray-900 dark:hover:text-white"
             >
               <svg
                 class="w-4 h-4"
@@ -145,8 +127,8 @@ const Footer = () => {
               <span class="sr-only">Facebook page</span>
             </a>
             <a
-              href="#"
-              class="text-gray-500 hover:text-gray-900 dark:hover:text-white ms-5"
+              href="https://discord.com/"
+              class="text-gray-700 hover:text-gray-900 dark:hover:text-white ms-5"
             >
               <svg
                 class="w-4 h-4"
@@ -160,61 +142,20 @@ const Footer = () => {
               <span class="sr-only">Discord community</span>
             </a>
             <a
-              href="#"
-              class="text-gray-500 hover:text-gray-900 dark:hover:text-white ms-5"
+              href="https://www.instagram.com/"
+              class="text-gray-700 hover:text-gray-900 dark:hover:text-white ms-5"
             >
               <svg
-                class="w-4 h-4"
-                aria-hidden="true"
                 xmlns="http://www.w3.org/2000/svg"
-                fill="currentColor"
-                viewBox="0 0 20 17"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M20 1.892a8.178 8.178 0 0 1-2.355.635 4.074 4.074 0 0 0 1.8-2.235 8.344 8.344 0 0 1-2.605.98A4.13 4.13 0 0 0 13.85 0a4.068 4.068 0 0 0-4.1 4.038 4 4 0 0 0 .105.919A11.705 11.705 0 0 1 1.4.734a4.006 4.006 0 0 0 1.268 5.392 4.165 4.165 0 0 1-1.859-.5v.05A4.057 4.057 0 0 0 4.1 9.635a4.19 4.19 0 0 1-1.856.07 4.108 4.108 0 0 0 3.831 2.807A8.36 8.36 0 0 1 0 14.184 11.732 11.732 0 0 0 6.291 16 11.502 11.502 0 0 0 17.964 4.5c0-.177 0-.35-.012-.523A8.143 8.143 0 0 0 20 1.892Z"
-                  clip-rule="evenodd"
-                />
-              </svg>
-              <span class="sr-only">Twitter page</span>
-            </a>
-            <a
-              href="#"
-              class="text-gray-500 hover:text-gray-900 dark:hover:text-white ms-5"
-            >
-              <svg
                 class="w-4 h-4"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 512 512"
                 fill="currentColor"
-                viewBox="0 0 20 20"
               >
-                <path
-                  fill-rule="evenodd"
-                  d="M10 .333A9.911 9.911 0 0 0 6.866 19.65c.5.092.678-.215.678-.477 0-.237-.01-1.017-.014-1.845-2.757.6-3.338-1.169-3.338-1.169a2.627 2.627 0 0 0-1.1-1.451c-.9-.615.07-.6.07-.6a2.084 2.084 0 0 1 1.518 1.021 2.11 2.11 0 0 0 2.884.823c.044-.503.268-.973.63-1.325-2.2-.25-4.516-1.1-4.516-4.9A3.832 3.832 0 0 1 4.7 7.068a3.56 3.56 0 0 1 .095-2.623s.832-.266 2.726 1.016a9.409 9.409 0 0 1 4.962 0c1.89-1.282 2.717-1.016 2.717-1.016.366.83.402 1.768.1 2.623a3.827 3.827 0 0 1 1.02 2.659c0 3.807-2.319 4.644-4.525 4.889a2.366 2.366 0 0 1 .673 1.834c0 1.326-.012 2.394-.012 2.72 0 .263.18.572.681.475A9.911 9.911 0 0 0 10 .333Z"
-                  clip-rule="evenodd"
-                />
+                <path d="M394.6 0H117.4C52.7 0 0 52.7 0 117.4v277.2C0 459.3 52.7 512 117.4 512h277.2c64.7 0 117.4-52.7 117.4-117.4V117.4C512 52.7 459.3 0 394.6 0zm84.4 394.6c0 46.7-38 84.6-84.6 84.6H117.4c-46.7 0-84.6-38-84.6-84.6V117.4C32.8 70.7 70.7 32.8 117.4 32.8h277.2c46.7 0 84.6 38 84.6 84.6v277.2z" />
+                <path d="M256 123c-73.6 0-133 59.4-133 133s59.4 133 133 133 133-59.4 133-133-59.4-133-133-133zm0 212.8c-47.9 0-86.8-38.9-86.8-86.8s38.9-86.8 86.8-86.8 86.8 38.9 86.8 86.8-38.9 86.8-86.8 86.8z" />
+                <circle cx="390.5" cy="121.5" r="30.2" />
               </svg>
-              <span class="sr-only">GitHub account</span>
-            </a>
-            <a
-              href="#"
-              class="text-gray-500 hover:text-gray-900 dark:hover:text-white ms-5"
-            >
-              <svg
-                class="w-4 h-4"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M10 0a10 10 0 1 0 10 10A10.009 10.009 0 0 0 10 0Zm6.613 4.614a8.523 8.523 0 0 1 1.93 5.32 20.094 20.094 0 0 0-5.949-.274c-.059-.149-.122-.292-.184-.441a23.879 23.879 0 0 0-.566-1.239 11.41 11.41 0 0 0 4.769-3.366ZM8 1.707a8.821 8.821 0 0 1 2-.238 8.5 8.5 0 0 1 5.664 2.152 9.608 9.608 0 0 1-4.476 3.087A45.758 45.758 0 0 0 8 1.707ZM1.642 8.262a8.57 8.57 0 0 1 4.73-5.981A53.998 53.998 0 0 1 9.54 7.222a32.078 32.078 0 0 1-7.9 1.04h.002Zm2.01 7.46a8.51 8.51 0 0 1-2.2-5.707v-.262a31.64 31.64 0 0 0 8.777-1.219c.243.477.477.964.692 1.449-.114.032-.227.067-.336.1a13.569 13.569 0 0 0-6.942 5.636l.009.003ZM10 18.556a8.508 8.508 0 0 1-5.243-1.8 11.717 11.717 0 0 1 6.7-5.332.509.509 0 0 1 .055-.02 35.65 35.65 0 0 1 1.819 6.476 8.476 8.476 0 0 1-3.331.676Zm4.772-1.462A37.232 37.232 0 0 0 13.113 11a12.513 12.513 0 0 1 5.321.364 8.56 8.56 0 0 1-3.66 5.73h-.002Z"
-                  clip-rule="evenodd"
-                />
-              </svg>
-              <span class="sr-only">Dribbble account</span>
+              <span class="sr-only">Instagram page</span>
             </a>
           </div>
         </div>

@@ -23,4 +23,12 @@ pip install drf-spectacular
 
 
 
-otp verification is on process
+--> user profile 
+-->add to cart
+--> reviews
+-->booking 
+--> admin approval for appointment booking 
+--> notifications
+--> payment integration khalti
+--> adoption page
+--> 

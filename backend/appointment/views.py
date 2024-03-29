@@ -5,13 +5,9 @@ from rest_framework import viewsets, status
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from .models import  Service, Appointment
-from user.models import Pet
-from .serializers import PetSerializer, ServiceSerializer, AppointmentSerializer
+from .serializers import  ServiceSerializer, AppointmentSerializer
 
 
-class PetViewSet(viewsets.ModelViewSet):
-    queryset = Pet.objects.all()
-    serializer_class = PetSerializer
 
 class ServiceViewSet(viewsets.ModelViewSet):
     queryset = Service.objects.all()
@@ -36,6 +32,7 @@ class AppointmentViewSet(viewsets.ModelViewSet):
                                     status=status.HTTP_400_BAD_REQUEST)
                 
                 serializer.save()
+
                 return Response({"message": _("Your appointment is booked.")},
                                 status=status.HTTP_201_CREATED)
             except KeyError as e:
@@ -44,17 +41,30 @@ class AppointmentViewSet(viewsets.ModelViewSet):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-    def update(self, request, *args, **kwargs):
+    
+    def approveAppointment(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
         instance = self.get_object()
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
+
         if serializer.is_valid():
-            # Check for appointment approval/cancellation by admin
-            is_approved = serializer.validated_data.get('is_approved', None)
-            if is_approved is not None:
-                instance.is_approved = is_approved
-                instance.save()
-                return Response(serializer.data)
-            return Response({"error": "Please provide 'is_approved' field to approve/cancel the appointment."},
-                            status=status.HTTP_400_BAD_REQUEST)
+            instance.status = "approved"
+            instance.save()
+
+            return Response(serializer.data)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def cancelAppointment(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+
+        if serializer.is_valid():
+
+            instance.status = "cancel"
+            instance.save()
+
+            return Response(serializer.data)
+        
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

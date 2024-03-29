@@ -5,8 +5,7 @@ from django.utils.translation import gettext_lazy as _
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from rest_framework_simplejwt.tokens import RefreshToken
-from django_rest_passwordreset.serializers import PasswordTokenSerializer
-from .models import Profile
+from user.models import Pet
 
 
 
@@ -100,12 +99,14 @@ class TokenObtainPairSerializer(serializers.Serializer):
         else:
             msg = _('Must include "email/mobile" and "password".')
             raise serializers.ValidationError(msg, code="authorization")
+        
 
         refresh = self.get_token(user)
         response = {
             "refresh": str(refresh),
             "access": str(refresh.access_token),
-            "is_staff": user.is_staff,
+            "user_type": user.user_type,
+            "id": user.id,
         }
         request = self.context["request"]
         user_logged_in.send(sender=user.__class__, request=request, user=user)
@@ -145,25 +146,8 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
    
         return attrs
 
-class ProfileSerializer(serializers.ModelSerializer):
 
+class PetSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Profile
+        model = Pet
         fields = '__all__'
-
-
-
-        def create(self, validated_data):
-            profile = Profile.objects.create(
-            user=validated_data['user'],
-            full_name = validated_data['full_name'],
-            bio=validated_data['bio'],
-            image=validated_data['image']
-        )
-
-            profile.set_password(validated_data['password'])
-            profile.save()
-
-            return profile
-
-

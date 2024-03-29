@@ -12,8 +12,8 @@ from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
-from django.utils.http import urlsafe_base64_decode
-from rest_framework import generics, status
+from django.http import Http404
+from rest_framework import viewsets, status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
@@ -21,18 +21,13 @@ from rest_framework.response import Response
 from user.models import User
 from django.core.mail import send_mail
 from django.contrib.auth import get_user_model
-from rest_framework import generics, permissions
-from .models import Profile
-from .serializers import ProfileSerializer
-
+from user.models import Pet
 from user.serializers import ChangePasswordSerializer, ResetPasswordEmailSerializer
 
 
 from rest_framework.generics import (
     CreateAPIView,
-    GenericAPIView,
-    RetrieveAPIView,
-    UpdateAPIView,
+
 )
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -54,7 +49,7 @@ from .serializers import (
     TokenObtainPairSerializer,
     ChangePasswordSerializer,
     # ProfileSerializer,
-    # PetSerializer,
+    PetSerializer,
     # ResetPasswordEmailSerializer,
     UserRegistrationSerializer,
     UserSerializer,
@@ -120,22 +115,10 @@ class TokenObtainPairView(CreateAPIView):
 
 
 
-#api/profile  and api/profile/update
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def getProfile(request):
-    profile = request.profile
-    serializer = ProfileSerializer(profile, many=False)
-    return Response(serializer.data)
 
-@api_view(['PUT'])
-@permission_classes([IsAuthenticated])
-def updateProfile(request):
-    profile = request.profile
-    serializer = ProfileSerializer(profile, data=request.data, partial=True)
-    if serializer.is_valid():
-        serializer.save()
-    return Response(serializer.data)
+class PetViewSet(viewsets.ModelViewSet):
+    queryset = Pet.objects.all()
+    serializer_class = PetSerializer
 
 # class PetListCreateAPIView(generics.ListCreateAPIView):
 #     queryset = Pet.objects.all()

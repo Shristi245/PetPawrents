@@ -15,10 +15,13 @@ class User(AbstractUser):
     username = CharField(_("Name of User"), blank=True, max_length=255)
     email = EmailField(_("Email Address"), unique=True)
     email_verified = BooleanField(default=False)
-    user_type = CharField(max_length=8, choices=USER_TYPE, default="HOTEL")
+    user_type = CharField(max_length=8, choices=USER_TYPE, default="CUSTOMER")
     mobile = CharField(_("Mobile Number"), blank=True, max_length=255)
     first_name = CharField(_("First Name"), max_length=150, blank=True)
     last_name = CharField(_("Last Name"), max_length=150, blank=True)
+    full_name = models.CharField(max_length=1000, null=False, blank=True)
+    bio = models.CharField(max_length=100, null=True, blank=True)
+    image = models.ImageField(upload_to="user_images", default="default.jpg")
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["username", "first_name", "last_name"]
@@ -43,16 +46,7 @@ class Pet(models.Model):
     
 
 
-class Profile(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name='notes')
-    full_name = models.CharField(max_length=1000)
-    bio = models.CharField(max_length=100)
-    image = models.ImageField(upload_to="user_images", default="default.jpg")
-    verified = models.BooleanField(default=False)
 
-    def __str__ (self): 
-        return self.full_name
-    
 # def create_user_profile(sender, instance, created, **kwargs):
 #     if created:
 #         Profile.objects.create(user=instance)

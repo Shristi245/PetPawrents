@@ -39,11 +39,18 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem("loginDetails", JSON.stringify(data));
 
     if (response.status === 200) {
-      console.log("Logged In");
       setAuthTokens(data);
       setUser(jwt_decode(data.access));
       localStorage.setItem("authTokens", JSON.stringify(data));
-      history.push("/");
+
+      console.log("shjdbcjsd", data);
+
+      if (data?.user_type === "ADMIN") {
+        history.push("/admin-dashboard");
+      } else {
+        history.push("/");
+      }
+
       swal.fire({
         title: "Login Successful",
         icon: "success",
@@ -92,9 +99,9 @@ export const AuthProvider = ({ children }) => {
     });
 
     if (response.status === 201) {
-    //   history.push("/pet");
+      //   history.push("/pet");
       swal.fire({
-        title: "Enter your pet credentials.",
+        title: "Registration Completed.Enter your details to login.",
         icon: "success",
         toast: true,
         timer: 6000,
@@ -114,7 +121,6 @@ export const AuthProvider = ({ children }) => {
       });
     }
   };
-
 
   // const userProfile = async (email, password) => {
   //   const response = await fetch("http://127.0.0.1:8000/jwt/token/", {
@@ -162,7 +168,7 @@ export const AuthProvider = ({ children }) => {
   // };
 
   const registerPet = async ({ petName, petType, age, height, weight }) => {
-    const response = await fetch("http://127.0.0.1:8000/pet/", {
+    const response = await fetch("http://127.0.0.1:8000/registration/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -203,13 +209,16 @@ export const AuthProvider = ({ children }) => {
 
   const resetPassword = async (email) => {
     try {
-      const response = await fetch(`http://127.0.0.1:8000/reset-password-email/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email }),
-      });
+      const response = await fetch(
+        `http://127.0.0.1:8000/reset-password-email/`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email }),
+        }
+      );
       if (response.ok) {
         swal.fire({
           title: "Password reset instructions sent to your email!",
@@ -229,7 +238,6 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-
   const logoutUser = () => {
     setAuthTokens(null);
     setUser(null);
@@ -245,8 +253,6 @@ export const AuthProvider = ({ children }) => {
       showConfirmButton: false,
     });
   };
-
-  
 
   const contextData = {
     user,

@@ -2,20 +2,25 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import AdminSideMenu from "../../Components/AdminSideMenu";
+import Swal from "sweetalert2";
+import { useDebounce } from "../../utils";
 
 const UserList = () => {
   const [users, setUsers] = useState([]);
-  const [showDropdown, setShowDropdown] = useState(false);
+  const [filteredUsers, setFilteredUsers] = useState([]);
 
-  const toggleDropdown = () => {
-    setShowDropdown(!showDropdown);
-  };
+  const [searchText, setSearchText] = useState("");
+  const debouncedSearchText = useDebounce(searchText);
+
+
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
         const response = await axios.get("http://127.0.0.1:8000/api/users/");
         setUsers(response.data);
+        setFilteredUsers(response.data);
+        console.log(users);
       } catch (error) {
         console.error("Error fetching users:", error);
       }
@@ -23,28 +28,48 @@ const UserList = () => {
     fetchUsers();
   }, []);
 
+  useEffect(() => {
+    const _searchText = debouncedSearchText.toLowerCase();
+    const _filteredUsers = users.filter(
+      ({ first_name, last_name, email, username, mobile }) => {
+        return (
+          first_name.toLowerCase().includes(_searchText) ||
+          last_name.toLowerCase().includes(_searchText) ||
+          email.toLowerCase().includes(_searchText) ||
+          username.toLowerCase().includes(_searchText) ||
+          mobile.toLowerCase().includes(_searchText)
+        );
+      }
+    );
+    setFilteredUsers(_filteredUsers);
+  }, [debouncedSearchText, users]);
+
   // Function to handle edit action
 
   // Function to handle delete action
   const handleDelete = async (userId) => {
     console.log("Delete user with ID:", userId);
     try {
-      // Send delete request to backend API
-      await axios.delete(`http://127.0.0.1:8000/users/${userId}`);
-      // Update users state to reflect deletion
+      await axios.delete(`http://127.0.0.1:8000/api/users/${userId}/delete`);
       setUsers(users.filter((user) => user.id !== userId));
-      // Show success message
-      console.log("User deleted successfully.");
+      // Show success message using SweetAlert
+      Swal.fire({
+        icon: "success",
+        title: "Success",
+        text: "User deleted successfully!",
+      });
     } catch (error) {
       console.error("Error deleting user:", error);
-      // Add error handling logic here
       let errorMessage = "Failed to delete user. Please try again.";
-      // Check if specific error message can be provided based on error status
       if (error.response && error.response.status === 404) {
         errorMessage = "User not found.";
       }
-      // Display error message to user
-      alert(errorMessage);
+      // Show error message using SweetAlert
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: errorMessage,
+      });
     }
   };
 
@@ -60,6 +85,7 @@ const UserList = () => {
               type="text"
               className=" text-black text-xl px-3 py-1 rounded-full focus:outline-none"
               placeholder="Type to search..."
+              onChange={(e) => setSearchText(e.target.value)}
             />
             <button className="absolute right-0 top-0 mt-1 mr-2">
               <svg
@@ -71,63 +97,31 @@ const UserList = () => {
               </svg>
             </button>
           </div>
-
-          {/* User Profile */}
-          <div className="flex items-center">
-            <div className="relative">
-              <button
-                className="text-white hover:text-amber-400 focus:outline-none"
-                onClick={toggleDropdown}
-              >
-                <img
-                  className="w-12 h-12 rounded-full object-cover"
-                  src="https://via.placeholder.com/150"
-                  alt="Profile"
-                />
-              </button>
-              {showDropdown && (
-                <div className="absolute top-0 right-0 mt-10 bg-gray-700 text-white py-2 px-4 rounded-lg shadow-lg">
-                  <button
-                    className="block w-full text-left hover:bg-gray-600 py-1"
-                    onClick={() => console.log("Account settings clicked")}
-                  >
-                    Account Settings
-                  </button>
-                  <button
-                    className="block w-full text-left hover:bg-gray-600 py-1"
-                    onClick={() => console.log("Logout clicked")}
-                  >
-                    Logout
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
         </div>
 
         {/* Your main content goes here */}
         <h1 className="text-4xl ml-3">Users</h1>
         <div className="  py-5">
           <div className="overflow-x-auto text-xl">
-            <table className="w-full ">
+            <table className="w-full border border-collapse">
               <thead>
                 <tr>
-                  <th className="px-4 py-2">SN</th>
-                  <th className="px-4 py-2">First Name</th>
-                  <th className="px-4 py-2">Last Name</th>
-                  <th className="px-4 py-2 ">Email</th>
-                  <th className="px-4 py-2">Phone Number</th>
+                  <th className="px-4 py-2 border">SN</th>
+                  <th className="px-4 py-2 border">First Name</th>
+                  <th className="px-4 py-2 border">Last Name</th>
+                  <th className="px-4 py-2 border">Email</th>
+                  <th className="px-4 py-2 border">Phone Number</th>
                 </tr>
               </thead>
               <tbody className=" text-center">
-                {users.map((user, index) => (
-                  <tr key={user.id} className="">
-                    <td className="px-4 py-2">{index + 1}</td>
-                    <td className="px-4 py-2">{user.first_name}</td>
-                    <td className="px-4 py-2">{user.last_name}</td>
-                    <td className="px-2 py-2">{user.email}</td>
-                    <td className="px-4 py-2 ">{user.mobile}</td>
-                    <td className="px-4 py-2 flex ">
+                {filteredUsers.map((user, index) => (
+                  <tr key={user.id} className="border">
+                    <td className="px-4 py-2 border">{index + 1}</td>
+                    <td className="px-4 py-2 border">{user.first_name}</td>
+                    <td className="px-4 py-2 border">{user.last_name}</td>
+                    <td className="px-2 py-2 border">{user.email}</td>
+                    <td className="px-4 py-2 border ">{user.mobile}</td>
+                    <td className="px-4 py-2 border flex ">
                       <Link
                         to={`/admin-dashboard-edituser/${user.id}`}
                         className=" text-white font-bold py-2 px-4 rounded ml-2"

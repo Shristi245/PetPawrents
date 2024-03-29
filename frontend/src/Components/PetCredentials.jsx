@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { useHistory } from "react-router-dom";
 import AuthContext from "../context/AuthContext";
+import { Link } from "react-router-dom/cjs/react-router-dom.min";
 
 function PetRegister({
   petInfo,
@@ -144,7 +145,7 @@ function PetRegister({
                   className="text-blue-500"
                   type="button"
                 >
-                  Skip
+                  <Link to="/login">Skip</Link>
                 </button>
               </div>
             </div>

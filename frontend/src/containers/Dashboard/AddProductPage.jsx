@@ -1,15 +1,9 @@
-import React, { useState } from "react";
-import AdminSideMenu from "../../Components/AdminSideMenu";
 import { Button, Input, Typography } from "@material-tailwind/react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom/cjs/react-router-dom.min";
-import { v4 as uuid } from "uuid";
-import {
-  getDownloadURL,
-  ref as storageRef,
-  uploadBytes,
-} from "firebase/storage";
-import storage from "../../config/firebaseConfig";
 import { toast } from "react-toastify";
+import AdminSideMenu from "../../Components/AdminSideMenu";
+import { updloadImageToFirebase } from "../../utils";
 
 const AddProductPage = () => {
   const defaultProductInfo = {
@@ -37,14 +31,8 @@ const AddProductPage = () => {
       return;
     }
 
-    const imageRef = storageRef(
-      storage,
-      `/files/${uuid()}_${productImgFile.name}`
-    );
-
     try {
-      const snapshot = await uploadBytes(imageRef, productImgFile);
-      const url = await getDownloadURL(snapshot.ref);
+      const imgUrl = updloadImageToFirebase(productImgFile);
 
       const res = await fetch("http://127.0.0.1:8000/create/products/", {
         method: "POST",
@@ -53,7 +41,7 @@ const AddProductPage = () => {
         },
         body: JSON.stringify({
           ...productInfo,
-          image: url,
+          image: imgUrl,
         }),
       });
 

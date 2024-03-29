@@ -9,7 +9,7 @@ class CategorySerializer(serializers.ModelSerializer):
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
-        fields = ['title', 'price', 'category', 'image']
+        fields = ['id','title', 'price', 'category', 'image']
 
     def validate(self, data):
 
@@ -27,4 +27,6 @@ class ProductSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("title, ctageory, image, price are required")
 
         return data
+
+
 

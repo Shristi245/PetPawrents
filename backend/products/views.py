@@ -46,7 +46,7 @@ def view_items(request):
         return Response(status=status.HTTP_404_NOT_FOUND)
     
 
-@api_view(['POST'])
+@api_view(['PATCH'])
 def update_items(request, pk):
     print("Received primary key:", pk)  # Print the received primary key for debugging
 
@@ -68,3 +68,14 @@ def delete_items(request, pk):
     item = get_object_or_404(Product, pk=pk)
     item.delete()
     return Response(status=status.HTTP_202_ACCEPTED)
+
+@api_view(['GET'])
+def get_product_by_id(request, pk):
+    item = get_object_or_404(Product, pk=pk)
+
+    if item:
+        serializer = ProductSerializer(item)
+        return Response(serializer.data)
+    else:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+

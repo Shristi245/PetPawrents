@@ -73,6 +73,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
     'user.apps.UserConfig',
     'core.apps.CoreConfig',
+    'adoption.apps.AdoptionConfig',
     'appointment.apps.AppointmentConfig',
     'products.apps.ProductsConfig',
     'administrator.apps.AdministratorConfig',
