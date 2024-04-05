@@ -28,4 +28,7 @@ export const updloadImageToFirebase = async (imgFile) => {
   return url;
 };
 
+
 export { default as useDebounce } from "./hooks/useDebounce.jsx";
+
+export * from "./handleCartOperations.js"

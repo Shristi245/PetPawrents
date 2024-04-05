@@ -15,7 +15,6 @@ import PetRegisterPage from "./containers/PetCredentailsPage.jsx";
 import AdminDashboard from "./containers/Dashboard/AdminDashboard.jsx";
 import About from "./containers/About";
 import Service from "./containers/Service";
-import Activate from "./containers/Activate";
 import ResetPassword from "./containers/ResetPassword";
 import EditProfile from "./containers/EditProfile";
 import UserList from "./containers/Dashboard/UserList.jsx";
@@ -30,12 +29,14 @@ import ShoppingCart from "./containers/Product/ShoppingCart.jsx";
 import AdminProductList from "./containers/Dashboard/AdminProductList.jsx";
 import AddProductPage from "./containers/Dashboard/AddProductPage.jsx";
 import AddAdoptionDetails from "./containers/Dashboard/AddAdoptionDetails.jsx";
+import AdoptionHistoryList from "./containers/Dashboard/AdoptionHistoryList.jsx";
 import AdoptionDetails from "./containers/adoption/AdoptionDetails.jsx";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AdminAppointments from "./containers/Dashboard/AdminAppointmentPage.jsx";
 import AdminAdoptionList from "./containers/Dashboard/AdminAdoptionList.jsx";
 import EditProductPage from "./containers/Dashboard/EditProductPage.jsx";
+import EditAdoptionPage from "./containers/Dashboard/EditAdoptionPage.jsx";
 
 const App = () => {
   console.log(1);
@@ -43,7 +44,7 @@ const App = () => {
     <Router>
       <AuthProvider>
         <Navbar />
-        <ToastContainer />
+        <ToastContainer position="bottom-right" />
         <Switch>
           {/* Admin Routes */}
           <Route component={AdminDashboard} path="/admin-dashboard" />
@@ -63,8 +64,17 @@ const App = () => {
           {/* Admin Adoption Routes */}
           <Route component={AddAdoptionDetails} path="/add-adoption" />
           <Route
+            component={EditAdoptionPage}
+            path="/edit-adoption/:adoptionID"
+          />
+
+          <Route
             component={AdminAdoptionList}
             path="/admin-dashboard-adoption"
+          />
+          <Route
+            component={AdoptionHistoryList}
+            path="/admin-dashboard-adoption-history"
           />
 
           {/* User Routes */}
@@ -81,7 +91,6 @@ const App = () => {
           <Route component={PetRegisterPage} path="/pet" />
           <Route component={About} path="/about" />
           <Route component={Service} path="/services" />
-          <Route component={Activate} path="/activate/:uid/:token" />
           <Route component={ResetPassword} path="/reset-password" />
           <Route component={ConfirmPassword} path="/confirm-password" />
           <Route component={Contact} path="/contact" />

@@ -19,9 +19,9 @@ class User(AbstractUser):
     mobile = CharField(_("Mobile Number"), blank=True, max_length=255)
     first_name = CharField(_("First Name"), max_length=150, blank=True)
     last_name = CharField(_("Last Name"), max_length=150, blank=True)
-    full_name = models.CharField(max_length=1000, null=False, blank=True)
+    address= models.CharField(max_length=1000, null=False, blank=True)
     bio = models.CharField(max_length=100, null=True, blank=True)
-    image = models.ImageField(upload_to="user_images", default="default.jpg")
+    image = models.TextField()
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["username", "first_name", "last_name"]

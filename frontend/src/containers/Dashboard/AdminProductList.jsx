@@ -7,15 +7,14 @@ import { v4 as uuid } from "uuid";
 
 const AdminProductList = () => {
   const [products, setProducts] = useState();
+  const fetchProducts = async () => {
+    const response = await fetch("http://127.0.0.1:8000/all/products/");
+    const data = await response.json();
+    console.log(data);
+    setProducts(data || []);
+  };
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      const response = await fetch("http://127.0.0.1:8000/all/products/");
-      const data = await response.json();
-
-      setProducts(data || []);
-    };
-
     fetchProducts();
   }, []);
 
@@ -61,6 +60,7 @@ const AdminProductList = () => {
               image={product.image}
               title={product.title}
               price={product.price}
+              fetchProducts={fetchProducts}
             />
           ))}
         </div>

@@ -7,6 +7,7 @@ CATEGORY_CHOICES = (
     ('toys', 'Toys'),
     ('food', 'Food'),
     ('cosmetics', 'Cosmetics'),
+    ('clothes', 'Clothes'),
 
 )
 

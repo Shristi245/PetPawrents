@@ -33,11 +33,6 @@ const Home = () => {
                 Learn More
               </button>
             </Link>
-            <Link to="/adoption">
-              <button className="bg-[#417EC5] text-[#FDF99B] text-xl py-2 px-4 md:py-3 md:px-9 rounded-[24px] hover:bg-[#673405] hover:text-white transition-transform duration-200 ease-in-out transform hover:scale-90">
-                Adopt
-              </button>
-            </Link>
           </div>
         </div>
       </div>
@@ -53,7 +48,7 @@ const Home = () => {
           <br />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12">
             {/* Feature 1 pet grooming */}
-            <div className="p-6 bg-white rounded-[39px] shadow-lg flex flex-col items-center transition-transform duration-200 ease-in-out transform hover:scale-90">
+            <div className="p-6 bg-white rounded-[39px] hover:bg-blue shadow-lg flex flex-col items-center transition-transform duration-200 ease-in-out transform hover:scale-90">
               <img
                 src="/images/scissor.png"
                 alt="Grooming Services"
@@ -67,7 +62,7 @@ const Home = () => {
             </div>
 
             {/* Feature 2  vaccination */}
-            <div className="p-6 bg-white rounded-[39px] shadow-lg flex flex-col items-center transition-transform duration-200 ease-in-out transform hover:scale-90">
+            <div className="p-6 bg-white rounded-[39px] hover:bg-blue shadow-lg flex flex-col items-center transition-transform duration-200 ease-in-out transform hover:scale-90">
               <img src="images/vaccination.png" alt="" className="mb-4" />
               <h3 className="text-xl font-bold mb-2">Vaccination</h3>
               <p>
@@ -78,7 +73,7 @@ const Home = () => {
             </div>
 
             {/* Feature 3  food*/}
-            <div className="p-6 bg-white rounded-[39px] shadow-lg flex flex-col items-center transition-transform duration-200 ease-in-out transform hover:scale-90">
+            <div className="p-6 bg-white rounded-[39px] hover:bg-blue shadow-lg flex flex-col items-center transition-transform duration-200 ease-in-out transform hover:scale-90">
               <img src="images/food.png" alt="" className="mb-4" />
               <h3 className="text-xl font-bold mb-2">Food</h3>
               <p>
@@ -89,7 +84,7 @@ const Home = () => {
             </div>
 
             {/* Feature 4  veterinary*/}
-            <div className="p-6 bg-white rounded-[39px] shadow-lg flex flex-col items-center transition-transform duration-200 ease-in-out transform hover:scale-90">
+            <div className="p-6 bg-white rounded-[39px] hover:bg-blue shadow-lg flex flex-col items-center transition-transform duration-200 ease-in-out transform hover:scale-90">
               <img src="images/veterinary.png" alt="" className="mb-4" />
               <h3 className="text-xl font-bold mb-2">Veterinary</h3>
               <p>
@@ -166,7 +161,7 @@ const Home = () => {
         <div className=" py-20 ">
           <h1>Adopt, Don't Shop!</h1>
           <h1>Be part of our Donation program</h1>
-          <button className="w-[80%] py-3 text-black text-2xl rounded-[30px] mt-11 bg-amber-400">
+          <button className="w-[80%] py-3 text-black text-2xl rounded-[30px] mt-11 bg-amber-400 transition-transform duration-200 ease-in-out transform hover:scale-110">
             <Link to="/donation">Make Donations</Link>
           </button>
         </div>

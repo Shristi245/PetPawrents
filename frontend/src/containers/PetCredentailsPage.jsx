@@ -26,9 +26,7 @@ function PetRegisterPage() {
   };
 
   // Function to handle skipping the registration process
-  const handleSkip = () => {
-    history.push("/login"); // Redirect the user to the login page
-  };
+
   return (
     <section className="h-[100vh] flex flex-col items-center justify-center w-full">
       <div className="grid grid-cols-1 w-full sm:grid-cols-2 place-items-center">

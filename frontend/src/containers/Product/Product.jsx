@@ -2,23 +2,30 @@ import React, { useEffect, useState } from "react";
 import ProductCard from "../../Components/ProductCard";
 import { v4 as uuid } from "uuid";
 import { Typography, Select } from "@material-tailwind/react"; // Assuming you have a Select component available
+import { setItemsToCart } from "../../utils";
+import { useDebounce } from "../../utils";
+
 // import { Link } from "react-router-dom/cjs/react-router-dom.min";
 
 const ProductList = () => {
   const [products, setProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
+
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedBrand, setSelectedBrand] = useState("All");
+  const [searchText, setSearchText] = useState("");
+
+  const debouncedSearchText = useDebounce(searchText);
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch("http://127.0.0.1:8000/all/products/");
+        const response = await fetch(`http://127.0.0.1:8000/all/products/`);
         if (!response.ok) {
           throw new Error("Failed to fetch products");
         }
         const data = await response.json();
         setProducts(data || []);
-        
       } catch (error) {
         console.error("Error fetching products:", error);
       }
@@ -35,11 +42,23 @@ const ProductList = () => {
     setSelectedBrand(event.target.value);
   };
 
-  const filteredProducts = products.filter(
-    (product) =>
-      (selectedCategory === "All" || product.category === selectedCategory) &&
-      (selectedBrand === "All" || product.brand === selectedBrand)
-  );
+  // const filteredProducts = products.filter(
+  //   (product) =>
+  //     (selectedCategory === "All" || product.category === selectedCategory) &&
+  //     (selectedBrand === "All" || product.brand === selectedBrand)
+  // );
+
+  useEffect(() => {
+    const _searchText = debouncedSearchText.toLowerCase();
+    const _filteredProducts = products.filter(({ title, category, price }) => {
+      return (
+        title.toLowerCase().includes(_searchText) ||
+        price.toLowerCase().includes(_searchText) ||
+        category.toLowerCase().includes(_searchText)
+      );
+    });
+    setFilteredProducts(_filteredProducts);
+  }, [debouncedSearchText, products]);
 
   return (
     <div className=" bg-white min-h-screen">
@@ -65,6 +84,7 @@ const ProductList = () => {
                 type="text"
                 placeholder="Search Your Choice..."
                 className="pl-8 pr-4 py-2 ml-80 w-[70%] border border-gray-300 rounded-lg focus:outline-none"
+                onChange={(e) => setSearchText(e.target.value)}
               />
               <button>
                 <img
@@ -119,6 +139,7 @@ const ProductList = () => {
                   image={product.image}
                   title={product.title}
                   price={product.price}
+                  category={product.category}
                 />
               );
             })}

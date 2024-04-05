@@ -14,7 +14,7 @@ from user.models import User
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ["id", "first_name", "last_name", "mobile", "username", "email", "is_staff", "is_superuser"]
+        fields = "__all__"
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
@@ -117,6 +117,29 @@ class TokenObtainPairSerializer(serializers.Serializer):
         return RefreshToken.for_user(user)
     
 
+class ImageUrlField(serializers.Field):
+    def to_representation(self, value):
+        if value:
+            if isinstance(value, str):
+                return value  # If it's already an image URL
+            else:
+                return value.url  # If it's a file object
+        return None
+
+    def to_internal_value(self, data):
+        return data  # Assuming the URL is passed directly
+    
+class UserProfileImageSerializer(serializers.ModelSerializer):
+    image = ImageUrlField()
+
+    class Meta:
+        model = User
+        fields = ['image']
+
+    def update(self, instance, validated_data):
+        instance.image = validated_data.get('image', instance.image)
+        instance.save()
+        return instance
 
 class ChangePasswordSerializer(serializers.Serializer):
     old_password = serializers.CharField(required=True)

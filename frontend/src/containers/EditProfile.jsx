@@ -1,33 +1,193 @@
-import React from 'react';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { getLogInDetailsFromLocalStorage } from "../utils";
+import swal from "sweetalert";
 
-const UserProfile = () => {
+const EditProfile = () => {
+  const user = getLogInDetailsFromLocalStorage();
 
-    return (
-        <div className="flex justify-center items-center h-screen bg-gray-100">
-            <div className="bg-white p-8 rounded-lg shadow-md flex flex-col">
-                {/* First div containing buttons */}
-                <div className="flex flex-col mb-6">
-                    <button className="bg-blue-500 text-white px-4 py-2 rounded-md mb-2">Button 1</button>
-                    <button className="bg-blue-500 text-white px-4 py-2 rounded-md mb-2">Button 2</button>
-                    <button className="bg-blue-500 text-white px-4 py-2 rounded-md mb-2">Button 3</button>
-                </div>
+  const defautInfo = {
+    first_name: "",
+    last_name: "",
+    mobile: "",
+    address: "",
+    email: "",
+    bio: "",
+  };
 
-                {/* Second div containing profile picture */}
-                <div className="flex justify-center mb-6">
-                    <img src="profile-pic.jpg" alt="Profile" className="w-24 h-24 rounded-full" />
-                </div>
 
-                {/* Third div containing user details */}
-                <div className="flex flex-col items-center mb-6">
-                    <h2 className="text-xl font-bold mb-2">Username</h2>
-                    <p className="text-gray-600">Email: user@example.com</p>
-                    <p className="text-gray-600">Location: City, Country</p>
-                </div>
-                {/* Edit button */}
-                <button className="bg-blue-500 text-white px-4 py-2 rounded-md self-end">Edit</button>
-            </div>
+  const [formData, setFormData] = useState(defautInfo);
+
+  useEffect(() => {
+    fetchProfileData();
+  }, []);
+
+  const fetchProfileData = async () => {
+    try {
+      const response = await axios.get(
+        `http://127.0.0.1:8000/api/users/${user.id}`
+      );
+      const profileData = response.data;
+      setFormData({
+        first_name: profileData.first_name,
+        last_name: profileData.last_name,
+        mobile: profileData.mobile,
+        address: profileData.address,
+        email: profileData.email,
+        bio: profileData.bio,
+      });
+    } catch (error) {
+      console.error("Error fetching profile data:", error);
+      // Handle error
+    }
+  };
+
+  
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await axios.patch(
+        `http://127.0.0.1:8000/api/users/${user.id}/`,
+        formData
+      ); // Replace 'http://example.com/api/profile' with your actual endpoint
+      // Handle success
+      swal({
+        title: "Success",
+        text: "Profile updated successfully",
+        icon: "success",
+        position: "bottom-end",
+        timer: 3000, // Close after 3 seconds
+        button: false, // Hide the close button
+      });
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      // Handle error
+      swal({
+        title: "Error",
+        text: "Failed to update profile",
+        icon: "error",
+        position: "bottom-end",
+        timer: 3000, // Close after 3 seconds
+        button: false, // Hide the close button
+      });
+    }
+  };
+
+  return (
+    <div className="container mx-auto px-4 py-8">
+      <h2 className="text-2xl font-bold mb-4">Edit Profile</h2>
+      <form onSubmit={handleSubmit}>
+        <div className="mb-4">
+          <label
+            htmlFor="first_name"
+            className="block text-sm font-medium text-gray-700"
+          >
+            First Name
+          </label>
+          <input
+            type="text"
+            id="first_name"
+            name="first_name"
+            value={formData.first_name}
+            onChange={handleChange}
+            className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+          />
         </div>
-    );
+        <div className="mb-4">
+          <label
+            htmlFor="last_name"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Last Name
+          </label>
+          <input
+            type="text"
+            id="last_name"
+            name="last_name"
+            value={formData.last_name}
+            onChange={handleChange}
+            className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+          />
+        </div>
+        <div className="mb-4">
+          <label
+            htmlFor="address"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Address
+          </label>
+          <input
+            type="text"
+            id="address"
+            name="address"
+            value={formData.address}
+            onChange={handleChange}
+            className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+          />
+        </div>
+        <div className="mb-4">
+          <label
+            htmlFor="email"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Email
+          </label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+          />
+        </div>
+
+        <div className="mb-4">
+          <label
+            htmlFor="mobile"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Phone Number
+          </label>
+          <input
+            type="mobile"
+            id="mobile"
+            name="mobile"
+            value={formData.mobile}
+            onChange={handleChange}
+            className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+          />
+        </div>
+        <div className="mb-4">
+          <label
+            htmlFor="bio"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Bio
+          </label>
+          <textarea
+            id="bio"
+            name="bio"
+            value={formData.bio}
+            onChange={handleChange}
+            rows="3"
+            className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+          ></textarea>
+        </div>
+        <button
+          type="submit"
+          className="bg-blue-500 text-black px-4 py-2 rounded-md"
+        >
+          Save Changes
+        </button>
+      </form>
+    </div>
+  );
 };
 
-export default UserProfile;
+export default EditProfile;

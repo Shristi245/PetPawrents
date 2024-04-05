@@ -12,8 +12,6 @@ const UserList = () => {
   const [searchText, setSearchText] = useState("");
   const debouncedSearchText = useDebounce(searchText);
 
-
-
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -48,29 +46,42 @@ const UserList = () => {
 
   // Function to handle delete action
   const handleDelete = async (userId) => {
-    console.log("Delete user with ID:", userId);
-    try {
-      await axios.delete(`http://127.0.0.1:8000/api/users/${userId}/delete`);
-      setUsers(users.filter((user) => user.id !== userId));
-      // Show success message using SweetAlert
-      Swal.fire({
-        icon: "success",
-        title: "Success",
-        text: "User deleted successfully!",
-      });
-    } catch (error) {
-      console.error("Error deleting user:", error);
-      let errorMessage = "Failed to delete user. Please try again.";
-      if (error.response && error.response.status === 404) {
-        errorMessage = "User not found.";
+    Swal.fire({
+      title: "Do you want to delete this user?",
+      showDenyButton: true,
+      confirmButtonText: "Yes",
+      denyButtonText: "No",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        console.log("Delete user with ID:", userId);
+        try {
+          await axios.delete(
+            `http://127.0.0.1:8000/api/users/${userId}/delete`
+          );
+          setUsers(users.filter((user) => user.id !== userId));
+          // Show success message using SweetAlert
+          Swal.fire({
+            icon: "success",
+            title: "Success",
+            text: "User deleted successfully!",
+          });
+        } catch (error) {
+          console.error("Error deleting user:", error);
+          let errorMessage = "Failed to delete user. Please try again.";
+          if (error.response && error.response.status === 404) {
+            errorMessage = "User not found.";
+          }
+          // Show error message using SweetAlert
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: errorMessage,
+          });
+        }
+      } else if (result.isDenied) {
+        Swal.fire("User deletion cancelled", "", "info");
       }
-      // Show error message using SweetAlert
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: errorMessage,
-      });
-    }
+    });
   };
 
   return (

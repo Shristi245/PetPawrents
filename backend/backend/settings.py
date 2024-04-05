@@ -74,7 +74,7 @@ INSTALLED_APPS = [
     'user.apps.UserConfig',
     'core.apps.CoreConfig',
     'adoption.apps.AdoptionConfig',
-    'appointment.apps.AppointmentConfig',
+    'booking.apps.BookingConfig',
     'products.apps.ProductsConfig',
     'administrator.apps.AdministratorConfig',
     'corsheaders',

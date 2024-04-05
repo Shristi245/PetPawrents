@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import AdminSideMenu from "../../Components/AdminSideMenu";
 import { useDebounce } from "../../utils";
+import Swal from "sweetalert2";
 
 const AdminAppointments = () => {
   const [appointments, setAppointments] = useState([]);
@@ -9,29 +10,28 @@ const AdminAppointments = () => {
   const [searchText, setSearchText] = useState("");
   const debouncedSearchText = useDebounce(searchText);
 
-  useEffect(() => {
-    const fetchAppointments = async () => {
-      try {
-        const response = await axios.get("http://127.0.0.1:8000/appointments/");
+  const fetchAppointments = async () => {
+    try {
+      const response = await axios.get("http://127.0.0.1:8000/booking/");
 
-        // Ensure status is set to "pending" for each appointment
-        const appointmentsWithStatus = response.data.map((appointment) => ({
-          ...appointment,
-          status: "pending",
-        }));
-        setFilteredUsers(response.data);
-        setAppointments(appointmentsWithStatus);
-      } catch (error) {
-        console.error("Error fetching appointments:", error);
-      }
-    };
+      // Ensure status is set to "pending" for each appointment
+
+      setFilteredUsers(response.data);
+      setAppointments(response.data);
+    } catch (error) {
+      console.error("Error fetching appointments:", error);
+    }
+  };
+
+  useEffect(() => {
     fetchAppointments();
   }, []);
 
   useEffect(() => {
     const _searchText = debouncedSearchText.toLowerCase();
     const _filteredUsers = appointments.filter(
-      ({ email, phone, full_name, pet_type, service, status }) => {
+      ({ user, pet_type, service, status }) => {
+        const { email, phone, full_name } = user;
         return (
           email.toLowerCase().includes(_searchText) ||
           phone.toLowerCase().includes(_searchText) ||
@@ -45,23 +45,40 @@ const AdminAppointments = () => {
     setFilteredUsers(_filteredUsers);
   }, [debouncedSearchText, appointments]);
 
-  const handleStatusChange = async (index, newStatus) => {
+  const handleStatusChange = async (booking_id, newStatus) => {
     try {
-      const updatedAppointments = [...appointments];
-      updatedAppointments[index].status = newStatus;
-      setAppointments(updatedAppointments);
       // Update the status on the server
-      await axios.put(
-        `http://127.0.0.1:8000/appointments/${appointments[index].id}`,
-        { status: newStatus }
+      const res = await axios.put(
+        `http://127.0.0.1:8000/bookingstatus/${booking_id}/`,
+        {
+          status: newStatus,
+        }
       );
+      fetchAppointments();
+      console.log(res);
+
+      // Show success message using SweetAlert
+      Swal.fire({
+        icon: "success",
+        title: "Success!",
+        text: `Booking status updated to ${newStatus}`,
+        showConfirmButton: false,
+        timer: 1500, // Close the alert after 1.5 seconds
+      });
     } catch (error) {
       console.error("Error updating status:", error);
+
+      // Show error message using SweetAlert
+      Swal.fire({
+        icon: "error",
+        title: "Error!",
+        text: "Failed to update booking status. Please try again later.",
+      });
     }
   };
 
   return (
-    <div className="flex overflow-hidden h-screen mb-32 ">
+    <div className="flex overflow-hidden mb-32 ">
       {/* Include AdminSideMenu component */}
       <AdminSideMenu />
 
@@ -91,8 +108,8 @@ const AdminAppointments = () => {
         {/* Main content starts here */}
         <h1 className="text-4xl ml-3">Appointments</h1>
         <div className="overflow-hidden w-full py-5">
-          <div className=" text-xl w-full  overflow-x-scroll">
-            <table className="w-full   border border-collapse overflow-x-scroll">
+          <div className=" text-xl w-full  overflow-x-scroll overflow-y-auto">
+            <table className="w-full  border border-collapse overflow-x-scroll overflow-y-auto">
               <thead>
                 <tr>
                   <th className="px-4 py-2 border">SN</th>
@@ -112,10 +129,15 @@ const AdminAppointments = () => {
                   <tr key={index} className="border">
                     <td className="px-4 py-2 border">{index + 1}</td>
                     <td className="px-4 py-2 border">
-                      {appointment.full_name}
+                      {appointment.user.first_name}
+                      {appointment.user.last_name}
                     </td>
-                    <td className="px-4 py-2 border">{appointment.email}</td>
-                    <td className="px-4 py-2 border">{appointment.phone}</td>
+                    <td className="px-4 py-2 border">
+                      {appointment.user.email}
+                    </td>
+                    <td className="px-4 py-2 border">
+                      {appointment.user.mobile}
+                    </td>
                     <td className="px-4 py-2 border">{appointment.pet_type}</td>
                     <td className="px-4 py-2 border">{appointment.service}</td>
                     <td className="px-4 py-2 border">{appointment.date}</td>
@@ -124,13 +146,17 @@ const AdminAppointments = () => {
                     <td className="px-4 py-2 border flex justify-center">
                       <button
                         className="bg-[#1A8990] hover:bg-green-600 text-white py-1 px-7 rounded-[7px] mr-2"
-                        onClick={() => handleStatusChange(index, "Accepted")}
+                        onClick={() =>
+                          handleStatusChange(appointment.id, "accepted")
+                        }
                       >
                         Accept
                       </button>
                       <button
                         className="bg-[#E56262] hover:bg-red-500 text-black py-1 px-7 rounded-[7px]"
-                        onClick={() => handleStatusChange(index, "Rejected")}
+                        onClick={() =>
+                          handleStatusChange(appointment.id, "rejected")
+                        }
                       >
                         Cancel
                       </button>

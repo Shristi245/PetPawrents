@@ -13,8 +13,8 @@ router = DefaultRouter()
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('user.urls')),
-    path('', include('appointment.urls')),
     path('api/', include('administrator.urls')),
+    path('', include('booking.urls')),
     path('', include('adoption.urls')),
     path('', include('products.urls')),
     path('api/password_reset/', include('django_rest_passwordreset.urls', namespace='password_reset')),

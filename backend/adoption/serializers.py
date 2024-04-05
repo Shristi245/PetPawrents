@@ -1,19 +1,22 @@
 from rest_framework import serializers
 from .models import Adopt
+from rest_framework import generics
+from rest_framework.permissions import IsAuthenticated
+from .models import AdoptedPet
 
 class AdoptSerializer(serializers.ModelSerializer):
     class Meta:
         model = Adopt
-        fields = ['name', 'description', 'image', 'updated_date']
+        fields = ['id','name', 'description', 'image', 'updated_date', 'is_adopted']
 
     def validate(self, data):
 
         name = data.get("name")
         description = data.get("description")
         updated_date = data.get("updated_date")
-        image = data.get("image")
+        is_adopted = data.get("is_adopted")
 
-        print("idsuc",not name or not updated_date or not description or not image)
+        image = data.get("image")
 
         if not image:
             raise serializers.ValidationError("Please upload an image")
@@ -22,3 +25,9 @@ class AdoptSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("name, description, image are required")
 
         return data
+    
+class AdoptedPetSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = AdoptedPet
+        fields = ['id', 'adopt', 'user', 'adopted_date']

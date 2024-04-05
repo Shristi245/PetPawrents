@@ -103,6 +103,19 @@ const AdminSideMenu = () => {
                 </Link>
               </li>
             </div>
+
+            <div className="flex">
+              <Dog />
+              <li className="px-4 text-[18px] hover:text-gray-600 flex">
+                <Link
+                  to="/admin-dashboard-adoption-history"
+                  alt=""
+                  className="w-full"
+                >
+                  Adoption History
+                </Link>
+              </li>
+            </div>
           </ul>
         </nav>
       </div>

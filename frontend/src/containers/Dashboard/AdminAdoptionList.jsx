@@ -8,16 +8,18 @@ import AdoptionCard from "../../Components/AdoptionCard";
 const AdminAdoptionList = () => {
   const [adoptions, setAdoptions] = useState();
 
+  const fetchAdoptions = async () => {
+    const response = await fetch(
+      "http://127.0.0.1:8000/all/adoptiondetails/"
+    );
+    const data = await response.json();
+
+    setAdoptions(data || []);
+  };
+
+
   useEffect(() => {
-    const fetchAdoptions = async () => {
-      const response = await fetch(
-        "http://127.0.0.1:8000/all/adoptiondetails/"
-      );
-      const data = await response.json();
-
-      setAdoptions(data || []);
-    };
-
+  
     fetchAdoptions();
   }, []);
 
@@ -29,7 +31,7 @@ const AdminAdoptionList = () => {
         <div className="flex justify-between">
           <Typography variant="h4">Adoption</Typography>
 
-          <Link to="/add-product">
+          <Link to="/add-adoption">
             <Button>Add</Button>
           </Link>
         </div>
@@ -41,6 +43,8 @@ const AdminAdoptionList = () => {
               image={adoption.image}
               name={adoption.name}
               description={adoption.description}
+              id={adoption.id}
+              fetchAdoptions={fetchAdoptions}
             />
           ))}
         </div>

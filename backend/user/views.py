@@ -91,6 +91,16 @@ class UserRegistrationView(CreateAPIView):
         )
 
 
+from .serializers import UserProfileImageSerializer
+
+class UserProfileImageView(APIView):
+    def put(self, request, user_id, *args, **kwargs):
+        user_profile = User.objects.get(id=user_id)
+        serializer = UserProfileImageSerializer(user_profile, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 class TokenObtainPairView(CreateAPIView):
     """
     Takes a set of user credentials and returns an access and refresh JSON web

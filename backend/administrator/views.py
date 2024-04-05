@@ -1,14 +1,17 @@
 from rest_framework import generics, status
 from rest_framework.response import Response
 from user.models import User
-from appointment.models import Appointment
+from booking.models import Booking
 from products.models import Product
 from adoption.models import Adopt
 from rest_framework.views import APIView
 from user.serializers import UserSerializer
 # from appointment.serializers import AppointmentSerializer
 from rest_framework.exceptions import NotFound  # Correct import for NotFound exception
+from rest_framework.permissions import IsAdminUser, IsAuthenticated
 
+from adoption.models import AdoptedPet
+from adoption.serializers import AdoptedPetSerializer
 class UserListView(generics.ListCreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -50,7 +53,7 @@ class TotalUsersView(APIView):
 
 class TotalAppointmentsView(APIView):
     def get(self, request):
-        totalAppointments = Appointment.objects.count()
+        totalAppointments = Booking.objects.count()
         return Response({'totalAppointments': totalAppointments})
 
 class TotalProductsView(APIView):
@@ -62,3 +65,9 @@ class TotalPetsforAdoptionsView(APIView):
     def get(self, request):
         totalAdoptionDetails = Adopt.objects.count()
         return Response({'totalAdoptionDetails': totalAdoptionDetails})
+
+
+class AdoptedPetListAPIView(generics.ListAPIView):
+    queryset = AdoptedPet.objects.all()
+    serializer_class = AdoptedPetSerializer
+    permission_classes = [IsAdminUser]  # Only admin can view all adopted pets

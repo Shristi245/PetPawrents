@@ -4,6 +4,10 @@ from rest_framework.response import Response
 from rest_framework import serializers, status
 from .models import Adopt
 from .serializers import AdoptSerializer
+from rest_framework import generics
+from rest_framework.permissions import IsAdminUser, IsAuthenticated
+from .models import AdoptedPet
+from .serializers import AdoptedPetSerializer
 
 @api_view(['GET'])
 def ApiOverview(request):
@@ -46,11 +50,11 @@ def view_details(request):
     
 
 @api_view(['POST'])
-def update_details(request, pk):
-    print("Received primary key:", pk)  # Print the received primary key for debugging
+def update_details(request, id):
+    print("Received primary key:", id)  # Print the received primary key for debugging
 
     try:
-        adoption = Adopt.objects.get(pk=pk)
+        adoption = Adopt.objects.get(id=id)
     except Adopt.DoesNotExist:
         return Response({"error": "Adoption matching query does not exist."}, status=status.HTTP_404_NOT_FOUND)
 
@@ -67,3 +71,49 @@ def delete_details(request, pk):
     adoption = get_object_or_404(Adopt, pk=pk)
     adoption.delete()
     return Response(status=status.HTTP_202_ACCEPTED)
+
+@api_view(['GET'])
+def get_adoption_by_id(request, pk):
+    item = get_object_or_404(Adopt, pk=pk)
+
+    if item:
+        serializer = AdoptSerializer(item)
+        return Response(serializer.data)
+    else:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['GET'])
+def get_adoption_by_user_id(request, userID):
+    try:
+        adoptions = AdoptedPet.objects.filter(user_id=userID)
+        serializer = AdoptedPetSerializer(adoptions, many=True)
+        return Response(serializer.data)
+    except AdoptedPet.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+
+class AdoptedPetListAPIView(generics.ListAPIView):
+    queryset = AdoptedPet.objects.all()
+    serializer_class = AdoptedPetSerializer
+    permission_classes = [IsAdminUser]  # Only admin can view all adopted pets
+
+class UserAdoptedPetsAPIView(generics.ListCreateAPIView):
+    serializer_class = AdoptedPetSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        return AdoptedPet.objects.filter(user=user)
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+
+        adopt_instance = Adopt.objects.get(id=request.data.get("adopt"))
+
+        if serializer.is_valid():
+            adopt_instance.is_adopted = True
+            adopt_instance.save()
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
