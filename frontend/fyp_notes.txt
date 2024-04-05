@@ -32,3 +32,9 @@ pip install drf-spectacular
 --> payment integration khalti
 --> adoption page
 --> 
+
+
+
+1. pets for adoption backend, frontend and get adoption details by user api
+2. change in product ui 
+3. appi for accept and cancel of the appointment by admin and fetched data in admin panel.
