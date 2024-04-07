@@ -79,25 +79,40 @@ function UserProfile() {
           <button className="bg-blue-500 text-white bg-[#1E5547] hover:bg-[#1ED1B1] text-3xl px-4 py-2 rounded-[20px] mb-16">
             View Orders
           </button>
+
+          <button
+            className="bg-blue-500 text-white bg-[#1E5547] hover:bg-[#1ED1B1] text-3xl px-4 py-2 rounded-[20px] mb-16"
+            disabled
+          >
+            <Link to=""> Adoption History</Link>
+          </button>
+
+          <button
+            className="bg-blue-500 text-white bg-[#1E5547] hover:bg-[#1ED1B1] text-3xl px-4 py-2 rounded-[20px] mb-16"
+            disabled
+          >
+            <Link to=""> Pet Details</Link>
+          </button>
         </div>
         {/* Second div containing profile picture */}
         <div className=" justify-center mb-6 rounded-full">
           {profile && (
             <>
-              <div className="w-44 h-44 rounded-full p-5 bg-gray-500 flex ">
+              <div className="w-60 h-60 rounded-full bg-gray-500 flex ">
                 <img
                   src={profile.image}
                   alt="Profile"
-                  className="w-full h-full object-cover "
+                  className="w-full h-full object-cover rounded-full"
                 />
               </div>
               <br />
               <div className="flex flex-col text-center">
-                .<p className="text-xl font-bold">{profile.username}</p>
+                <p className="text-xl font-bold">{profile.username}</p>
                 <button
                   onClick={() => {
                     document.getElementById("profileimage").click();
                   }}
+                  className="bg-[#1E5547] text-white rounded-lg py-1 hover:bg-[#1ED1B1]"
                 >
                   Choose Image
                 </button>
@@ -118,23 +133,40 @@ function UserProfile() {
           {/* Display email and phone number */}
           {profile && (
             <>
-              <p className="text-black text-2xl">
-                First Name: {profile.first_name}
-              </p>
-              <p className="text-black text-2xl">
-                Last Name: {profile.last_name}
-              </p>
+              <div className="flex items-center text-2xl gap-4">
+                <p className="text-black">First Name:</p>
+                <p className="text-[#673405]"> {profile.first_name}</p>
+              </div>
 
-              <p className="text-black text-2xl">Email: {profile.email}</p>
-              <p className="text-black text-2xl">
-                Phone Number: {profile.mobile}
-              </p>
-              <p className="text-black text-2xl">Address: {profile.email}</p>
-              <p className="text-black text-2xl">Bio: {profile.bio}</p>
+              <div className="flex items-center text-2xl gap-4">
+                <p className="text-black text-2xl">Last Name:</p>
+                <p className="text-[#673405]">{profile.last_name}</p>
+              </div>
+
+              <div className="flex items-center text-2xl gap-4">
+                <p className="text-black text-2xl">Email: </p>
+                <p> {profile.email}</p>
+              </div>
+
+              <div className="flex items-center text-2xl gap-4">
+                <p className="text-black text-2xl flex items-center">
+                  Phone number:
+                </p>
+                <p> {profile.mobile}</p>
+              </div>
+
+              <div className="flex items-center text-2xl gap-4">
+                <p className="text-black text-2xl">Address:</p>
+                <p> {profile.email}</p>
+              </div>
+
+              <div className="flex items-center text-2xl gap-4">
+                <p className="text-black ">Bio:</p>
+                <p> {profile.bio}</p>
+              </div>
             </>
           )}
-
-          {/* Add more details as needed */}
+          {/* Add more details as needed */}x
         </div>
       </div>
     </div>

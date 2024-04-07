@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { getLogInDetailsFromLocalStorage } from "../utils";
 import swal from "sweetalert";
+import { Link } from "react-router-dom/cjs/react-router-dom.min";
 
 const EditProfile = () => {
   const user = getLogInDetailsFromLocalStorage();
@@ -14,7 +15,6 @@ const EditProfile = () => {
     email: "",
     bio: "",
   };
-
 
   const [formData, setFormData] = useState(defautInfo);
 
@@ -41,8 +41,6 @@ const EditProfile = () => {
       // Handle error
     }
   };
-
-  
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -179,12 +177,15 @@ const EditProfile = () => {
             className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
           ></textarea>
         </div>
-        <button
-          type="submit"
-          className="bg-blue-500 text-black px-4 py-2 rounded-md"
-        >
-          Save Changes
-        </button>
+
+        <Link to="/profile" >
+          <button
+            type="submit"
+            className="bg-blue-500 text-black px-4 py-2 rounded-md"
+          >
+            Save Changes
+          </button>
+        </Link>
       </form>
     </div>
   );

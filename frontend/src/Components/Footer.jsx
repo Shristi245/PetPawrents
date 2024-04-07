@@ -88,17 +88,25 @@ const Footer = () => {
               <h2 className="mb-6 text-2xl  uppercase ">Connect with us</h2>
               <ul className="text-black text-xl font-medium">
                 <li className="mb-4">
-                  <Link to="#" className="hover:underline">
+                  <a
+                    href="https://www.facebook.com/"
+                    className="hover:underline"
+                  >
                     Facebook
-                  </Link>
+                  </a>
                 </li>
-                <li>
-                  <Link to="#" className="hover:underline">
+                <li className="mb-4">
+                  <a
+                    href="https://www.instagram.com/"
+                    className="hover:underline"
+                  >
                     Instagram
-                  </Link>
+                  </a>
                 </li>
                 <li>
-                  <Link to="">Discord</Link>
+                  <a href="https://discord.com/" className="hover:underline">
+                    Discord
+                  </a>
                 </li>
               </ul>
             </div>

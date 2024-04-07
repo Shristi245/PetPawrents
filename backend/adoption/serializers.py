@@ -3,6 +3,8 @@ from .models import Adopt
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 from .models import AdoptedPet
+from user.serializers import UserSerializer
+
 
 class AdoptSerializer(serializers.ModelSerializer):
     class Meta:
@@ -27,7 +29,10 @@ class AdoptSerializer(serializers.ModelSerializer):
         return data
     
 class AdoptedPetSerializer(serializers.ModelSerializer):
+
+    user = UserSerializer(read_only=True)  # Set read_only=True for nested serializers
+    adopt = AdoptSerializer(read_only=True) 
     
     class Meta:
         model = AdoptedPet
-        fields = ['id', 'adopt', 'user', 'adopted_date']
+        fields = ['id', 'adopt', 'user', 'adopted_date', 'status']

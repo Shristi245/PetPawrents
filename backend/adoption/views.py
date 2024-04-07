@@ -9,6 +9,7 @@ from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from .models import AdoptedPet
 from .serializers import AdoptedPetSerializer
 
+
 @api_view(['GET'])
 def ApiOverview(request):
     api_urls = {
@@ -33,21 +34,18 @@ def add_details(request):
     
 @api_view(['GET'])
 def view_details(request):
-     
-     
-    # checking for the parameters from the URL
-    if request.query_params:
-        adoption = Adopt.objects.filter(**request.query_params.dict())
-    else:
-        adoption = Adopt.objects.all()
- 
-    # if there is something in adoption else raise error
-    if adoption:
-        serializer = AdoptSerializer(adoption, many=True)
-        return Response(serializer.data)
-    else:
-        return Response({"message": "No data found", "status":status.HTTP_404_NOT_FOUND})
+     # Filter adoption pets by is_adopted property
+    adoption = Adopt.objects.filter(is_adopted=False)
     
+    # Check if adoption is empty, if so return empty array
+    if not adoption:
+        return Response([], status=status.HTTP_200_OK)
+    
+    # Serialize and return the data
+    serializer = AdoptSerializer(adoption, many=True)
+    return Response(serializer.data)
+
+
 
 @api_view(['POST'])
 def update_details(request, id):
@@ -90,6 +88,32 @@ def get_adoption_by_user_id(request, userID):
         return Response(serializer.data)
     except AdoptedPet.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['GET'])
+def get_all_adpotion_history(request):
+    adoptions = AdoptedPet.objects.all()
+
+    # Check if adoption is empty, if so return empty array
+    if not adoptions:
+        return Response([], status=status.HTTP_200_OK)
+    
+    serializer = AdoptedPetSerializer(adoptions, many=True)
+    return Response(serializer.data)
+
+@api_view(['PATCH'])
+def update_adoption_history_status(request, adoptionHistoryID):
+    try:
+        adoption = AdoptedPet.objects.get(id=adoptionHistoryID)
+    except AdoptedPet.DoesNotExist:
+        return Response({"message": "Adoption history not found"}, status=status.HTTP_404_NOT_FOUND)
+
+    # Update the status to "adopted"
+    adoption.status = "adopted"
+    adoption.save()
+
+    # Serialize and return the updated adoption history
+    serializer = AdoptedPetSerializer(adoption)
+    return Response(serializer.data)
 
 
 

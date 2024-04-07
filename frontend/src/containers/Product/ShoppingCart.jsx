@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Trash, Heart } from "lucide-react";
+import { Trash } from "lucide-react";
 import {
   calculateOrderTotal,
   decreaseQuantity,
@@ -12,9 +12,29 @@ import { FaPlus } from "react-icons/fa6";
 import { FaMinus } from "react-icons/fa6";
 import { Alert, Button } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
+import KhaltiCheckout from "khalti-checkout-web";
+import { config } from "../Checkout/CheckoutConfig";
 
 export function ShoppingCart() {
   const [cartItems, setCartItems] = useState([]);
+  let checkout = new KhaltiCheckout(config);
+  const handleSubscription = () => {
+    // const user = getUserInfoFromCookie();
+
+    // if (!user) {
+    //   toast.error('You need to register first to take the subscription');
+    //   return;
+    // }
+
+    // if (user.subscription) {
+    //   toast.info(
+    //     'You have already a subscription plan. You cannot take new subscription'
+    //   );
+    //   return;
+    // }
+
+    checkout.show({ amount: 20000 });
+  };
 
   useEffect(() => {
     setCartItems(getItemsFromCart());
@@ -146,6 +166,7 @@ export function ShoppingCart() {
             <button
               type="button"
               className="rounded-md border border-black px-3 py-2 text-sm font-semibold text-black shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
+              onClick={handleSubscription}
             >
               Checkout
             </button>

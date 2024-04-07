@@ -3,6 +3,9 @@ import axios from "axios";
 import AdminSideMenu from "../../Components/AdminSideMenu";
 import { useDebounce } from "../../utils";
 import Swal from "sweetalert2";
+import { IoMdCheckmarkCircleOutline } from "react-icons/io";
+import { RxCrossCircled } from "react-icons/rx";
+import { IconButton } from "@material-tailwind/react";
 
 const AdminAdoptionHistory = () => {
   const [adoptions, setAdoptions] = useState([]);
@@ -10,9 +13,11 @@ const AdminAdoptionHistory = () => {
   const [searchText, setSearchText] = useState("");
   const debouncedSearchText = useDebounce(searchText);
 
-  const fetchAppointments = async () => {
+  const fetchAppointmentHistory = async () => {
     try {
-      const response = await axios.get("http://127.0.0.1:8000/adopted-pets");
+      const response = await axios.get(
+        "http://127.0.0.1:8000/adoption-history/all/"
+      );
 
       setFilteredUsers(response.data);
       setAdoptions(response.data);
@@ -22,8 +27,48 @@ const AdminAdoptionHistory = () => {
   };
 
   useEffect(() => {
-    fetchAppointments();
+    fetchAppointmentHistory();
   }, []);
+
+  const updateAdoptionHistoryStatus = (id) => async () => {
+    console.log(id);
+
+    Swal.fire({
+      title: "Are you sure?",
+      text: "Yout will not be able to revert this!",
+      icon: "info",
+      showCancelButton: true,
+      confirmButtonColor: "green",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, confirm it",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const res = await fetch(
+          `http://127.0.0.1:8000/adoption-history/update-status/${id}/`,
+          {
+            method: "PATCH",
+          }
+        );
+
+        if (!res.ok) {
+          Swal.fire({
+            title: "Error!",
+            text: "Unable to change the status at the momebt",
+            icon: "error",
+          });
+          return;
+        }
+
+        Swal.fire({
+          title: "Success!",
+          text: "Status changed successfully",
+          icon: "success",
+        });
+
+        fetchAppointmentHistory();
+      }
+    });
+  };
 
   //   useEffect(() => {
   //     const _searchText = debouncedSearchText.toLowerCase();
@@ -111,27 +156,41 @@ const AdminAdoptionHistory = () => {
               <thead>
                 <tr>
                   <th className="px-4 py-2 border">SN</th>
-                  <th className="px-4 py-2 border">Full Name</th>
+                  <th className="px-4 py-2 border">Pet</th>
+                  <th className="px-4 py-2 border">User</th>
                   <th className="px-4 py-2 border">Email</th>
-                  <th className="px-4 py-2 border">Phone</th>
                   <th className="px-4 py-2 border">Adopted Date</th>
                   <th className="px-4 py-2 border">Status</th>
+                  <th className="px-4 py-2 border">Action</th>
                 </tr>
               </thead>
               <tbody className="text-center text-[#673405]">
                 {filteredUsers.map((adoption, index) => (
                   <tr key={index} className="border">
                     <td className="px-4 py-2 border">{index + 1}</td>
+                    <td className="px-4 py-2 border">{adoption.adopt.name}</td>
                     <td className="px-4 py-2 border">
                       {adoption.user.first_name}
                       {adoption.user.last_name}
                     </td>
-                    <td className="px-4 py-2 border">{adoption.user.email}</td>
                     <td className="px-4 py-2 border">{adoption.user.mobile}</td>
                     <td className="px-4 py-2 border">
                       {adoption.adopted_date}
                     </td>
                     <td className="px-4 py-2 border">{adoption.status}</td>
+                    <td>
+                      <div className="flex gap-x-2 pl-2">
+                        <IconButton
+                          onClick={updateAdoptionHistoryStatus(adoption.id)}
+                          disabled={adoption.status === "adopted"}
+                          variant="text"
+                          size="sm"
+                        >
+                          <IoMdCheckmarkCircleOutline color="green" size={20} />
+                        </IconButton>
+                        {/* <RxCrossCircled color="red" /> */}
+                      </div>
+                    </td>
                   </tr>
                 ))}
               </tbody>
