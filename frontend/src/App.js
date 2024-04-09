@@ -37,7 +37,9 @@ import AdminAppointments from "./containers/Dashboard/AdminAppointmentPage.jsx";
 import AdminAdoptionList from "./containers/Dashboard/AdminAdoptionList.jsx";
 import EditProductPage from "./containers/Dashboard/EditProductPage.jsx";
 import EditAdoptionPage from "./containers/Dashboard/EditAdoptionPage.jsx";
-
+import ReviewPage from "./containers/Reviews.jsx";
+import OrderList from "./containers/Dashboard/AdminOrdersList.jsx";
+import OrderedItems from "./containers/Orders/OrderItemsbyID.jsx";
 const App = () => {
   console.log(1);
   return (
@@ -60,14 +62,12 @@ const App = () => {
           />
           <Route component={AddProductPage} path="/add-product" />
           <Route component={EditProductPage} path="/edit-product/:productID" />
-
           {/* Admin Adoption Routes */}
           <Route component={AddAdoptionDetails} path="/add-adoption" />
           <Route
             component={EditAdoptionPage}
             path="/edit-adoption/:adoptionID"
           />
-
           <Route
             component={AdminAdoptionList}
             path="/admin-dashboard-adoption"
@@ -76,14 +76,13 @@ const App = () => {
             component={AdoptionHistoryList}
             path="/admin-dashboard-adoption-history"
           />
-
+          <Route component={OrderList} path="/admin-order-list" />
+          <Route component={OrderedItems} path="/orders-list" />
           {/* User Routes */}
           <Route component={EditProfile} path="/edit-profile" />
           <Route component={UserProfile} path="/profile" />
-
           <Route component={BookAppointment} path="/book-appointment" />
           <Route component={AdminAppointments} path="/admin-appointment" />
-
           {/* Common Routes */}
           <Route component={Home} path="/" exact />
           <Route component={Login} path="/login" />
@@ -98,7 +97,8 @@ const App = () => {
           <Route component={ProductPage} path="/product" />
           <Route component={ShoppingCart} path="/cart" />
           <Route component={AdoptionDetails} path="/adoption" />
-
+          /* Reviews */
+          <Route component={ReviewPage} path="/review" />
           {/* Redirect to home for unknown paths */}
           <Redirect to="/" />
         </Switch>

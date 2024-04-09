@@ -116,6 +116,15 @@ const AdminSideMenu = () => {
                 </Link>
               </li>
             </div>
+
+            <div className="flex">
+              <Dog />
+              <li className="px-4 text-[18px] hover:text-gray-600 flex">
+                <Link to="/admin-order-list" alt="" className="w-full">
+                  Orders
+                </Link>
+              </li>
+            </div>
           </ul>
         </nav>
       </div>

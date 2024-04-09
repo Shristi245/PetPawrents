@@ -17,6 +17,7 @@ urlpatterns = [
     path('', include('booking.urls')),
     path('', include('adoption.urls')),
     path('', include('products.urls')),
+    path('', include('reviews.urls')),
     path('', include('dashboard_analytics.urls')),
     path('api/password_reset/', include('django_rest_passwordreset.urls', namespace='password_reset')),
     path('', include(router.urls)),

@@ -77,7 +77,7 @@ function UserProfile() {
             <Link to="/edit-profile"> Edit Profile</Link>
           </button>
           <button className="bg-blue-500 text-white bg-[#1E5547] hover:bg-[#1ED1B1] text-3xl px-4 py-2 rounded-[20px] mb-16">
-            View Orders
+            <Link to="/orders-list">View Orders</Link>
           </button>
 
           <button

@@ -76,6 +76,7 @@ INSTALLED_APPS = [
     'adoption.apps.AdoptionConfig',
     'booking.apps.BookingConfig',
     'products.apps.ProductsConfig',
+    'reviews.apps.ReviewsConfig',
     'administrator.apps.AdministratorConfig',
     'corsheaders',
     'django_rest_passwordreset',

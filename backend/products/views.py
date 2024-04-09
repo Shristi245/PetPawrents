@@ -3,7 +3,9 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import serializers, status
 from .models import Product
-from .serializers import ProductSerializer
+from rest_framework.views import APIView
+from .serializers import OrderSerializer, OrderItemSerializer, ProductSerializer
+from .models import Order, Orderitem
 
 @api_view(['GET'])
 def ApiOverview(request):
@@ -12,7 +14,7 @@ def ApiOverview(request):
         'Search by Category': '/?category=category_name',
         'Add': '/create',
         'Update': '/update/pk',
-        'Delete': '/item/pk/delete'
+        'Delete': '/item/pk/delete',
     }
  
     return Response(api_urls)
@@ -79,3 +81,35 @@ def get_product_by_id(request, pk):
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
+@api_view(['POST'])
+def PlaceOrder(request, format=None):
+        serializer = OrderSerializer(data=request.data)
+        print(serializer)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+def GetAllOrders(request):
+    orders = Order.objects.all()
+    serializer = OrderSerializer(orders, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def GetOrderItemsByOrderID(request, orderID):
+    try:
+        order_items = Orderitem.objects.filter(order_id=orderID)
+        serializer = OrderItemSerializer(order_items, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    except Orderitem.DoesNotExist:
+        return Response({"message": "Order items not found"}, status=status.HTTP_404_NOT_FOUND)
+    
+@api_view(['GET'])
+def GetOrderByUserID(request, userID):
+    try:
+        orders = Order.objects.filter(user_id=userID)
+        serializer = OrderSerializer(orders, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    except Order.DoesNotExist:
+        return Response({"message": "Orders not found for the user"}, status=status.HTTP_404_NOT_FOUND)

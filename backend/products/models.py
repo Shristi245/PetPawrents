@@ -24,14 +24,17 @@ class Product(models.Model):
     def __str__(self):
         return self.title
     
-
-class Cart(models.Model):
-    title = models.CharField(max_length=100)
-    category = models.CharField(max_length=100, choices=CATEGORY_CHOICES)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    image= models.ImageField(upload_to = "cart/")
-    item_id=models.IntegerField()
+class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    
+    total_amount= models.FloatField()
+    paid_amount = models.FloatField()
+    status = models.CharField(max_length=100, default="Not Delivered")
+
+
+class Orderitem(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='order_items')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)    
+
     def __str__(self):
-        return self.title
+        return self.order

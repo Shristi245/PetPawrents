@@ -1,6 +1,6 @@
 import myKey from "./CheckoutKey";
 // import axios from "axios";
-x
+
 export const config = {
   publicKey: myKey.publicTestKey,
   productIdentity: "1234224",
@@ -11,7 +11,7 @@ export const config = {
     onSuccess(payload) {
       console.log(payload);
     },
-    // onError handler is optional
+    // onError handler is optional1
     onError(error) {
       console.log(error);
     },
@@ -20,4 +20,3 @@ export const config = {
     },
   },
 };
-

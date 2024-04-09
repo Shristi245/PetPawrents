@@ -1,10 +1,8 @@
 from rest_framework import serializers
-from .models import Cart, Product
+from .models import  Product, Order, Orderitem
+from user.serializers import UserSerializer
 
-class CategorySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Cart
-        fields = '__all__'
+
 
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
@@ -30,3 +28,26 @@ class ProductSerializer(serializers.ModelSerializer):
 
 
 
+class OrderItemSerializer(serializers.ModelSerializer):
+    order = serializers.PrimaryKeyRelatedField(queryset=Order.objects.all(), required=False)
+    product = ProductSerializer(read_only=True)
+
+    class Meta:
+        model = Orderitem
+        fields = [ 'product', 'quantity', 'order']
+
+class OrderSerializer(serializers.ModelSerializer):
+    order_items = OrderItemSerializer(many=True)
+    user = UserSerializer(read_only=True)
+    class Meta:
+        model = Order
+        fields = ['id', 'user', 'total_amount', 'paid_amount', 'order_items']
+
+    def create(self, validated_data):
+        order_items_data = validated_data.pop('order_items')
+
+        order = Order.objects.create(**validated_data)
+        for order_item_data in order_items_data:
+            Orderitem.objects.create(order=order, **order_item_data)
+           
+        return order
