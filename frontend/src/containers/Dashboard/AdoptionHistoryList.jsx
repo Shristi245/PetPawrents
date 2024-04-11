@@ -16,7 +16,7 @@ const AdminAdoptionHistory = () => {
   const fetchAppointmentHistory = async () => {
     try {
       const response = await axios.get(
-        "http://127.0.0.1:8000/adoption-history/all/"
+        `http://127.0.0.1:8000/adoption-history/all/`
       );
 
       setFilteredUsers(response.data);
@@ -35,7 +35,7 @@ const AdminAdoptionHistory = () => {
 
     Swal.fire({
       title: "Are you sure?",
-      text: "Yout will not be able to revert this!",
+      text: "You will not be able to revert this!",
       icon: "info",
       showCancelButton: true,
       confirmButtonColor: "green",
@@ -151,7 +151,7 @@ const AdminAdoptionHistory = () => {
         {/* Main content starts here */}
         <h1 className="text-4xl ml-3">Adoption History</h1>
         <div className="overflow-hidden w-full py-5">
-          <div className=" text-xl w-full  overflow-y-scroll overflow-y-auto">
+          <div className=" text-xl w-full  overflow-y-scroll">
             <table className="w-full  border border-collapse  overflow-y-auto">
               <thead>
                 <tr>

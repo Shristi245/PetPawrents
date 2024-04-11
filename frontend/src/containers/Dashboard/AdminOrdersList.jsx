@@ -84,6 +84,7 @@ const OrderList = () => {
                 <tr>
                   <th className="px-4 py-2 border">Order ID</th>
                   <th className="px-4 py-2 border">User</th>
+                  <th className="px-4 py-2 border">Address</th>
                   <th className="px-4 py-2 border">Phone Number</th>
                   <th className="px-4 py-2 border">Total Amount</th>
                   <th className="px-4 py-2 border">Paid Amount</th>
@@ -95,6 +96,7 @@ const OrderList = () => {
                   <tr key={order.id} className="border">
                     <td className="px-4 py-2 border">{order.id}</td>
                     <td className="px-4 py-2 border">{`${order.user.first_name} ${order.user.last_name}`}</td>
+                    <td className="px-4 py-2 border">{order.user.address}</td>
                     <td className="px-4 py-2 border">{order.user.mobile}</td>
                     <td className="px-4 py-2 border">{order.total_amount}</td>
                     <td className="px-4 py-2 border">{order.paid_amount}</td>

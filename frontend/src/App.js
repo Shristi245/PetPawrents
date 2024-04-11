@@ -40,6 +40,8 @@ import EditAdoptionPage from "./containers/Dashboard/EditAdoptionPage.jsx";
 import ReviewPage from "./containers/Reviews.jsx";
 import OrderList from "./containers/Dashboard/AdminOrdersList.jsx";
 import OrderedItems from "./containers/Orders/OrderItemsbyID.jsx";
+import ChangePasswordPage from "./containers/ChangePassword.jsx";
+import PetDetailsPage from "./containers/PetDetails.jsx";
 const App = () => {
   console.log(1);
   return (
@@ -88,16 +90,18 @@ const App = () => {
           <Route component={Login} path="/login" />
           <Route component={Register} path="/register" />
           <Route component={PetRegisterPage} path="/pet" />
+          <Route component={PetDetailsPage} path="/pet-details" />
           <Route component={About} path="/about" />
           <Route component={Service} path="/services" />
           <Route component={ResetPassword} path="/reset-password" />
           <Route component={ConfirmPassword} path="/confirm-password" />
+          <Route component={ChangePasswordPage} path="/change-password" />
+
           <Route component={Contact} path="/contact" />
           <Route component={Donation} path="/donation" />
           <Route component={ProductPage} path="/product" />
           <Route component={ShoppingCart} path="/cart" />
           <Route component={AdoptionDetails} path="/adoption" />
-          /* Reviews */
           <Route component={ReviewPage} path="/review" />
           {/* Redirect to home for unknown paths */}
           <Redirect to="/" />

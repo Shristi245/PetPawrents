@@ -1,0 +1,14 @@
+Subject: Update on Your Booking Status
+
+Dear {{ booking.user.first_name }},
+
+We would like to inform you that your recent booking with us has been marked as {{ booking.status }}.
+
+Your appointment is now {{ booking.status }}. We assure you that we are dedicated to providing you with the best service possible, ensuring a seamless experience every step of the way.
+
+Should you have any questions or require further assistance, please don't hesitate to reach out to our support team. We're here to assist you with any inquiries you may have.
+
+Thank you for choosing us for your appointment needs. We value your trust in us and look forward to serving you again soon.
+
+Best regards,
+Pet Pawrents Family.

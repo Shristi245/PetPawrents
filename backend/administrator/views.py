@@ -10,8 +10,8 @@ from user.serializers import UserSerializer
 from rest_framework.exceptions import NotFound  # Correct import for NotFound exception
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 
-from adoption.models import AdoptedPet
-from adoption.serializers import AdoptedPetSerializer
+# from adoption.models import AdoptedPet
+# from adoption.serializers import AdoptedPetSerializer
 class UserListView(generics.ListCreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -61,13 +61,13 @@ class TotalProductsView(APIView):
         totalProducts = Product.objects.count()
         return Response({'totalProducts': totalProducts})
     
-class TotalPetsforAdoptionsView(APIView):
-    def get(self, request):
-        totalAdoptionDetails = Adopt.objects.count()
-        return Response({'totalAdoptionDetails': totalAdoptionDetails})
+# class TotalPetsforAdoptionsView(APIView):
+#     def get(self, request):
+#         totalAdoptionDetails = Adopt.objects.count()
+#         return Response({'totalAdoptionDetails': totalAdoptionDetails})
 
 
-class AdoptedPetListAPIView(generics.ListAPIView):
-    queryset = AdoptedPet.objects.all()
-    serializer_class = AdoptedPetSerializer
-    permission_classes = [IsAdminUser]  # Only admin can view all adopted pets
+# class AdoptedPetListAPIView(generics.ListAPIView):
+#     queryset = AdoptedPet.objects.all()
+#     serializer_class = AdoptedPetSerializer
+#     permission_classes = [IsAdminUser]  # Only admin can view all adopted pets

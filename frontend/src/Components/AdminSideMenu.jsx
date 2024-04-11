@@ -38,21 +38,7 @@ const AdminSideMenu = () => {
           isMenuOpen ? "" : "hidden"
         }`}
       >
-        {/* Sidebar Header */}
-        <div className="mt-5 p-5 justify-center">
-          {/* Profile Picture */}
-          <img
-            className="w-16 h-16 rounded-full object-cover justify-center ml-20"
-            src="images/1.jpg"
-            alt="Profile"
-          />
-          {/* Profile Information */}
-          <div className="text-center mt-2">
-            <h2 className="text-lg font-semibold">Admin</h2>
-            <p className="text-sm">admin@example.com</p>
-          </div>
-        </div>
-
+        <img src="/images/final_logo.png" className="w-40 mx-auto mt-11" alt="" />
         {/* Sidebar Menu */}
         <nav className="">
           <ul className="space-y-8 mt-6 px-9">

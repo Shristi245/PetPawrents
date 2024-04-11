@@ -144,6 +144,7 @@ class UserProfileImageSerializer(serializers.ModelSerializer):
 class ChangePasswordSerializer(serializers.Serializer):
     old_password = serializers.CharField(required=True)
     new_password = serializers.CharField(required=True)
+    confirm_password=serializers.CharField(required=True)
 
 
 class ResetPasswordEmailSerializer(serializers.Serializer):
@@ -173,4 +174,18 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
 class PetSerializer(serializers.ModelSerializer):
     class Meta:
         model = Pet
-        fields = '__all__'
+        fields = ['petname', 'pettype', 'age', 'height', 'weight', 'user']
+
+class VerifyAccountSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    otp = serializers.CharField(max_length=6)
+
+    def validate(self, data):
+        email = data.get('email')
+        otp = data.get('otp')
+
+        # Perform additional validation if needed
+        if not email or not otp:
+            raise serializers.ValidationError("Email and OTP are required fields.")
+
+        return data

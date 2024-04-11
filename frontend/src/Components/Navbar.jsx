@@ -92,7 +92,7 @@ function Navbar() {
             <img
               src="/images/final_logo.png"
               alt=""
-              className="h-[8rem] w-[15rem] ml-20 "
+              className="h-[8rem] w-[15rem] ml-24 "
             />
           </Link>
         </div>

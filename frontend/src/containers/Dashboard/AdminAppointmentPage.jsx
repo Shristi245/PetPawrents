@@ -3,6 +3,7 @@ import axios from "axios";
 import AdminSideMenu from "../../Components/AdminSideMenu";
 import { useDebounce } from "../../utils";
 import Swal from "sweetalert2";
+import { Alert } from "@material-tailwind/react";
 
 const AdminAppointments = () => {
   const [appointments, setAppointments] = useState([]);
@@ -47,28 +48,23 @@ const AdminAppointments = () => {
 
   const handleStatusChange = async (booking_id, newStatus) => {
     try {
-      // Update the status on the server
-      const res = await axios.put(
-        `http://127.0.0.1:8000/bookingstatus/${booking_id}/`,
-        {
-          status: newStatus,
-        }
-      );
-      fetchAppointments();
-      console.log(res);
+      await axios.put(`http://127.0.0.1:8000/bookingstatus/${booking_id}/`, {
+        status: newStatus,
+      });
 
-      // Show success message using SweetAlert
+      // Show success message to the user
       Swal.fire({
         icon: "success",
         title: "Success!",
-        text: `Booking status updated to ${newStatus}`,
-        showConfirmButton: false,
-        timer: 1500, // Close the alert after 1.5 seconds
+        text: `Booking status updated to ${newStatus}. An email notification has been sent.`,
       });
+
+      // Refresh the appointments list
+      fetchAppointments();
     } catch (error) {
       console.error("Error updating status:", error);
 
-      // Show error message using SweetAlert
+      // Show error message to the user
       Swal.fire({
         icon: "error",
         title: "Error!",
@@ -76,7 +72,6 @@ const AdminAppointments = () => {
       });
     }
   };
-
   return (
     <div className="flex overflow-hidden mb-32 ">
       {/* Include AdminSideMenu component */}
@@ -109,6 +104,9 @@ const AdminAppointments = () => {
         <h1 className="text-4xl ml-3">Appointments</h1>
         <div className="overflow-hidden w-full py-5">
           <div className=" text-xl w-full  overflow-x-scroll overflow-y-auto">
+            {appointments.length === 0 && (
+              <Alert color="black">No appointments booked till now</Alert>
+            )}
             <table className="w-full  border border-collapse overflow-x-scroll overflow-y-auto">
               <thead>
                 <tr>
@@ -118,6 +116,8 @@ const AdminAppointments = () => {
                   <th className="px-4 py-2 border">Phone</th>
                   <th className="px-4 py-2 border">Pet Type</th>
                   <th className="px-4 py-2 border">Service</th>
+                  <th className="px-4 py-2 border">Breed</th>
+                  <th className="px-4 py-2 border">Aggression</th>
                   <th className="px-4 py-2 border">Date</th>
                   <th className="px-4 py-2 border">Time</th>
                   <th className="px-4 py-2 border">Status</th>
@@ -140,26 +140,35 @@ const AdminAppointments = () => {
                     </td>
                     <td className="px-4 py-2 border">{appointment.pet_type}</td>
                     <td className="px-4 py-2 border">{appointment.service}</td>
+                    <td className="px-4 py-2 border">{appointment.breed}</td>
+                    <td className="px-4 py-2 border">
+                      {appointment.is_aggressive}
+                    </td>
+
                     <td className="px-4 py-2 border">{appointment.date}</td>
                     <td className="px-4 py-2 border">{appointment.time}</td>
                     <td className="px-4 py-2 border">{appointment.status}</td>
                     <td className="px-4 py-2 border flex justify-center">
-                      <button
-                        className="bg-[#1A8990] hover:bg-green-600 text-white py-1 px-7 rounded-[7px] mr-2"
-                        onClick={() =>
-                          handleStatusChange(appointment.id, "accepted")
-                        }
-                      >
-                        Accept
-                      </button>
-                      <button
-                        className="bg-[#E56262] hover:bg-red-500 text-black py-1 px-7 rounded-[7px]"
-                        onClick={() =>
-                          handleStatusChange(appointment.id, "rejected")
-                        }
-                      >
-                        Cancel
-                      </button>
+                      {appointment.status === "pending" && (
+                        <>
+                          <button
+                            className="bg-[#1A8990] hover:bg-green-600 text-white py-1 px-7 rounded-[7px] mr-2"
+                            onClick={() =>
+                              handleStatusChange(appointment.id, "accepted")
+                            }
+                          >
+                            Accept
+                          </button>
+                          <button
+                            className="bg-[#E56262] hover:bg-red-500 text-black py-1 px-7 rounded-[7px]"
+                            onClick={() =>
+                              handleStatusChange(appointment.id, "rejected")
+                            }
+                          >
+                            Cancel
+                          </button>
+                        </>
+                      )}
                     </td>
                   </tr>
                 ))}

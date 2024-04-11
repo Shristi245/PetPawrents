@@ -21,6 +21,7 @@ class User(AbstractUser):
     last_name = CharField(_("Last Name"), max_length=150, blank=True)
     address= models.CharField(max_length=1000, null=False, blank=True)
     bio = models.CharField(max_length=100, null=True, blank=True)
+    otp = models.CharField(max_length=6, null=True, blank=True)
     image = models.TextField()
 
     USERNAME_FIELD = "email"
@@ -39,9 +40,9 @@ class Pet(models.Model):
     age = models.PositiveIntegerField()
     height = models.DecimalField(max_digits=5, decimal_places=2)
     weight = models.DecimalField(max_digits=5, decimal_places=2)
-    owner = models.ForeignKey(User, related_name='pets', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, default=None)
 
-    def __str__(self):
+    def __str__(self):      
         return self.petname
     
 

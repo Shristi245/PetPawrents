@@ -130,8 +130,8 @@ class UserAdoptedPetsAPIView(generics.ListCreateAPIView):
         return AdoptedPet.objects.filter(user=user)
 
     def post(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-
+        serializer = AdoptedPetSerializer(data=request.data)
+        print(request.data)
         adopt_instance = Adopt.objects.get(id=request.data.get("adopt"))
 
         if serializer.is_valid():

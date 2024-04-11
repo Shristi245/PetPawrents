@@ -62,36 +62,43 @@ function UserProfile() {
   };
 
   return (
-    <div className="flex  h-screen bg-gray-100">
-      <div className="bg-white p-8 mt-9 w-full justify-between rounded-lg shadow-md flex">
+    <div className="flex bg-white">
+      <div className="bg-white p-8 mt-9 pl-32 w-full justify-between rounded-lg shadow-md flex">
         {/* First div containing buttons */}
-        <div className="flex flex-col mb-6 ml-20">
-          <button className="bg-blue-500 text-white bg-[#1E5547] hover:bg-[#1ED1B1] text-3xl px-4 py-2 rounded-[20px] mb-16">
+        <div className="flex flex-col ml-20">
+          <button className="bg-blue-500 text-white shadow-inner hover:text-black  bg-[#56A6B8]  text-3xl py-3 rounded-[20px] mb-5">
             Profile
           </button>
           {/* You may want to remove 'Edit Profile' button as we're on profile page */}
           <button
-            className="bg-blue-500 text-white bg-[#1E5547] hover:bg-[#1ED1B1] text-3xl px-4 py-2 rounded-[20px] mb-16"
+            className="bg-blue-500 text-white hover:text-black shadow-inner bg-[#56A6B8] text-3xl px-4 py-3 rounded-[20px] mb-5"
             disabled
           >
             <Link to="/edit-profile"> Edit Profile</Link>
           </button>
-          <button className="bg-blue-500 text-white bg-[#1E5547] hover:bg-[#1ED1B1] text-3xl px-4 py-2 rounded-[20px] mb-16">
+          <button className="bg-blue-500 text-white shadow-inner hover:text-black bg-[#56A6B8] text-3xl px-4 py-3 rounded-[20px] mb-5">
             <Link to="/orders-list">View Orders</Link>
           </button>
 
           <button
-            className="bg-blue-500 text-white bg-[#1E5547] hover:bg-[#1ED1B1] text-3xl px-4 py-2 rounded-[20px] mb-16"
+            className="bg-blue-500 text-white shadow-inner hover:text-black bg-[#56A6B8] text-3xl px-4 py-3 rounded-[20px] mb-5"
             disabled
           >
             <Link to=""> Adoption History</Link>
           </button>
 
           <button
-            className="bg-blue-500 text-white bg-[#1E5547] hover:bg-[#1ED1B1] text-3xl px-4 py-2 rounded-[20px] mb-16"
+            className="bg-blue-500 text-white shadow-inner hover:text-black  bg-[#56A6B8] text-3xl px-4 py-3 rounded-[20px] mb-5"
             disabled
           >
             <Link to=""> Pet Details</Link>
+          </button>
+
+          <button
+            className="bg-blue-500 text-white shadow-inner hover:text-black  bg-[#56A6B8] text-3xl px-4 py-3 rounded-[20px] "
+            disabled
+          >
+            <Link to="/change-password"> Change Password</Link>
           </button>
         </div>
         {/* Second div containing profile picture */}
@@ -102,17 +109,17 @@ function UserProfile() {
                 <img
                   src={profile.image}
                   alt="Profile"
-                  className="w-full h-full object-cover rounded-full"
+                  className="w-full h-full object-cover rounded-full border-2 border-black "
                 />
               </div>
               <br />
               <div className="flex flex-col text-center">
-                <p className="text-xl font-bold">{profile.username}</p>
+                <p className="text-2xl font-bold">{profile.username}</p>
                 <button
                   onClick={() => {
                     document.getElementById("profileimage").click();
                   }}
-                  className="bg-[#1E5547] text-white rounded-lg py-1 hover:bg-[#1ED1B1]"
+                  className="bg-blue text-white rounded-lg py-1 mt-3 hover:bg-[#BB9B81]"
                 >
                   Choose Image
                 </button>
@@ -129,7 +136,7 @@ function UserProfile() {
           )}
         </div>
         {/* Third div containing user details */}
-        <div className="flex flex-col items-start space-y-3 mb-6 mr-44 w-[20%]">
+        <div className="flex flex-col items-start space-y-6 mr-44 w-[20%]">
           {/* Display email and phone number */}
           {profile && (
             <>
@@ -138,35 +145,39 @@ function UserProfile() {
                 <p className="text-[#673405]"> {profile.first_name}</p>
               </div>
 
-              <div className="flex items-center text-2xl gap-4">
-                <p className="text-black text-2xl">Last Name:</p>
+              <div className="flex items-center text-2xl gap-4 ">
+                <p className="text-black">Last Name:</p>
                 <p className="text-[#673405]">{profile.last_name}</p>
               </div>
 
-              <div className="flex items-center text-2xl gap-4">
+              <div className="flex items-center text-2xl gap-4 mb-3">
                 <p className="text-black text-2xl">Email: </p>
                 <p> {profile.email}</p>
               </div>
 
-              <div className="flex items-center text-2xl gap-4">
-                <p className="text-black text-2xl flex items-center">
-                  Phone number:
-                </p>
+              <div className="flex items-center text-2xl gap-4 mb-3">
+                <p className="text-black text-2xl flex items-center">Phone:</p>
                 <p> {profile.mobile}</p>
               </div>
 
-              <div className="flex items-center text-2xl gap-4">
+              <div className="flex items-center text-2xl gap-4 mb-3">
                 <p className="text-black text-2xl">Address:</p>
                 <p> {profile.email}</p>
               </div>
 
-              <div className="flex items-center text-2xl gap-4">
-                <p className="text-black ">Bio:</p>
+              <div className="flex items-center text-2xl gap-4 mb-3">
+                <p className="text-black text-2xl">Bio:</p>
                 <p> {profile.bio}</p>
               </div>
+
+              <Link to="/edit-profile">
+                <button className="bg-[#FEC200] text-white shadow-2xl hover:text-white  text-lg px-9 py-2 rounded-[20px] transition-transform duration-200 ease-in-out transform hover:scale-90">
+                  Edit
+                </button>
+              </Link>
             </>
           )}
-          {/* Add more details as needed */}x
+          {/* Add more details as needed */}
         </div>
       </div>
     </div>

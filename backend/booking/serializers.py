@@ -1,5 +1,4 @@
 # serializers.py
-
 from django.utils import timezone
 from rest_framework import serializers
 from .models import Booking
@@ -40,3 +39,5 @@ class GETBookingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Booking
         fields = "__all__"
+
+

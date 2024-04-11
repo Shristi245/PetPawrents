@@ -83,12 +83,11 @@ def get_product_by_id(request, pk):
 
 @api_view(['POST'])
 def PlaceOrder(request, format=None):
-        serializer = OrderSerializer(data=request.data)
-        print(serializer)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    serializer = OrderSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
 def GetAllOrders(request):

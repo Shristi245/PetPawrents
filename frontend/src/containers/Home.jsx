@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom/cjs/react-router-dom.min";
+import { IoMdStarOutline } from "react-icons/io";
 
 const Home = () => {
   return (
@@ -27,10 +28,17 @@ const Home = () => {
           </div>
 
           {/* Buttons at the bottom-middle */}
-          <div className="absolute bottom-0 left-0 right-0 flex flex-col md:flex-row justify-center items-center mb-8 p-9 md:space-x-14 md:ml-56">
+          <div className=" flex absolute bottom-0 left-0 right-0  flex-col md:flex-row justify-center items-center mb-8 p-9 md:space-x-14 md:ml-56">
             <Link to="/services">
-              <button className="bg-[#417EC5] text-[#FDF99B] text-xl py-2 px-4 md:py-3 md:px-6 rounded-[24px] mb-4 md:mb-0 md:ml-0 hover:bg-[#673405] hover:text-white transition-transform duration-200 ease-in-out transform hover:scale-90">
+              <button className="bg-[#417EC5] text-[#FDF99B] text-xl py-2 lg:px-9  md:py-3 md:px-6 rounded-[24px] mb-4 md:mb-0 md:ml-0 hover:bg-[#673405] hover:text-white transition-transform duration-200 ease-in-out transform hover:scale-90">
                 Learn More
+              </button>
+            </Link>
+
+            <Link to="/review">
+              <button className="bg-[#417EC5] text-[#FDF99B] text-xl py-2 lg:px-9 flex md:py-3 md:px-6 rounded-[24px] mb-4 md:mb-0 md:ml-0 hover:bg-[#673405] hover:text-white transition-transform duration-200 ease-in-out transform hover:scale-90">
+                <IoMdStarOutline className="mt-1 mr-1" />
+                Reviews
               </button>
             </Link>
           </div>

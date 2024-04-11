@@ -23,8 +23,7 @@ from django.core.mail import send_mail
 from django.contrib.auth import get_user_model
 from user.models import Pet
 from user.serializers import ChangePasswordSerializer, ResetPasswordEmailSerializer
-
-
+from .serializers import UserProfileImageSerializer
 from rest_framework.generics import (
     CreateAPIView,
 
@@ -56,7 +55,7 @@ from .serializers import (
     # VerirfyOtpSerializer,
 )
 
-
+from .serializers import VerifyAccountSerializer
 
 # from rest_framework.throttling import ScopedRateThrottle
 
@@ -82,16 +81,22 @@ class UserRegistrationView(CreateAPIView):
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        serializer.save()
-        headers = self.get_success_headers(serializer.data)
-        return Response(
-            {"detail": _("Verification email sent.")},
-            status=status.HTTP_201_CREATED,
-            headers=headers,
-        )
+        user = serializer.save()
 
-
-from .serializers import UserProfileImageSerializer
+        # Send OTP email
+        verify_otp = VerifyOTP()
+        if verify_otp.send_otp_via_email(user.email):
+            headers = self.get_success_headers(serializer.data)
+            return Response(
+                {"detail": _("User registered successfully. Verification email sent.")},
+                status=status.HTTP_201_CREATED,
+                headers=headers,
+            )
+        else:
+            # If OTP email sending fails, roll back user creation
+            user.delete()
+            raise ValidationError(_("Error sending verification email."))
+        
 
 class UserProfileImageView(APIView):
     def put(self, request, user_id, *args, **kwargs):
@@ -101,11 +106,10 @@ class UserProfileImageView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+#generate refresh and access token
 class TokenObtainPairView(CreateAPIView):
-    """
-    Takes a set of user credentials and returns an access and refresh JSON web
-    token pair to prove the authentication of those credentials and email_verified status.
-    """
 
     serializer_class = TokenObtainPairSerializer
     permission_classes = ()
@@ -130,6 +134,17 @@ class PetViewSet(viewsets.ModelViewSet):
     queryset = Pet.objects.all()
     serializer_class = PetSerializer
 
+    # def list(self, request, *args, **kwargs):
+    #     user_id = request.query_params.get('user_id')
+    #     if user_id:
+    #         pets = Pet.objects.filter(user_id=user_id)
+    #         serializer = self.get_serializer(pets, many=True)
+    #         return Response(serializer.data)
+    #     else:
+    #         return super().list(request, *args, **kwargs)
+
+
+
 # class PetListCreateAPIView(generics.ListCreateAPIView):
 #     queryset = Pet.objects.all()
 #     serializer_class = PetSerializer
@@ -145,19 +160,24 @@ class PetViewSet(viewsets.ModelViewSet):
 
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
-def change_password(request):
+def change_password(request, userID):
     serializer = ChangePasswordSerializer(data=request.data)
+    user = User.objects.get(id=userID)
     if serializer.is_valid():
         # Check old password
-        if not request.user.check_password(serializer.validated_data.get("old_password")):
+        if not user.check_password(serializer.validated_data.get("old_password")):
             return Response({"old_password": ["Wrong password."]}, status=status.HTTP_400_BAD_REQUEST)
-        # set_password also hashes the password that the user will get
-        request.user.set_password(serializer.validated_data.get("new_password"))
-        request.user.save()
-        # Keep the user logged in after changing the password
-        update_session_auth_hash(request, request.user)
+        # Check if the new password matches the confirm password
+        new_password = serializer.validated_data.get("new_password")
+        confirm_password = serializer.validated_data.get("confirm_password")
+        if new_password != confirm_password:
+            return Response({"confirm_password": ["Passwords do not match."]}, status=status.HTTP_400_BAD_REQUEST)
+        # Update the password
+        user.set_password(new_password)
+        user.save()
+       
         return Response({"detail": "Password updated successfully"}, status=status.HTTP_200_OK)
+    3
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -196,7 +216,7 @@ class ResetPassword(APIView):
         serializer = PasswordResetConfirmSerializer(data=request.data)
 
 
-        token = request.data.get("token");
+        token = request.data.get("token")
 
         print(serializer.is_valid())
 
@@ -213,3 +233,46 @@ class ResetPassword(APIView):
             return Response({"detail": "User not found or token is invalid."}, status=status.HTTP_404_NOT_FOUND)
         
         return Response({"detail":"Email or Password or Token is not valid"}, status=status.HTTP_400_BAD_REQUEST)
+    
+
+import random 
+from backend.settings import EMAIL_HOST_USER
+class VerifyOTP(APIView):
+    def post(self, request):
+        serializer = VerifyAccountSerializer(data=request.data)
+
+        if serializer.is_valid():
+            email = serializer.data['email']
+            otp = serializer.data['otp']
+
+            user = User.objects.filter(email=email)
+
+            if not user.exists():
+                print("User does not exist")
+                return Response("Invalid Email!", status=400)
+
+            if user.first().otp != otp:
+                print("Invalid OTP")
+                return Response("Invalid OTP!", status=400)
+
+            user.update(is_verified=True)
+            return Response("Account Verified", status=200)
+
+        return Response(serializer.errors, status=400)
+
+    def send_otp_via_email(self, email):
+        subject = 'Your account verification email'
+        otp = random.randint(1000, 9999)
+        message = f'Your OTP is {otp}'
+        email_from = EMAIL_HOST_USER
+            
+        try:
+            send_mail(subject, message, email_from, [email])
+            user_obj = User.objects.get(email=email)
+            user_obj.otp = otp
+            user_obj.save()
+            return True
+        except Exception as e:
+            print(e)
+            return False
+

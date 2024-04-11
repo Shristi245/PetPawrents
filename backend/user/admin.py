@@ -6,7 +6,7 @@ class UserAdmin(admin.ModelAdmin):
 
 
 class PetAdmin(admin.ModelAdmin):
-    list_display = ['id', 'pettype', 'petname', 'age', 'height', 'weight', 'owner']
+    list_display = ['id', 'pettype', 'petname', 'age', 'height', 'weight']
 
 admin.site.register(User, UserAdmin)
 admin.site.register(Pet, PetAdmin)

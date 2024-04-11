@@ -4,8 +4,9 @@ from rest_framework import status
 from .models import Booking
 from .serializers import BookingSerializer
 from .serializers import GETBookingSerializer
-
-
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
 
 
 
@@ -58,8 +59,20 @@ def update_booking_status(request, booking_id):
 
     if new_status not in ['accepted', 'rejected']:
         return Response({'error': 'Invalid status'}, status=status.HTTP_400_BAD_REQUEST)
-
+    old_status = booking.status
     booking.status = new_status
     booking.save()
+
+    # Send email to user if status is updated
+    if old_status != new_status:
+        email_subject = 'Booking Status Update'
+        email_template = 'booking_status_email.txt'  # Template for email body
+        context = {'booking': booking, 'new_status': new_status}
+        email_body = render_to_string(email_template, context)
+        send_mail(email_subject, email_body, None, [booking.user.email])
+
     serializer = BookingSerializer(booking)
     return Response(serializer.data)
+
+
+
