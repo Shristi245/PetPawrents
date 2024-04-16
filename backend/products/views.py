@@ -26,7 +26,7 @@ def ApiOverview(request):
 def add_items(request):
 
     item = ProductSerializer(data=request.data)
- 
+     
     if item.is_valid():
         item.save()
         return Response({"message": "Product Added", "status":status.HTTP_200_OK})

@@ -16,7 +16,6 @@ class ProductSerializer(serializers.ModelSerializer):
         price = data.get("price")
         image = data.get("image")
 
-        print("idsuc",not title or not category or not price or not image)
 
         if(price < 0):
             raise serializers.ValidationError("Price cannot be negative")

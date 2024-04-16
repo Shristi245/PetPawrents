@@ -44,16 +44,31 @@ export function ShoppingCart() {
           }),
         });
 
-        if (res.ok) {
-          toast.success(
-            "Order placed successfully. The currior will deliver the items soon"
-          );
-          setCartItems([]);
-          clearCart();
+        const orderResMsg = await res.json();
+
+        if (!res.ok) {
+          toast.error("Unable to place order at the moment");
           return;
         }
 
-        toast.error("Unable to place order at the moment");
+        toast.success(
+          "Order placed successfully. The currior will deliver the items soon"
+        );
+        setCartItems([]);
+        clearCart();
+
+        await fetch("http://127.0.0.1:8000/transactions/create/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            user: user.id,
+            reference_id: orderResMsg.id,
+            amount: paid_amount,
+            transaction_type: "products",
+          }),
+        });
       },
       // onError handler is optional1
       onError(error) {
@@ -69,7 +84,14 @@ export function ShoppingCart() {
 
   let checkout = new KhaltiCheckout({ ...generalConfig, ...khaltiConfig });
 
-  const handleSubscription = () => {
+  const handleCheckout = () => {
+    const orderTotal = calculateOrderTotal();
+
+    if (orderTotal < 200) {
+      checkout.show({ amount: orderTotal * 100 });
+      return;
+    }
+
     checkout.show({ amount: 20000 });
   };
 
@@ -203,7 +225,7 @@ export function ShoppingCart() {
             <button
               type="button"
               className="rounded-md border border-black px-3 py-2 text-sm font-semibold text-black shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
-              onClick={handleSubscription}
+              onClick={handleCheckout}
             >
               Checkout
             </button>
