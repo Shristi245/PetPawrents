@@ -169,9 +169,12 @@ const Home = () => {
         <div className=" py-20 ">
           <h1>Adopt, Don't Shop!</h1>
           <h1>Be part of our Donation program</h1>
-          <button className="w-[80%] py-3 text-black text-2xl rounded-[30px] mt-11 bg-amber-400 transition-transform duration-200 ease-in-out transform hover:scale-110">
-            <Link to="/donation">Make Donations</Link>
-          </button>
+
+          <Link to="/donation">
+            <button className="w-[80%] py-3 text-black text-2xl rounded-[30px] mt-11 bg-amber-400 transition-transform duration-200 ease-in-out transform hover:scale-110">
+              Make Donations
+            </button>
+          </Link>
         </div>
         <div className="w-[10%] py-40 mt-40  ">
           <img className=" ml-32" src="images/dog and cat.png" alt="" />

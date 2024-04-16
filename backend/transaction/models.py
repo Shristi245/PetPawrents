@@ -4,6 +4,6 @@ from user.models import User
 class Transaction(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     transaction_type = models.CharField(max_length=100)
-    reference_id = models.IntegerField()
+    reference_id = models.IntegerField(default=0)
     amount = models.FloatField()
     transaction_date = models.DateTimeField(auto_now=True)

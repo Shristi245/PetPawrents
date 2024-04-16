@@ -18,6 +18,7 @@ import { generalConfig } from "../Checkout/CheckoutConfig";
 
 export function ShoppingCart() {
   const khaltiConfig = {
+    productUrl: "http://localhost:3000/cart",
     eventHandler: {
       async onSuccess(payload) {
         const paid_amount = payload.amount / 100;

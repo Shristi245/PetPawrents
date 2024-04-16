@@ -46,7 +46,7 @@ def view_items(request):
         serializer = ProductSerializer(items, many=True)
         return Response(serializer.data)
     else:
-        return Response(status=status.HTTP_404_NOT_FOUND)
+        return Response([])
     
 
 @api_view(['PATCH'])

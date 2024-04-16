@@ -1,16 +1,63 @@
-import React from "react";
+import React, { useState } from "react";
+import { getLogInDetailsFromLocalStorage } from "../utils";
+import { toast } from "react-toastify";
+import { generalConfig } from "./Checkout/CheckoutConfig";
+import KhaltiCheckout from "khalti-checkout-web";
+import {
+  Button,
+  ButtonGroup,
+  Dialog,
+  DialogBody,
+  DialogFooter,
+  DialogHeader,
+  Input,
+} from "@material-tailwind/react";
 
 const DonationPage = () => {
-  // const [amount, setAmount] = useState(100);
+  const [open, setOpen] = useState(false);
 
-  // const handleAmountChange = (event) => {
-  //   const newValue = parseInt(event.target.value);
-  //   setAmount(newValue);
-  // };
+  const handleOpen = () => setOpen(!open);
 
-  // const handleSliderChange = (event) => {
-  //   setAmount(parseInt(event.target.value));
-  // };
+  const [amount, setAmount] = useState(0);
+
+  const khaltiConfig = {
+    productUrl: "http://localhost:3000/donation",
+    eventHandler: {
+      async onSuccess(payload) {
+        const paid_amount = payload.amount / 100;
+
+        const user = getLogInDetailsFromLocalStorage();
+
+        const res = await fetch("http://127.0.0.1:8000/transactions/create/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            user: user.id,
+            amount: paid_amount,
+            transaction_type: "donation",
+          }),
+        });
+
+        if (res.ok) {
+          toast.success("Thank you for your suport :)");
+          return;
+        }
+
+        toast.error("Unable to donate at the moment");
+      },
+      // onError handler is optional1
+      onError(error) {
+        console.log(error);
+      },
+      onClose() {
+        console.log("widget is closing");
+      },
+    },
+  };
+
+  let checkout = new KhaltiCheckout({ ...generalConfig, ...khaltiConfig });
 
   return (
     <div className="flex justify-center items-center h-screen">
@@ -35,11 +82,6 @@ const DonationPage = () => {
             access our donation page instantly. Your support is greatly
             appreciated!
           </p>
-          {/* <img
-            src="images/donate.jpg"
-            alt=""
-            className="w-full rounded-[30px]"
-          /> */}
         </div>
         <div className="w-[30%] ml-20">
           <img
@@ -47,8 +89,61 @@ const DonationPage = () => {
             alt="esewa"
             className="w-[80%] ml-7"
           ></img>
-          <img src="images/qr.jpg" alt="QR Code" className="w-full h-auto" />
-          <p className="text-center text-2xl">SCAN HERE</p>
+          <p className="text-center text-2xl">
+            <button
+              className="w-[80%] py-3 text-black text-2xl rounded-[30px] mt-11 bg-amber-400 transition-transform duration-200 ease-in-out transform hover:scale-110"
+              onClick={handleOpen}
+            >
+              Donate
+            </button>
+
+            <Dialog open={open} handler={handleOpen}>
+              <DialogHeader>Enter the amount to dontate</DialogHeader>
+
+              <DialogBody>
+                <p className="text-red-500">
+                  Note: <span>The maximum amount is 200</span>
+                </p>
+                <br />
+                <form
+                  id="amount-form"
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    handleOpen();
+
+                    const checkout_amount = amount > 200 ? 2000 : amount * 100;
+
+                    checkout.show({
+                      amount: checkout_amount,
+                    });
+                  }}
+                >
+                  <Input
+                    label="Amount"
+                    type="number"
+                    min={1}
+                    required
+                    value={amount}
+                    onChange={(e) => {
+                      setAmount(e.target.value);
+                    }}
+                    max={200}
+                  />
+                </form>
+              </DialogBody>
+
+              <DialogFooter>
+                <div className="space-x-5">
+                  <Button variant="text" onClick={handleOpen}>
+                    Close
+                  </Button>
+                  <Button color="green" type="submit" form="amount-form">
+                    Donate
+                  </Button>
+                </div>
+              </DialogFooter>
+            </Dialog>
+          </p>
         </div>
       </div>
     </div>

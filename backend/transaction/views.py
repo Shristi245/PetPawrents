@@ -2,7 +2,10 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from .models import Transaction
+from booking.models import Booking
 from .serializers import TransactionSerializer
+from django.shortcuts import render, get_object_or_404
+
 
 @api_view(['POST'])
 def create_transaction(request):
@@ -22,15 +25,19 @@ def update_transaction_amount(request):
             transaction_type = request.data.get('transaction_type')
 
             transaction = Transaction.objects.get(reference_id=reference_id, transaction_type=transaction_type)
+            booking = Booking.objects.get(id=reference_id)
             
             if amount is not None:
                 transaction.amount = amount
+                booking.estimated_price = amount
                 transaction.save()
+                booking.save()
                 serializer = TransactionSerializer(instance=transaction)
                 return Response(serializer.data, status=status.HTTP_200_OK)
             else:
                 return Response({'error': 'Amount not provided in request'}, status=status.HTTP_400_BAD_REQUEST)
-        except Transaction.DoesNotExist:
+        except Exception as e:
+            print(e)
             return Response({'error': 'Transaction not found'}, status=status.HTTP_404_NOT_FOUND)
         
 

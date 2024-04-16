@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import AdminSideMenu from "../../Components/AdminSideMenu";
-import { useDebounce } from "../../utils";
+import { getLogInDetailsFromLocalStorage, useDebounce } from "../../utils";
 import Swal from "sweetalert2";
 import {
   Alert,
   Button,
   Dialog,
   DialogBody,
+  DialogFooter,
   DialogHeader,
+  Input,
   Typography,
 } from "@material-tailwind/react";
+import { toast } from "react-toastify";
 
 const AdminAppointments = () => {
   const [appointments, setAppointments] = useState([]);
@@ -23,7 +26,6 @@ const AdminAppointments = () => {
       const response = await axios.get("http://127.0.0.1:8000/booking/");
 
       // Ensure status is set to "pending" for each appointment
-
       setFilteredUsers(response.data);
       setAppointments(response.data);
     } catch (error) {
@@ -53,7 +55,7 @@ const AdminAppointments = () => {
     setFilteredUsers(_filteredUsers);
   }, [debouncedSearchText, appointments]);
 
-  const handleStatusChange = async (booking_id, newStatus) => {
+  const handleStatusChange = async (booking_id, newStatus, estimated_price) => {
     try {
       await axios.put(`http://127.0.0.1:8000/bookingstatus/${booking_id}/`, {
         status: newStatus,
@@ -68,6 +70,24 @@ const AdminAppointments = () => {
 
       // Refresh the appointments list
       fetchAppointments();
+
+      const user = getLogInDetailsFromLocalStorage();
+
+      if (newStatus === "accepted") {
+        // Storing transaction amount
+        await fetch("http://127.0.0.1:8000/transactions/create/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            user: user.id,
+            amount: estimated_price,
+            transaction_type: "booking",
+            reference_id: booking_id,
+          }),
+        });
+      }
     } catch (error) {
       console.error("Error updating status:", error);
 
@@ -140,9 +160,7 @@ const AdminAppointments = () => {
                       {appointment.user.mobile}
                     </td>
 
-                    <td className="px-4 py-2 border">
-                      {appointment.status}
-                    </td>
+                    <td className="px-4 py-2 border">{appointment.status}</td>
 
                     <td className="px-4 py-2 border">
                       <AppointmentDetails
@@ -156,13 +174,25 @@ const AdminAppointments = () => {
                       />
                     </td>
 
+                    <td className="px-4 py-2 border">
+                      <UpdateSerivceCharge
+                        booking_id={appointment.id}
+                        estimated_price={appointment.estimated_price}
+                        status={appointment.status}
+                      />
+                    </td>
+
                     <td className="px-4 py-2  flex justify-center">
                       {appointment.status === "pending" && (
                         <>
                           <button
                             className="bg-[#1A8990] hover:bg-green-600 text-white py-1 px-7 rounded-[7px] mr-2"
                             onClick={() =>
-                              handleStatusChange(appointment.id, "accepted")
+                              handleStatusChange(
+                                appointment.id,
+                                "accepted",
+                                appointment.estimated_price
+                              )
                             }
                           >
                             Accept
@@ -170,7 +200,11 @@ const AdminAppointments = () => {
                           <button
                             className="bg-[#E56262] hover:bg-red-500 text-black py-1 px-7 rounded-[7px]"
                             onClick={() =>
-                              handleStatusChange(appointment.id, "rejected")
+                              handleStatusChange(
+                                appointment.id,
+                                "rejected",
+                                appointment.estimated_price
+                              )
                             }
                           >
                             Cancel
@@ -252,6 +286,83 @@ const AppointmentDetails = ({
             </p>
           </div>
         </DialogBody>
+      </Dialog>
+    </div>
+  );
+};
+
+const UpdateSerivceCharge = ({ estimated_price, booking_id, status }) => {
+  const [open, setOpen] = useState(false);
+
+  const handleOpen = () => setOpen(!open);
+
+  const [amount, setAmount] = useState(estimated_price);
+
+  const handleUpdateAmount = async (e) => {
+    e.preventDefault();
+    const user = getLogInDetailsFromLocalStorage();
+    const res = await fetch(
+      "http://127.0.0.1:8000/transactions/update-amount/",
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          user: user.id,
+          reference_id: booking_id,
+          amount: amount,
+          transaction_type: "booking",
+        }),
+      }
+    );
+
+    if (res.ok) {
+      handleOpen()
+      toast.success("Total charge is updated");
+      return;
+    }
+
+    toast.error("Unable to update at the moment");
+  };
+
+  return (
+    <div>
+      <Button
+        className="sm"
+        disabled={["rejected", "pending"].includes(status)}
+        onClick={handleOpen}
+      >
+        Update Total Charge
+      </Button>
+      <Dialog open={open} handler={handleOpen}>
+        <DialogHeader>New Serice Charge</DialogHeader>
+
+        <DialogBody>
+          <form id="amount-form" onSubmit={handleUpdateAmount}>
+            <Input
+              label="Amount"
+              type="number"
+              min={1}
+              required
+              value={amount}
+              onChange={(e) => {
+                setAmount(e.target.value);
+              }}
+            />
+          </form>
+        </DialogBody>
+
+        <DialogFooter>
+          <div className="space-x-5">
+            <Button variant="text" onClick={handleOpen}>
+              Close
+            </Button>
+            <Button color="green" type="submit" form="amount-form">
+              Update
+            </Button>
+          </div>
+        </DialogFooter>
       </Dialog>
     </div>
   );
