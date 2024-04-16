@@ -76,7 +76,7 @@ const OrderList = () => {
             </button>
           </div>
         </div>
-        <h1 className="text-4xl ml-3 sticky z-30 bg-black">Orders</h1>
+        <h1 className="text-4xl sticky top-0 bg-white py-3 ">Orders</h1>
         <div className="py-5 overflow-x-auto ">
           <div className="  text-xl flex-1">
             <table className="w-full h-full border border-collapse">

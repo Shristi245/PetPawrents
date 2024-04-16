@@ -73,6 +73,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
     'user.apps.UserConfig',
     'core.apps.CoreConfig',
+    'transaction.apps.TransactionConfig',
     'adoption.apps.AdoptionConfig',
     'booking.apps.BookingConfig',
     'products.apps.ProductsConfig',
@@ -146,7 +147,7 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME' : 'PetPawrents2',
+        'NAME' : 'petpawrents3',
         'USER': 'postgres',
         'PASSWORD': 'yumarai123?',
         'HOST': 'localhost',

@@ -19,9 +19,22 @@ def booking_list(request):
     
     elif request.method == 'POST':
         serializer = BookingSerializer(data=request.data)
+        
         if serializer.is_valid():
+             # Extract date and time from the request data
+            booking_date = serializer.validated_data['date']
+            booking_time = serializer.validated_data['time']
+            
+            # Check if a booking already exists for the given date and time
+            existing_booking = Booking.objects.filter(date=booking_date, time=booking_time, status='pending').exists()
+
+            if existing_booking:
+                return Response({"error": "Booking already exists for this date and time."}, status=status.HTTP_400_BAD_REQUEST)
+            
             serializer.save()
+
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+        
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET', 'PUT', 'DELETE'])

@@ -31,18 +31,30 @@ class AdoptSerializer(serializers.ModelSerializer):
     
 
 class AdoptedPetSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AdoptedPet
+        fields = ['id', 'adopt', 'user', 'adopted_date', 'status', 'aggreement']
+
+
+
+class AgreementSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Agreement
+        fields = ['id', 'user', 'adopt', 'adopter_name', 'contact_information', 'permanent_address', 'temporary_address', 'agreement_date']
+
+
+class GETAdoptedPetSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)  # Set read_only=True for nested serializers
     adopt = AdoptSerializer(read_only=True) 
 
     class Meta:
         model = AdoptedPet
-        fields = ['id', 'adopt', 'user', 'adopted_date', 'status']
+        fields = ['id', 'adopt', 'user', 'adopted_date', 'status', 'aggreement']
 
 
-
-class AgreementSerializer(serializers.ModelSerializer):
+class GETAgreementSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)  # Set read_only=True for nested serializers
     adopt = AdoptSerializer(read_only=True)
     class Meta:
         model = Agreement
-        fields = ['id', 'adopt', 'user', 'adopted_pet', 'adopter_name', 'contact_information', 'permanent_address', 'temporary_address', 'terms', 'signature', 'agreement_date']
+        fields = ['id', 'user', 'adopt', 'adopter_name', 'contact_information', 'permanent_address', 'temporary_address', 'agreement_date']

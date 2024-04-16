@@ -44,7 +44,6 @@ import ChangePasswordPage from "./containers/ChangePassword.jsx";
 import PetDetailsPage from "./containers/PetDetails.jsx";
 import ProductDetails from "./containers/Product/ProductDescription.jsx";
 const App = () => {
-  console.log(1);
   return (
     <Router>
       <AuthProvider>

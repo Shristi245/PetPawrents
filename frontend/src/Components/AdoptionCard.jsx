@@ -6,6 +6,7 @@ import Swal from "sweetalert2";
 import { getLogInDetailsFromLocalStorage } from "../utils";
 // import { updloadImageToFirebase } from "../../utils";
 import { format } from "date-fns";
+import { toast } from "react-toastify";
 
 const AdoptionCard = ({ image, id, name, description, fetchAdoptions }) => {
   const user = getLogInDetailsFromLocalStorage();
@@ -13,7 +14,6 @@ const AdoptionCard = ({ image, id, name, description, fetchAdoptions }) => {
   const [loading, setLoading] = useState(false);
   const [adoptionDate, setAdoptionDate] = useState("");
   const [showAgreementModal, setShowAgreementModal] = useState(false); // State to control the visibility of the agreement modal
-  const [agreementData, setAgreementData] = useState(null); // State to store fetched agreement data
   const location = useLocation();
 
   const defaultAgreementInfo = {
@@ -22,10 +22,9 @@ const AdoptionCard = ({ image, id, name, description, fetchAdoptions }) => {
     permanent_address: "",
     temporary_address: "",
     agreement_date: "",
-    signature: "",
   };
 
-  const [agrementDate, setAgrementDate] = useState(new Date());
+  const agreement_date = new Date();
 
   const [agreementInfo, setAgreementInfo] = useState(defaultAgreementInfo);
 
@@ -46,24 +45,65 @@ const AdoptionCard = ({ image, id, name, description, fetchAdoptions }) => {
     setShowFullDescription(!showFullDescription);
   };
 
-  const storeAgreementDetails = async () => {
+  const storeAgreementDetails = async (petID) => {
     try {
-      // const imgUrl = await updloadImageToFirebase(agreementImgFile);
+      const isUserAcceptedTermsAndCondition =
+        document.getElementById("termsAndConditions").checked;
 
-      // Fetch agreement data from the backend
-      const response = await fetch("http://127.0.0.1:8000/agreement-forms/");
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch agreement data");
+      if (!isUserAcceptedTermsAndCondition) {
+        Swal.fire({
+          title: "Error",
+          text: "Please accept the Terms and Conditions",
+          icon: "error",
+          confirmButtonText: "OK",
+        });
+        return;
       }
-      const data = await response.json();
-      setAgreementData(data);
+
+      const agreementRes = await fetch(
+        "http://127.0.0.1:8000/agreement-forms/",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            adopter_name: agreementInfo.adopter_name,
+            contact_information: agreementInfo.contact_information,
+            permanent_address: agreementInfo.permanent_address,
+            temporary_address: agreementInfo.temporary_address,
+            agreement_date: agreement_date,
+            user: user.id,
+            adopt: petID,
+          }),
+        }
+      );
+
+      const agreementResData = await agreementRes.json();
+
+      console.log(agreementResData);
+
+      if (!agreementRes.ok) {
+        Swal.fire({
+          title: "Error",
+          text: "Failed to store agreement details",
+          icon: "error",
+        });
+
+        return;
+      }
+
+      toast.success("Agreement details stored successfully");
+
+      handleAdoptionSubmit(petID, agreementResData.id);
+
+      // handleAdoptionSubmit(agreementResData.id);
     } catch (error) {
       console.error("Error fetching agreement data:", error.message);
     }
   };
 
-  const submitAdoptionDetails = async (adoptionID) => {
+  const submitAdoptionDetails = async (adoptionID, aggreementID) => {
     try {
       const response = await fetch("http://127.0.0.1:8000/user-adopted-pets/", {
         method: "POST",
@@ -74,6 +114,7 @@ const AdoptionCard = ({ image, id, name, description, fetchAdoptions }) => {
           adopted_date: adoptionDate,
           user: user.id,
           adopt: adoptionID,
+          aggreement: aggreementID,
         }),
       });
       if (!response.ok) {
@@ -85,7 +126,9 @@ const AdoptionCard = ({ image, id, name, description, fetchAdoptions }) => {
     }
   };
 
-  const handleAdoptionSubmit = async (adoptionID) => {
+  const handleDelete = () => null;
+
+  const handleAdoptionSubmit = async (adoptionID, aggreementID) => {
     try {
       const { value: date } = await Swal.fire({
         title: "Enter Adoption Date",
@@ -99,7 +142,11 @@ const AdoptionCard = ({ image, id, name, description, fetchAdoptions }) => {
           const currentDate = new Date();
           const selectedDate = new Date(date);
           if (currentDate >= selectedDate) {
-            throw new Error("Date Cannot be in the past");
+            Swal.fire({
+              icon: "error",
+              text: "Date Cannot Be in Past",
+              title: "Error",
+            });
           }
           setAdoptionDate(date);
           return date;
@@ -115,7 +162,7 @@ const AdoptionCard = ({ image, id, name, description, fetchAdoptions }) => {
           confirmButtonText: "Yes, adopt it",
         });
         if (result.isConfirmed) {
-          await submitAdoptionDetails(adoptionID);
+          await submitAdoptionDetails(adoptionID, aggreementID);
           Swal.fire({
             title: "Success!",
             text: "Please pick up your pet within the mentioned time",
@@ -133,10 +180,6 @@ const AdoptionCard = ({ image, id, name, description, fetchAdoptions }) => {
         icon: "error",
       });
     }
-  };
-
-  const handleDelete = async () => {
-    // Your delete logic here
   };
 
   return (
@@ -211,20 +254,6 @@ const AdoptionCard = ({ image, id, name, description, fetchAdoptions }) => {
 
                 <>
                   <p className="mb-2">
-                    This Adoption Agreement is entered into on
-                    <input
-                      className="ml-5 border border-black"
-                      placeholder="Enter Date yyyy/mm/dd"
-                      id="agreement_date"
-                      name="agreement_date"
-                      onChange={handleChange}
-                      value={agreementInfo.agreement_date}
-                      required
-                    ></input>
-                    <br />
-                    by
-                  </p>
-                  <p className="mb-2">
                     Mr/Mrs.
                     <input
                       className="ml-5 border border-black"
@@ -236,6 +265,7 @@ const AdoptionCard = ({ image, id, name, description, fetchAdoptions }) => {
                       required
                     ></input>
                   </p>
+
                   <div className="text-left text-white mt-5 bg-blue px-3 rounded-lg py-3">
                     <p className="mb-4 text-lg">
                       <input type="checkbox" id="termsAndConditions" />
@@ -327,7 +357,7 @@ const AdoptionCard = ({ image, id, name, description, fetchAdoptions }) => {
                   <div className="mb-4 mt-20  text-lg ml-4 flex justify-between">
                     <p className=" font-semibold text-left">Signature: </p>
                     <p className="font-semibold text-right">
-                      Date: {format(agrementDate, "dd MMM, yyyy")}
+                      Date: {format(agreement_date, "dd MMM, yyyy")}
                     </p>
                   </div>
                 </>
@@ -335,7 +365,8 @@ const AdoptionCard = ({ image, id, name, description, fetchAdoptions }) => {
               <div className="modal-footer">
                 <button
                   className="bg-blue text-white px-4 py-2 rounded-md mt-2 w-[20%]"
-                  onClick={() => handleAdoptionSubmit(id)}
+                  // onClick={() => handleAdoptionSubmit(id)}
+                  onClick={() => storeAgreementDetails(id)}
                 >
                   Submit Form
                 </button>

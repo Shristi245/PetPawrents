@@ -3,7 +3,14 @@ import axios from "axios";
 import AdminSideMenu from "../../Components/AdminSideMenu";
 import { useDebounce } from "../../utils";
 import Swal from "sweetalert2";
-import { Alert } from "@material-tailwind/react";
+import {
+  Alert,
+  Button,
+  Dialog,
+  DialogBody,
+  DialogHeader,
+  Typography,
+} from "@material-tailwind/react";
 
 const AdminAppointments = () => {
   const [appointments, setAppointments] = useState([]);
@@ -78,7 +85,7 @@ const AdminAppointments = () => {
       <AdminSideMenu />
 
       {/* Main Content */}
-      <div className="flex-1  px-9 overflow-hidden">
+      <div className="flex-1  px-9 overflow-hidden ">
         <div className="p-4 flex items-center justify-between">
           {/* Search Bar */}
           <div className="relative  ">
@@ -101,7 +108,7 @@ const AdminAppointments = () => {
         </div>
 
         {/* Main content starts here */}
-        <h1 className="text-4xl ml-3">Appointments</h1>
+        <h1 className="text-4xl ml-3  ">Appointments</h1>
         <div className="overflow-hidden w-full py-5">
           <div className=" text-xl w-full  overflow-x-scroll overflow-y-auto">
             {appointments.length === 0 && (
@@ -114,12 +121,6 @@ const AdminAppointments = () => {
                   <th className="px-4 py-2 border">Full Name</th>
                   <th className="px-4 py-2 border">Email</th>
                   <th className="px-4 py-2 border">Phone</th>
-                  <th className="px-4 py-2 border">Pet Type</th>
-                  <th className="px-4 py-2 border">Service</th>
-                  <th className="px-4 py-2 border">Breed</th>
-                  <th className="px-4 py-2 border">Aggression</th>
-                  <th className="px-4 py-2 border">Date</th>
-                  <th className="px-4 py-2 border">Time</th>
                   <th className="px-4 py-2 border">Status</th>
                   <th className="px-4 py-2 border">Requests</th>
                 </tr>
@@ -138,17 +139,24 @@ const AdminAppointments = () => {
                     <td className="px-4 py-2 border">
                       {appointment.user.mobile}
                     </td>
-                    <td className="px-4 py-2 border">{appointment.pet_type}</td>
-                    <td className="px-4 py-2 border">{appointment.service}</td>
-                    <td className="px-4 py-2 border">{appointment.breed}</td>
+
                     <td className="px-4 py-2 border">
-                      {appointment.is_aggressive}
+                      {appointment.status}
                     </td>
 
-                    <td className="px-4 py-2 border">{appointment.date}</td>
-                    <td className="px-4 py-2 border">{appointment.time}</td>
-                    <td className="px-4 py-2 border">{appointment.status}</td>
-                    <td className="px-4 py-2 border flex justify-center">
+                    <td className="px-4 py-2 border">
+                      <AppointmentDetails
+                        service={appointment.service}
+                        pet_type={appointment.pet_type}
+                        date={appointment.date}
+                        time={appointment.time}
+                        aggressive={appointment.aggressive}
+                        breed={appointment.aggressive}
+                        estimated_price={appointment.estimated_price}
+                      />
+                    </td>
+
+                    <td className="px-4 py-2  flex justify-center">
                       {appointment.status === "pending" && (
                         <>
                           <button
@@ -182,3 +190,69 @@ const AdminAppointments = () => {
 };
 
 export default AdminAppointments;
+
+const AppointmentDetails = ({
+  pet_type,
+  service,
+  estimated_price,
+  aggressive,
+  breed,
+  date,
+  time,
+}) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleOpen = () => setIsOpen(!isOpen);
+
+  return (
+    <div>
+      <Button onClick={handleOpen} size="sm">
+        View Details
+      </Button>
+      <Dialog open={isOpen} handler={handleOpen}>
+        <DialogHeader>
+          <Typography variant="h5">Appointment Details</Typography>
+        </DialogHeader>
+
+        <DialogBody>
+          <div className="space-y-4">
+            <p>
+              Pet Type:
+              <span> {pet_type}</span>
+            </p>
+
+            <p>
+              Service:
+              <span> {service}</span>
+            </p>
+
+            <p>
+              Breed:
+              <span> {breed}</span>
+            </p>
+
+            <p>
+              Aggressive:
+              <span> {aggressive}</span>
+            </p>
+
+            <p>
+              Appintment Date:
+              <span> {date}</span>
+            </p>
+
+            <p>
+              Time:
+              <span> {time}</span>
+            </p>
+
+            <p>
+              Estimated Price:
+              <span> NRP {estimated_price}</span>
+            </p>
+          </div>
+        </DialogBody>
+      </Dialog>
+    </div>
+  );
+};

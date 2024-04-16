@@ -5,6 +5,12 @@ import "react-datepicker/dist/react-datepicker.css";
 import { getLogInDetailsFromLocalStorage } from "../utils";
 import { format } from "date-fns";
 import Select from "react-select";
+import {
+  AGRRESIVE_CHARGE,
+  BREEDS,
+  BREED_SERVICE_CHARGE,
+  SERVICE_PRICES,
+} from "../constants";
 
 function AppointmentBookingPage() {
   const user = getLogInDetailsFromLocalStorage();
@@ -15,35 +21,12 @@ function AppointmentBookingPage() {
     service: [],
     date: "",
     time: "",
-    is_aggressive: "",
-    estimatedPrice: "",
+    aggressive: "",
+    estimated_price: "",
   };
 
   const [bookingInfo, setBookingInfo] = useState(defaultBookingInfo);
   const [bookingDate, setBookingDate] = useState();
-  // const [servicePrices] = useState({
-  //   Grooming: 50,
-  //   Vaccination: 100,
-  //   NailTrimming: 30,
-  // });
-  // const [breedPrices] = useState({
-  //   Dog: {
-  //     "German Shepherd": 70,
-  //     "Labrador Retriever": 60,
-  //     // Add prices for other dog breeds
-  //   },
-  //   Cat: {
-  //     Abyssinian: 40,
-  //     "American Shorthair": 35,
-  //     // Add prices for other cat breeds
-  //   },
-  // });
-  // const [aggressionPrices] = useState({
-  //   Violent: 20,
-  //   "Semi-violent": 10,
-  //   "Not-violent": 5,
-  //   Unknown: 0,
-  // });
 
   useEffect(() => {
     if (!user) {
@@ -68,11 +51,13 @@ function AppointmentBookingPage() {
       ? selectedOptions
       : [selectedOptions];
     const selectedServices = optionsArray.map((option) => option.value);
+
     setBookingInfo({
       ...bookingInfo,
       service: selectedServices, // Set service to an array of selected services
     });
   };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -98,6 +83,7 @@ function AppointmentBookingPage() {
     try {
       const data = {
         ...bookingInfo,
+        service: bookingInfo.service.toString(),
         date: format(new Date(bookingDate), "yyyy-MM-dd"),
         user: user.id,
       };
@@ -121,9 +107,11 @@ function AppointmentBookingPage() {
         return;
       }
 
+      const resMessage = await response.json();
+
       swal.fire({
         title: "Error!",
-        text: "Unable to book an appointment",
+        text: resMessage?.error || "Unable to book an appointment",
         icon: "error",
       });
     } catch (error) {
@@ -136,73 +124,47 @@ function AppointmentBookingPage() {
     }
   };
 
-  // const calculateEstimatedPrice = () => {
-  //   let totalPrice = 0;
+  const calculateEstimatedPrice = () => {
+    const { pet_type, service, breed, aggressive } = bookingInfo;
 
-  //   // Calculate price based on selected services
-  //   bookingInfo.services.forEach((service) => {
-  //     totalPrice += servicePrices[service];
-  //   });
+    let estimatedPrice = 0;
 
-  //   // Add price based on selected breed
-  //   totalPrice += breedPrices[bookingInfo.pet_type][bookingInfo.breed] || 0;
+    if (service.length !== 0) {
+      const serviceCharge = service.reduce((acc, item) => {
+        const servicePrice = SERVICE_PRICES[item] || 0;
+        console.log(servicePrice);
+        return (
+          acc + (isNaN(parseInt(servicePrice)) ? 0 : parseInt(servicePrice))
+        );
+      }, 0);
 
-  //   // Add price based on aggression level
-  //   totalPrice += aggressionPrices[bookingInfo.is_aggressive];
+      estimatedPrice += serviceCharge;
+    }
 
-  //   // Update estimated price in the state
-  //   setBookingInfo({
-  //     ...bookingInfo,
-  //     estimatedPrice: totalPrice,
-  //   });
-  // };
+    if (pet_type && breed) {
+      const breedCharge =
+        BREED_SERVICE_CHARGE[pet_type.toLowerCase()][breed] || 0;
+      estimatedPrice += breedCharge;
+    }
 
-  const dogBreeds = [
-    "German Shepherd",
-    "Labrador Retriever",
-    "Golden Retriever",
-    "Bulldog",
-    "Beagle",
-    "Poodle",
-    "Rottweiler",
-    "Yorkshire Terrier",
-    "Dachshund",
-    "Boxer",
-    "Siberian Husky",
-    "Doberman Pinscher",
-    "Great Dane",
-    "Shih Tzu",
-    "Pug",
-    "Chihuahua",
-    "Maltese",
-    "Border Collie",
-    "Australian Shepherd",
-    "Cocker Spaniel",
-  ];
+    if (aggressive) {
+      const agrresiveCharge = AGRRESIVE_CHARGE[aggressive] || 0;
+      estimatedPrice += agrresiveCharge;
+    }
 
-  const catBreeds = [
-    "Abyssinian",
-    "American Shorthair",
-    "Bengal",
-    "Birman",
-    "Bombay",
-    "British Shorthair",
-    "Burmese",
-    "Chartreux",
-    "Cornish Rex",
-    "Devon Rex",
-    "Egyptian Mau",
-    "Exotic Shorthair",
-    "Maine Coon",
-    "Manx",
-    "Norwegian Forest Cat",
-    "Oriental",
-    "Persian",
-    "Ragdoll",
-    "Russian Blue",
-    "Siamese",
-    "Sphynx",
-  ];
+    setBookingInfo((prevInfo) => {
+      return { ...prevInfo, estimated_price: estimatedPrice };
+    });
+  };
+
+  useEffect(() => {
+    calculateEstimatedPrice();
+  }, [
+    bookingInfo.aggressive,
+    bookingInfo.breed,
+    bookingInfo.pet_type,
+    bookingInfo.service,
+  ]);
 
   return (
     <div
@@ -278,19 +240,11 @@ function AppointmentBookingPage() {
                 <option value="" className="text-blue">
                   Select Breed
                 </option>
-                {bookingInfo.pet_type === "Dog"
-                  ? dogBreeds.map((breed) => (
-                      <option key={breed} value={breed}>
-                        {breed}
-                      </option>
-                    ))
-                  : bookingInfo.pet_type === "Cat"
-                  ? catBreeds.map((breed) => (
-                      <option key={breed} value={breed}>
-                        {breed}
-                      </option>
-                    ))
-                  : null}
+                {BREEDS[bookingInfo.pet_type.toLowerCase()]?.map((breed) => (
+                  <option key={breed} value={breed}>
+                    {breed}
+                  </option>
+                ))}
                 <option value="Unknown">Unknown</option>
               </select>
             </div>
@@ -339,8 +293,8 @@ function AppointmentBookingPage() {
               </label>
               <select
                 id="aggressive"
-                name="is_aggressive"
-                value={bookingInfo.is_aggressive}
+                name="aggressive"
+                value={bookingInfo.aggressive}
                 onChange={handleChange}
                 className="mt-1 block w-full rounded py-2 lg:text-lg shadow-sm px-2 border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 required
@@ -351,7 +305,6 @@ function AppointmentBookingPage() {
                 <option value="Violent">Violent</option>
                 <option value="Semi-violent">Semi-violent</option>
                 <option value="Not-violent">Not-violent</option>
-                <option value="Unknown">Unknown</option>
               </select>
             </div>
             <div className="mt-4">
@@ -365,13 +318,7 @@ function AppointmentBookingPage() {
                 id="estimatedPrice"
                 name="estimatedPrice"
                 type="text"
-                value={`$${bookingInfo.estimatedPrice}`}
-                onChange={(e) =>
-                  setBookingInfo({
-                    ...bookingInfo,
-                    estimatedPrice: e.target.value,
-                  })
-                }
+                value={`NPR ${bookingInfo.estimated_price}`}
                 className="mt-1 block w-full py-2 rounded shadow-sm border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
             </div>

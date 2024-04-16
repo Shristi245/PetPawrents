@@ -5,6 +5,8 @@ import { ShoppingCart } from "lucide-react";
 import { CalendarCheck2 } from "lucide-react";
 import { Users } from "lucide-react";
 import { Dog } from "lucide-react";
+import { MdHistory } from "react-icons/md";
+import { BsCartCheckFill } from "react-icons/bs";
 
 const AdminSideMenu = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(true);
@@ -38,7 +40,11 @@ const AdminSideMenu = () => {
           isMenuOpen ? "" : "hidden"
         }`}
       >
-        <img src="/images/final_logo.png" className="w-40 mx-auto mt-11" alt="" />
+        <img
+          src="/images/final_logo.png"
+          className="w-40 mx-auto mt-11"
+          alt=""
+        />
         {/* Sidebar Menu */}
         <nav className="">
           <ul className="space-y-8 mt-6 px-9">
@@ -91,7 +97,7 @@ const AdminSideMenu = () => {
             </div>
 
             <div className="flex">
-              <Dog />
+              <MdHistory className="w-6 h-6" />
               <li className="px-4 text-[18px] hover:text-gray-600 flex">
                 <Link
                   to="/admin-dashboard-adoption-history"
@@ -104,7 +110,7 @@ const AdminSideMenu = () => {
             </div>
 
             <div className="flex">
-              <Dog />
+              <BsCartCheckFill className="w-6 h-6"/>
               <li className="px-4 text-[18px] hover:text-gray-600 flex">
                 <Link to="/admin-order-list" alt="" className="w-full">
                   Orders
