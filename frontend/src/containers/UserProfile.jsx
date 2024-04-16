@@ -5,7 +5,7 @@ import { Link } from "react-router-dom/cjs/react-router-dom.min";
 import { updloadImageToFirebase } from "../utils";
 import { toast } from "react-toastify";
 
-function UserProfile() {
+const UserProfile = (userID) => {
   const [profile, setProfile] = useState(null);
   // Get the URL parameter 'pk' using useParams
 
@@ -77,7 +77,7 @@ function UserProfile() {
             <Link to="/edit-profile"> Edit Profile</Link>
           </button>
           <button className="bg-blue-500 text-white shadow-inner hover:text-black bg-[#56A6B8] text-3xl px-4 py-3 rounded-[20px] mb-5">
-            <Link to="/orders-list">View Orders</Link>
+            <Link to={`/orders-list/${userID}`}>View Orders</Link>
           </button>
 
           <button
@@ -130,13 +130,13 @@ function UserProfile() {
                   accept="image/*"
                   className="hidden"
                   onChange={handleImageChange}
-                />{" "}
+                />
               </div>
             </>
           )}
         </div>
         {/* Third div containing user details */}
-        <div className="flex flex-col items-start space-y-6 mr-44 w-[20%]">
+        <div className="flex flex-col items-start space-y-6 mr-60 w-[20%]">
           {/* Display email and phone number */}
           {profile && (
             <>
@@ -162,7 +162,7 @@ function UserProfile() {
 
               <div className="flex items-center text-2xl gap-4 mb-3">
                 <p className="text-black text-2xl">Address:</p>
-                <p> {profile.email}</p>
+                <p> {profile.address}</p>
               </div>
 
               <div className="flex items-center text-2xl gap-4 mb-3">

@@ -4,12 +4,13 @@ from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 from .models import AdoptedPet
 from user.serializers import UserSerializer
-
+from rest_framework import serializers
+from .models import Agreement
 
 class AdoptSerializer(serializers.ModelSerializer):
     class Meta:
         model = Adopt
-        fields = ['id','name', 'description', 'image', 'updated_date', 'is_adopted']
+        fields = ['id', 'name', 'description', 'image', 'updated_date', 'is_adopted']
 
     def validate(self, data):
 
@@ -28,11 +29,20 @@ class AdoptSerializer(serializers.ModelSerializer):
 
         return data
     
-class AdoptedPetSerializer(serializers.ModelSerializer):
 
+class AdoptedPetSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)  # Set read_only=True for nested serializers
     adopt = AdoptSerializer(read_only=True) 
-    
+
     class Meta:
         model = AdoptedPet
         fields = ['id', 'adopt', 'user', 'adopted_date', 'status']
+
+
+
+class AgreementSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)  # Set read_only=True for nested serializers
+    adopt = AdoptSerializer(read_only=True)
+    class Meta:
+        model = Agreement
+        fields = ['id', 'adopt', 'user', 'adopted_pet', 'adopter_name', 'contact_information', 'permanent_address', 'temporary_address', 'terms', 'signature', 'agreement_date']

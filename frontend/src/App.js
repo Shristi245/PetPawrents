@@ -42,6 +42,7 @@ import OrderList from "./containers/Dashboard/AdminOrdersList.jsx";
 import OrderedItems from "./containers/Orders/OrderItemsbyID.jsx";
 import ChangePasswordPage from "./containers/ChangePassword.jsx";
 import PetDetailsPage from "./containers/PetDetails.jsx";
+import ProductDetails from "./containers/Product/ProductDescription.jsx";
 const App = () => {
   console.log(1);
   return (
@@ -79,12 +80,13 @@ const App = () => {
             path="/admin-dashboard-adoption-history"
           />
           <Route component={OrderList} path="/admin-order-list" />
-          <Route component={OrderedItems} path="/orders-list" />
+          <Route component={OrderedItems} path="/orders-list/:userID" />
           {/* User Routes */}
           <Route component={EditProfile} path="/edit-profile" />
           <Route component={UserProfile} path="/profile" />
           <Route component={BookAppointment} path="/book-appointment" />
           <Route component={AdminAppointments} path="/admin-appointment" />
+
           {/* Common Routes */}
           <Route component={Home} path="/" exact />
           <Route component={Login} path="/login" />
@@ -103,6 +105,11 @@ const App = () => {
           <Route component={ShoppingCart} path="/cart" />
           <Route component={AdoptionDetails} path="/adoption" />
           <Route component={ReviewPage} path="/review" />
+          <Route
+            component={ProductDetails}
+            path="/product-details/:id"
+          />
+
           {/* Redirect to home for unknown paths */}
           <Redirect to="/" />
         </Switch>

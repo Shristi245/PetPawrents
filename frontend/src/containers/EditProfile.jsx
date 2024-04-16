@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { getLogInDetailsFromLocalStorage } from "../utils";
 import swal from "sweetalert";
-import { Link } from "react-router-dom/cjs/react-router-dom.min";
 import { Input, Textarea } from "@material-tailwind/react";
 
 const EditProfile = () => {
@@ -29,14 +28,16 @@ const EditProfile = () => {
         `http://127.0.0.1:8000/api/users/${user.id}`
       );
       const profileData = response.data;
-      setFormData({
-        first_name: profileData.first_name,
-        last_name: profileData.last_name,
-        mobile: profileData.mobile,
-        address: profileData.address,
-        email: profileData.email,
-        bio: profileData.bio,
-      });
+
+      // setFormData({
+      //   first_name: profileData.first_name,
+      //   last_name: profileData.last_name,
+      //   mobile: profileData.mobile,
+      //   address: profileData.address,
+      //   email: profileData.email,
+      //   bio: profileData.bio,
+      // });
+      setFormData(profileData);
     } catch (error) {
       console.error("Error fetching profile data:", error);
       // Handle error
@@ -154,14 +155,12 @@ const EditProfile = () => {
               />
             </div>
 
-            <Link to="/profile">
-              <button
-                type="submit"
-                className="bg-blue text-black px-4 py-2 rounded-md"
-              >
-                Save Changes
-              </button>
-            </Link>
+            <button
+              type="submit"
+              className="bg-blue text-black px-4 py-2 rounded-md"
+            >
+              Save Changes
+            </button>
           </form>
         </div>
 

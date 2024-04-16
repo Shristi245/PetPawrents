@@ -3,6 +3,8 @@ import AuthContext from "../context/AuthContext";
 import PetRegister from "../Components/PetCredentials";
 // import { useHistory } from 'react-router-dom';
 import { Input } from "@material-tailwind/react";
+import { toast } from "react-toastify";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
 function Register() {
   const [first_name, setFirstname] = useState("");
@@ -11,10 +13,11 @@ function Register() {
   const [username, setUsername] = useState("");
   const [mobile, setMobile] = useState("");
   const [password, setPassword] = useState("");
+  const history = useHistory();
 
   const defaultUserInfo = {
-    petName: "",
-    petType: "",
+    petname: "",
+    pettype: "",
     age: 0,
     height: 0,
     weight: 0,
@@ -29,7 +32,7 @@ function Register() {
 
   const handleUserRegistration = async () => {
     try {
-      await registerUser(
+      return await registerUser(
         first_name,
         last_name,
         email,
@@ -47,7 +50,7 @@ function Register() {
 
   const handlePetRegistration = async () => {
     try {
-      await registerPet(petInfo);
+      return await registerPet(petInfo);
       // history.push('/pet'); // Redirect upon successful
     } catch (error) {
       console.error("Registration failed:", error);
@@ -57,7 +60,7 @@ function Register() {
   };
 
   const handleBothUserAndPetRegistration = async () => {
-    await Promise.all([handleUserRegistration, handlePetRegistration]);
+    await Promise.all([handleUserRegistration(), handlePetRegistration()]);
   };
 
   const handlePetInfoChange = (e) => {

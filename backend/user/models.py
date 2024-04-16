@@ -22,7 +22,7 @@ class User(AbstractUser):
     address= models.CharField(max_length=1000, null=False, blank=True)
     bio = models.CharField(max_length=100, null=True, blank=True)
     otp = models.CharField(max_length=6, null=True, blank=True)
-    image = models.TextField()
+    image = models.TextField(default="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png")
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["username", "first_name", "last_name"]

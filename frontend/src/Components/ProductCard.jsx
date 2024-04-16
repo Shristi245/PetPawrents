@@ -93,13 +93,18 @@ const ProductCard = ({ image, title, price, id, category, fetchProducts }) => {
       </div>
       <div className="mt-4 pb-5">
         <h5 className="text-center tracking-tight text-gray-500">{title}</h5>
-        <div className="mb-5 flex justify-center">
+        <div className="mb-2 flex justify-center">
           <p>
             <span className="text-sm font-bold text-gray-900">
               NRP. {price}
             </span>
           </p>
         </div>
+        <Link to={`/product-details/${id}`}>
+          <button className=" text-blue underline text-center">
+            View Details...
+          </button>
+        </Link>
       </div>
 
       {location.pathname === "/admin-dashboard-products" ? (

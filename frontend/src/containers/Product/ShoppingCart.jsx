@@ -1,38 +1,74 @@
-import React, { useEffect, useState } from "react";
+import { Alert, Button } from "@material-tailwind/react";
+import KhaltiCheckout from "khalti-checkout-web";
 import { Trash } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { FaMinus, FaPlus } from "react-icons/fa6";
+import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 import {
   calculateOrderTotal,
+  clearCart,
   decreaseQuantity,
   getItemsFromCart,
+  getLogInDetailsFromLocalStorage,
   removeItemFromCart,
   setItemsToCart,
 } from "../../utils";
-import { toast } from "react-toastify";
-import { FaPlus } from "react-icons/fa6";
-import { FaMinus } from "react-icons/fa6";
-import { Alert, Button } from "@material-tailwind/react";
-import { Link } from "react-router-dom";
-import KhaltiCheckout from "khalti-checkout-web";
-import { config } from "../Checkout/CheckoutConfig";
+import { generalConfig } from "../Checkout/CheckoutConfig";
 
 export function ShoppingCart() {
+  const khaltiConfig = {
+    eventHandler: {
+      async onSuccess(payload) {
+        const paid_amount = payload.amount / 100;
+
+        const user = getLogInDetailsFromLocalStorage();
+
+        const cartItems = getItemsFromCart().map((item) => {
+          return { product: item.id, quantity: item.quantity };
+        });
+
+        const total_amount = calculateOrderTotal();
+
+        const res = await fetch("http://127.0.0.1:8000/place-order/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            total_amount,
+            paid_amount,
+            user: user.id,
+            order_items: cartItems,
+          }),
+        });
+
+        if (res.ok) {
+          toast.success(
+            "Order placed successfully. The currior will deliver the items soon"
+          );
+          setCartItems([]);
+          clearCart();
+          return;
+        }
+
+        toast.error("Unable to place order at the moment");
+      },
+      // onError handler is optional1
+      onError(error) {
+        console.log(error);
+      },
+      onClose() {
+        console.log("widget is closing");
+      },
+    },
+  };
+
   const [cartItems, setCartItems] = useState([]);
-  let checkout = new KhaltiCheckout(config);
+
+  let checkout = new KhaltiCheckout({ ...generalConfig, ...khaltiConfig });
+
   const handleSubscription = () => {
-    // const user = getUserInfoFromCookie();
-
-    // if (!user) {
-    //   toast.error('You need to register first to take the subscription');
-    //   return;
-    // }
-
-    // if (user.subscription) {
-    //   toast.info(
-    //     'You have already a subscription plan. You cannot take new subscription'
-    //   );
-    //   return;
-    // }
-
     checkout.show({ amount: 20000 });
   };
 

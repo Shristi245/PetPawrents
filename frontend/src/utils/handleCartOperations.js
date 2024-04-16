@@ -50,3 +50,7 @@ export const calculateOrderTotal = () => {
     return acc + item.price * item.quantity;
   }, 0);
 };
+
+export const clearCart = () => {
+  localStorage.removeItem("cartItems");
+};

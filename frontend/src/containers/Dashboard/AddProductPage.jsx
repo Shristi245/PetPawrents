@@ -9,6 +9,7 @@ const AddProductPage = () => {
   const defaultProductInfo = {
     title: "",
     category: "",
+    description: "",
     price: 0,
   };
 
@@ -88,6 +89,14 @@ const AddProductPage = () => {
               name="category"
               onChange={handleChange}
               value={productInfo.category}
+              required
+            />
+
+            <Input
+              label="Product Description"
+              name="description"
+              onChange={handleChange}
+              value={productInfo.description}
               required
             />
             <Input

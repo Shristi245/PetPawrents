@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from user.models import User
 from booking.models import Booking
 from products.models import Product
-from adoption.models import Adopt
+from adoption.models import AdoptedPet
 from rest_framework.views import APIView
 from user.serializers import UserSerializer
 # from appointment.serializers import AppointmentSerializer
@@ -61,10 +61,10 @@ class TotalProductsView(APIView):
         totalProducts = Product.objects.count()
         return Response({'totalProducts': totalProducts})
     
-# class TotalPetsforAdoptionsView(APIView):
-#     def get(self, request):
-#         totalAdoptionDetails = Adopt.objects.count()
-#         return Response({'totalAdoptionDetails': totalAdoptionDetails})
+class TotalAdoptionHistoryView(APIView):
+    def get(self, request):
+        totalAdoptionDetails = AdoptedPet.objects.count()
+        return Response({'totalAdoptionDetails': totalAdoptionDetails})
 
 
 # class AdoptedPetListAPIView(generics.ListAPIView):

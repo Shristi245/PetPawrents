@@ -10,14 +10,7 @@ function PetRegister({
   handleUserRegistration,
   handleBothUserAndPetRegistration,
 }) {
-  const { petName, petType, age, height, weight } = petInfo;
-
-  const history = useHistory;
-
-  // Function to handle skipping the registration process
-  const handleSkip = () => {
-    history.push("/login"); // Redirect the user to the login page
-  };
+  const { petname, pettype, age, height, weight } = petInfo;
 
   return (
     <section className="h-[100vh] flex flex-col items-center justify-center w-full">
@@ -41,10 +34,10 @@ function PetRegister({
                 type="text"
                 class="peer block min-h-[auto] w-full rounded border-b bg-transparent px-3 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
                 id="exampleFormControlInput22"
-                name="petName"
+                name="petname"
                 placeholder="Pet Name"
                 onChange={handleChange}
-                value={petName}
+                value={petname}
               />
               <label
                 for="exampleFormControlInput22"
@@ -60,8 +53,8 @@ function PetRegister({
                 type="text"
                 class="peer block min-h-[auto] w-full rounded border-b bg-transparent px-3 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
                 id="exampleFormControlInput22"
-                name="petType"
-                value={petType}
+                name="pettype"
+                value={pettype}
                 placeholder="Pet Type"
                 onChange={handleChange}
               />

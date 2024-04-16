@@ -4,16 +4,17 @@ import AdminSideMenu from "../../Components/AdminSideMenu";
 import { useDebounce } from "../../utils";
 import Swal from "sweetalert2";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
-import { RxCrossCircled } from "react-icons/rx";
 import { IconButton } from "@material-tailwind/react";
 
 const AdminAdoptionHistory = () => {
   const [adoptions, setAdoptions] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [searchText, setSearchText] = useState("");
+  const [selectedAgreementForm, setSelectedAgreementForm] = useState([]);
+  const [showModal, setShowModal] = useState(false);
   const debouncedSearchText = useDebounce(searchText);
 
-  const fetchAppointmentHistory = async () => {
+  const fetchAdoptionHistory = async () => {
     try {
       const response = await axios.get(
         `http://127.0.0.1:8000/adoption-history/all/`
@@ -27,7 +28,7 @@ const AdminAdoptionHistory = () => {
   };
 
   useEffect(() => {
-    fetchAppointmentHistory();
+    fetchAdoptionHistory();
   }, []);
 
   const updateAdoptionHistoryStatus = (id) => async () => {
@@ -65,11 +66,22 @@ const AdminAdoptionHistory = () => {
           icon: "success",
         });
 
-        fetchAppointmentHistory();
+        fetchAdoptionHistory();
       }
     });
   };
-
+  const handleAgreementDetails = async (adoptID) => {
+    try {
+      const response = await axios.get(
+        `http://127.0.0.1:8000/agreement-forms/${adoptID}/`
+      );
+      const agreementForm = response.data;
+      setShowModal(true);
+      setSelectedAgreementForm(agreementForm);
+    } catch (error) {
+      console.error("Error fetching agreement details:", error);
+    }
+  };
   //   useEffect(() => {
   //     const _searchText = debouncedSearchText.toLowerCase();
   //     const _filteredUsers = adoptions.filter(
@@ -88,40 +100,8 @@ const AdminAdoptionHistory = () => {
   // setFilteredUsers(_filteredUsers);
   //   }, [debouncedSearchText, appointments]);
 
-  //   const handleStatusChange = async (booking_id, newStatus) => {
-  //     try {
-  //       // Update the status on the server
-  //       const res = await axios.put(
-  //         `http://127.0.0.1:8000/bookingstatus/${booking_id}/`,
-  //         {
-  //           status: newStatus,
-  //         }
-  //       );
-  //       fetchAppointments();
-  //       console.log(res);
-
-  //       // Show success message using SweetAlert
-  //       Swal.fire({
-  //         icon: "success",
-  //         title: "Success!",
-  //         text: `Booking status updated to ${newStatus}`,
-  //         showConfirmButton: false,
-  //         timer: 1500, // Close the alert after 1.5 seconds
-  //       });
-  //     } catch (error) {
-  //       console.error("Error updating status:", error);
-
-  //       // Show error message using SweetAlert
-  //       Swal.fire({
-  //         icon: "error",
-  //         title: "Error!",
-  //         text: "Failed to update booking status. Please try again later.",
-  //       });
-  //     }
-  //   };
-
   return (
-    <div className="flex overflow-hidden mb-32 ">
+    <div className="flex overflow-hidden mb-32 h-screen">
       {/* Include AdminSideMenu component */}
       <AdminSideMenu />
 
@@ -156,18 +136,22 @@ const AdminAdoptionHistory = () => {
               <thead>
                 <tr>
                   <th className="px-4 py-2 border">SN</th>
-                  <th className="px-4 py-2 border">Pet</th>
+                  <th className="px-4 py-2 border">Animal ID</th>
+                  <th className="px-4 py-2 border">Animal Name</th>
                   <th className="px-4 py-2 border">User</th>
                   <th className="px-4 py-2 border">Email</th>
                   <th className="px-4 py-2 border">Adopted Date</th>
                   <th className="px-4 py-2 border">Status</th>
                   <th className="px-4 py-2 border">Action</th>
+                  <th className="px-4 py-2 border">Agreement</th>
                 </tr>
               </thead>
               <tbody className="text-center text-[#673405]">
                 {filteredUsers.map((adoption, index) => (
                   <tr key={index} className="border">
                     <td className="px-4 py-2 border">{index + 1}</td>
+                    <td className="px-4 py-2 border">{adoption.adopt.id}</td>
+
                     <td className="px-4 py-2 border">{adoption.adopt.name}</td>
                     <td className="px-4 py-2 border">
                       {adoption.user.first_name}
@@ -191,11 +175,115 @@ const AdminAdoptionHistory = () => {
                         {/* <RxCrossCircled color="red" /> */}
                       </div>
                     </td>
+                    <td className="px-4 py-2 border ">
+                      <button
+                        className="text-black font-bold py-2 px-4 rounded"
+                        onClick={() =>
+                          handleAgreementDetails(adoption.adopt.id)
+                        }
+                      >
+                        View Details
+                      </button>
+                    </td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
+          {showModal && (
+            <div className="fixed z-10 inset-0 overflow-y-auto">
+              <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+                <div
+                  className="fixed inset-0 transition-opacity"
+                  aria-hidden="true"
+                >
+                  <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
+                </div>
+                <span
+                  className="hidden sm:inline-block sm:align-middle sm:h-screen"
+                  aria-hidden="true"
+                >
+                  &#8203;
+                </span>
+                <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                  <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    <div className="sm:flex sm:items-start">
+                      <div className="text-center sm:mt-0 sm:ml-4 sm:text-left">
+                        <h3 className="text-lg leading-6 font-medium text-gray-900">
+                          Legal Adoption Agreement
+                        </h3>
+                        <div className="mt-4">
+                          {selectedAgreementForm.map((agreement, index) => (
+                            <React.Fragment key={index}>
+                              <p className="mb-2">
+                                This Adoption Agreement is entered into on{" "}
+                                {agreement.agreement_date}, by and between:
+                              </p>
+                              <p className="mb-2">
+                                Party of the Second Part:{" "}
+                                {agreement.adopter_name}
+                              </p>
+                              <p className="mb-4">
+                                Both parties agree to the following terms and
+                                conditions:
+                              </p>
+                              {/* Replace with agreement details */}
+                              <div>
+                                <p>
+                                  <strong>User ID:</strong> {agreement.user.id}
+                                </p>
+                                <p>
+                                  <strong>Animal ID:</strong>{" "}
+                                  {agreement.adopt.id}
+                                </p>
+                                <p>
+                                  <strong>Animal Name:</strong>{" "}
+                                  {agreement.adopt.name}
+                                </p>
+                                <p>
+                                  <strong>Adopter Name:</strong>{" "}
+                                  {agreement.adopter_name}
+                                </p>
+                                <p>
+                                  <strong>Contact:</strong>{" "}
+                                  {agreement.contact_information}
+                                </p>
+                                <p>
+                                  <strong>Permanent Address:</strong>{" "}
+                                  {agreement.permanent_address}
+                                </p>
+                                <p>
+                                  <strong>Temporary Address:</strong>{" "}
+                                  {agreement.temporary_address}
+                                </p>
+                                {/* Add more fields as needed */}
+                              </div>
+                              {/* Signature Section */}
+                              <div className="mb-4">
+                                <p className="mb-1">
+                                  Signature: ___________________________________
+                                </p>
+                                <p>Date: _____________________________</p>
+                              </div>
+                            </React.Fragment>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                    <button
+                      onClick={() => setShowModal(false)}
+                      type="button"
+                      className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm"
+                    >
+                      Close
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

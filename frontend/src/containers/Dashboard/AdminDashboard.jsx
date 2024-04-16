@@ -108,7 +108,7 @@ const AdminDashboard = () => {
 
         <div className="grid grid-cols-4 gap-8 mt-8">
           {/* Total Users */}
-          <div className="bg-gray-200 p-6 rounded-lg flex justify-between items-center">
+          <div className="bg-blue-300 p-6 rounded-lg flex justify-between items-center">
             <div>
               <h2 className="text-xl font-semibold mb-4">Total Users</h2>
               <p className="text-3xl font-bold">{totalUsers}</p>
@@ -120,7 +120,7 @@ const AdminDashboard = () => {
             />
           </div>
           {/* Total Appointments */}
-          <div className="bg-gray-200 p-6 rounded-lg flex justify-between items-center">
+          <div className="bg-green-200 p-6 rounded-lg flex justify-between items-center">
             <div>
               <h2 className="text-xl font-semibold mb-4">Total Appointments</h2>
               <p className="text-3xl font-bold">{totalAppointments}</p>
@@ -132,7 +132,7 @@ const AdminDashboard = () => {
             />
           </div>
           {/* Total Products */}
-          <div className="bg-gray-200 p-6 rounded-lg flex justify-between items-center">
+          <div className="bg-amber-100 p-6 rounded-lg flex justify-between items-center">
             <div>
               <h2 className="text-xl font-semibold mb-4">Total Products</h2>
               <p className="text-3xl font-bold">{totalProducts}</p>
@@ -144,7 +144,7 @@ const AdminDashboard = () => {
             />
           </div>
           {/* Total Adoption Details */}
-          <div className="bg-gray-200 p-6 rounded-lg flex justify-between items-center">
+          <div className="bg-red-200 p-6 rounded-lg flex justify-between items-center">
             <div>
               <h2 className="text-xl font-semibold mb-4">
                 Total Adoption Details

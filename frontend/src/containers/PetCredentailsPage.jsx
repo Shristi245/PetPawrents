@@ -4,7 +4,7 @@ import AuthContext from "../context/AuthContext";
 
 function PetRegisterPage() {
   const history = useHistory();
-  const { PetInfo } = useContext(AuthContext);
+  const { registerPet } = useContext(AuthContext);
 
   const [petName, setPetName] = useState("");
   const [petType, setPetType] = useState("");
@@ -14,8 +14,7 @@ function PetRegisterPage() {
 
   const handleRegister = (e) => {
     e.preventDefault();
-    PetInfo(petName, petType, age, height, weight);
-    history.push("/login");
+    registerPet({ petname: petName, pettype: petType, age, height, weight });
   };
 
   const handleSubmit = (e) => {

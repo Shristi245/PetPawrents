@@ -11,6 +11,11 @@ urlpatterns = [
     path('user-adopted-pets/', UserAdoptedPetsAPIView.as_view(), name='user-adopted-pets-list'),
     path('adoption/<int:pk>/', views.get_adoption_by_id, name='get-product-by-id'),
     path('adoption/user/<int:userID>/', views.get_adoption_by_user_id, name='get-product-by-id'),
+
     path('adoption-history/all/', views.get_all_adpotion_history, name='get-product-by-id'),
     path('adoption-history/update-status/<int:adoptionHistoryID>/', views.update_adoption_history_status, name='get-product-by-id'),
+
+    path('agreement-forms/', views.list_all_agreement_forms, name='list_all_agreement_forms'),
+    path('agreement-forms/<int:adoptID>/', views.list_agreement_forms_by_adopt, name='list_agreement_forms_by_user_and_adopt'),
+
 ]

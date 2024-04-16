@@ -10,7 +10,7 @@ const OrderedItems = () => {
     const fetchUserOrders = async () => {
       try {
         const response = await axios.get(
-          `http://127.0.0.1:8000/all/orders/user/${user.id}/`
+          `http://127.0.0.1:8000/all/orders/user/${user.userID}/`
         );
         setUserOrders(response.data);
       } catch (error) {
@@ -21,7 +21,7 @@ const OrderedItems = () => {
   }, []);
 
   return (
-    <div className="flex h-screen mb-32">
+    <div className="flex h-screen mt-9">
       <div className="flex-1 px-9">
         <h1 className="text-4xl ml-3">Your Orders</h1>
         <div className="py-5">

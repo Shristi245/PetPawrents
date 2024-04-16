@@ -9,7 +9,7 @@ const EditUser = () => {
     first_name: "",
     last_name: "",
     email: "",
-    phone_number: "",
+    mobile: "",
   });
 
   const history = useHistory();
@@ -117,9 +117,9 @@ const EditUser = () => {
             </label>
             <input
               type="text"
-              id="phone_number"
-              name="phone_number"
-              value={user.phone_number}
+              id="mobile"
+              name="mobile"
+              value={user.mobile}
               onChange={handleChange}
               className="border border-gray-300 rounded-md px-3 py-2 w-full mt-1"
             />

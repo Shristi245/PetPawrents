@@ -27,7 +27,7 @@ const AdoptionDetails = () => {
         <p className="text-2xl">are looking for a home</p>
       </div>
 
-      <div className="flex-1 px-16 pt-16 overflow-x-auto container mx-auto">
+      <div className="flex-1 px-16 py-11 pt-16 overflow-x-auto container mx-auto">
         {adoptions.length === 0 && (
           <Alert color="black" className="text-xl">
             No pets are available for the adoptions

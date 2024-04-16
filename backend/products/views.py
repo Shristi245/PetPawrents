@@ -4,8 +4,11 @@ from rest_framework.response import Response
 from rest_framework import serializers, status
 from .models import Product
 from rest_framework.views import APIView
-from .serializers import OrderSerializer, OrderItemSerializer, ProductSerializer
+from .serializers import OrderSerializer, OrderItemSerializer, ProductSerializer, GetAllOrderDetailSerializer, GetOrderItemDetailsSerializer
 from .models import Order, Orderitem
+
+from django.http import JsonResponse
+from .models import CATEGORY_CHOICES
 
 @api_view(['GET'])
 def ApiOverview(request):
@@ -32,15 +35,13 @@ def add_items(request):
     
 @api_view(['GET'])
 def view_items(request):
-     
-     
-    # checking for the parameters from the URL
-    if request.query_params:
-        items = Product.objects.filter(**request.query_params.dict())
+    category = request.query_params.get('category')
+
+    if category:
+        items = Product.objects.filter(category=category)
     else:
         items = Product.objects.all()
- 
-    # if there is something in items else raise error
+
     if items:
         serializer = ProductSerializer(items, many=True)
         return Response(serializer.data)
@@ -81,25 +82,28 @@ def get_product_by_id(request, pk):
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
+from user.serializers import UserSerializer
+
 @api_view(['POST'])
 def PlaceOrder(request, format=None):
-    serializer = OrderSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        serializer = OrderSerializer(data=request.data)
+       
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
 def GetAllOrders(request):
     orders = Order.objects.all()
-    serializer = OrderSerializer(orders, many=True)
+    serializer = GetAllOrderDetailSerializer(orders, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 @api_view(['GET'])
 def GetOrderItemsByOrderID(request, orderID):
     try:
         order_items = Orderitem.objects.filter(order_id=orderID)
-        serializer = OrderItemSerializer(order_items, many=True)
+        serializer = GetOrderItemDetailsSerializer(order_items, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     except Orderitem.DoesNotExist:
         return Response({"message": "Order items not found"}, status=status.HTTP_404_NOT_FOUND)
@@ -112,3 +116,17 @@ def GetOrderByUserID(request, userID):
         return Response(serializer.data, status=status.HTTP_200_OK)
     except Order.DoesNotExist:
         return Response({"message": "Orders not found for the user"}, status=status.HTTP_404_NOT_FOUND)
+    
+
+@api_view(['POST'])
+def checkout(request):
+    serializer = OrderSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+def get_categories(request):
+    categories = [category[1] for category in CATEGORY_CHOICES]
+    return JsonResponse(categories, safe=False)

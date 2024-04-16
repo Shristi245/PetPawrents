@@ -1,6 +1,7 @@
 import { createContext, useState, useEffect } from "react";
 import { jwtDecode as jwt_decode } from "jwt-decode";
 import { useHistory } from "react-router-dom";
+import { getLogInDetailsFromLocalStorage } from "../utils";
 
 const swal = require("sweetalert2");
 
@@ -42,8 +43,6 @@ export const AuthProvider = ({ children }) => {
       setAuthTokens(data);
       setUser(jwt_decode(data.access));
       localStorage.setItem("authTokens", JSON.stringify(data));
-
-      console.log("shjdbcjsd", data);
 
       if (data?.user_type === "ADMIN") {
         history.push("/admin-dashboard");
@@ -167,24 +166,21 @@ export const AuthProvider = ({ children }) => {
   //   }
   // };
 
-  const registerPet = async ({ petName, petType, age, height, weight }) => {
-    const response = await fetch("http://127.0.0.1:8000/registration/", {
+  const registerPet = async (petInfo) => {
+    const response = await fetch("http://127.0.0.1:8000/pets/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        petName,
-        petType,
-        age,
-        height,
-        weight,
+        ...petInfo,
+        user: getLogInDetailsFromLocalStorage()?.id,
       }),
     });
-    if (response.status === 201) {
+    if (response.ok) {
       history.push("/login");
       swal.fire({
-        title: "",
+        title: "Sucess",
         icon: "success",
         toast: true,
         timer: 6000,

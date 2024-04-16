@@ -26,19 +26,19 @@ const OrderList = () => {
     fetchOrders();
   }, []);
 
-  useEffect(() => {
-    const _searchText = debouncedSearchText.toLowerCase();
-    const _filteredOrders = orders.filter((order) => {
-      return (
-        order.user.first_name.toLowerCase().includes(_searchText) ||
-        order.user.last_name.toLowerCase().includes(_searchText) ||
-        order.user.email.toLowerCase().includes(_searchText) ||
-        order.user.username.toLowerCase().includes(_searchText) ||
-        order.user.mobile.toLowerCase().includes(_searchText)
-      );
-    });
-    setFilteredOrders(_filteredOrders);
-  }, [debouncedSearchText, orders]);
+  // useEffect(() => {
+  //   const _searchText = debouncedSearchText.toLowerCase();
+  //   const _filteredOrders = orders.filter((order) => {
+  //     return (
+  //       order.user.first_name.toLowerCase().includes(_searchText) ||
+  //       order.user.last_name.toLowerCase().includes(_searchText) ||
+  //       order.user.email.toLowerCase().includes(_searchText) ||
+  //       order.user.username.toLowerCase().includes(_searchText) ||
+  //       order.user.mobile.toLowerCase().includes(_searchText)
+  //     );
+  //   });
+  //   setFilteredOrders(_filteredOrders);
+  // }, [debouncedSearchText, orders]);
 
   const handleItemsDetails = async (orderID) => {
     try {
@@ -54,9 +54,9 @@ const OrderList = () => {
   };
 
   return (
-    <div className="flex h-screen mb-32">
+    <div className="flex h-screen mb-32 overflow-hidden ">
       <AdminSideMenu />
-      <div className="flex-1  px-9">
+      <div className="flex-1  px-9  overflow-y-scroll">
         <div className="p-4 flex items-center justify-between">
           <div className="relative  ">
             <input
@@ -76,10 +76,10 @@ const OrderList = () => {
             </button>
           </div>
         </div>
-        <h1 className="text-4xl ml-3">Orders</h1>
-        <div className="  py-5">
-          <div className="overflow-x-auto text-xl">
-            <table className="w-full border border-collapse">
+        <h1 className="text-4xl ml-3 sticky z-30 bg-black">Orders</h1>
+        <div className="py-5 overflow-x-auto ">
+          <div className="  text-xl flex-1">
+            <table className="w-full h-full border border-collapse">
               <thead>
                 <tr>
                   <th className="px-4 py-2 border">Order ID</th>
@@ -142,7 +142,9 @@ const OrderList = () => {
                         <div key={index} className="mb-2">
                           <p>Product Name: {order.product.title}</p>
                           <p>Quantity: {order.quantity}</p>
-                          <p>Total Amount: {order.total_amount}</p>
+                          <p>
+                            Total Amount: {order.quantity * order.product.price}
+                          </p>
                           <p>Order ID: {order.order}</p>
                         </div>
                       ))}

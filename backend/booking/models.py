@@ -9,7 +9,7 @@ from django.utils import timezone
 class Booking(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     pet_type = models.CharField(max_length=50)
-    service = models.CharField(max_length=100)
+    service = models.CharField(max_length=100, blank=True, null=True)
     time = models.TimeField(default=timezone.now)
     date = models.DateField()
     status = models.CharField(default="pending") 

@@ -73,7 +73,7 @@ const AdminAppointments = () => {
     }
   };
   return (
-    <div className="flex overflow-hidden mb-32 ">
+    <div className="flex overflow-hidden mb-32 h-screen ">
       {/* Include AdminSideMenu component */}
       <AdminSideMenu />
 

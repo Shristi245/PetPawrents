@@ -9,17 +9,13 @@ const AdminAdoptionList = () => {
   const [adoptions, setAdoptions] = useState();
 
   const fetchAdoptions = async () => {
-    const response = await fetch(
-      "http://127.0.0.1:8000/all/adoptiondetails/"
-    );
+    const response = await fetch("http://127.0.0.1:8000/all/adoptiondetails/");
     const data = await response.json();
 
     setAdoptions(data || []);
   };
 
-
   useEffect(() => {
-  
     fetchAdoptions();
   }, []);
 
@@ -27,13 +23,15 @@ const AdminAdoptionList = () => {
     <div className="flex h-screen mb-32">
       <AdminSideMenu />
 
-      <div className="flex-1 px-9 pt-16 overflow-x-auto">
-        <div className="flex justify-between">
-          <Typography variant="h4">Adoption</Typography>
+      <div className="flex-1 px-9 overflow-x-auto">
+        <div className="sticky top-0 bg-white pt-14 mb-4 z-10">
+          <div className="flex justify-between">
+            <Typography variant="h4">Adoption</Typography>
 
-          <Link to="/add-adoption">
-            <Button>Add</Button>
-          </Link>
+            <Link to="/add-adoption">
+              <Button>Add</Button>
+            </Link>
+          </div>
         </div>
 
         <div className="grid grid-cols-3 gap-4">
