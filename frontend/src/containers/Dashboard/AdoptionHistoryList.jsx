@@ -154,13 +154,13 @@ const AdminAdoptionHistory = () => {
 
                     <td className="px-4 py-2 border">{adoption.adopt.name}</td>
                     <td className="px-4 py-2 border">
-                      {adoption.user.first_name}
+                      {adoption.user.last_name}
                       {adoption.user.last_name}
                     </td>
-                    <td className="px-4 py-2 border">{adoption.user.mobile}</td>
+                    <td className="px-4 py-2 border">{adoption.user.email}</td>
                     <td className="px-4 py-2 border">
                       {adoption.adopted_date}
-                    </td>
+                    </td> 
                     <td className="px-4 py-2 border">{adoption.status}</td>
                     <td>
                       <div className="flex gap-x-2 pl-2">

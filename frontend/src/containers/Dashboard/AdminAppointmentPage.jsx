@@ -14,6 +14,8 @@ import {
   Typography,
 } from "@material-tailwind/react";
 import { toast } from "react-toastify";
+import { IoMdCheckmarkCircleOutline } from "react-icons/io";
+import { FaRegCircleXmark } from "react-icons/fa6";
 
 const AdminAppointments = () => {
   const [appointments, setAppointments] = useState([]);
@@ -130,11 +132,11 @@ const AdminAppointments = () => {
         {/* Main content starts here */}
         <h1 className="text-4xl ml-3  ">Appointments</h1>
         <div className="overflow-hidden w-full py-5">
-          <div className=" text-xl w-full  overflow-x-scroll overflow-y-auto">
+          <div className=" text-xl w-full   ">
             {appointments.length === 0 && (
               <Alert color="black">No appointments booked till now</Alert>
             )}
-            <table className="w-full  border border-collapse overflow-x-scroll overflow-y-auto">
+            <table className="w-full  border border-collapse ">
               <thead>
                 <tr>
                   <th className="px-4 py-2 border">SN</th>
@@ -142,6 +144,8 @@ const AdminAppointments = () => {
                   <th className="px-4 py-2 border">Email</th>
                   <th className="px-4 py-2 border">Phone</th>
                   <th className="px-4 py-2 border">Status</th>
+                  <th className="px-4 py-2 border">Details</th>
+                  <th className="px-4 py-2 border">Service Charge</th>
                   <th className="px-4 py-2 border">Requests</th>
                 </tr>
               </thead>
@@ -169,7 +173,7 @@ const AdminAppointments = () => {
                         date={appointment.date}
                         time={appointment.time}
                         aggressive={appointment.aggressive}
-                        breed={appointment.aggressive}
+                        breed={appointment.breed}
                         estimated_price={appointment.estimated_price}
                       />
                     </td>
@@ -182,11 +186,11 @@ const AdminAppointments = () => {
                       />
                     </td>
 
-                    <td className="px-4 py-2  flex justify-center">
+                    <td className="px-4 py-2  flex justify-center space-x-5">
                       {appointment.status === "pending" && (
                         <>
                           <button
-                            className="bg-[#1A8990] hover:bg-green-600 text-white py-1 px-7 rounded-[7px] mr-2"
+                            className=" hover:text-green-500 text-green-800 py-1"
                             onClick={() =>
                               handleStatusChange(
                                 appointment.id,
@@ -195,10 +199,10 @@ const AdminAppointments = () => {
                               )
                             }
                           >
-                            Accept
+                            <IoMdCheckmarkCircleOutline className="w-7 h-7" />
                           </button>
                           <button
-                            className="bg-[#E56262] hover:bg-red-500 text-black py-1 px-7 rounded-[7px]"
+                            className="hover:text-red-300 text-red-500 py-1 "
                             onClick={() =>
                               handleStatusChange(
                                 appointment.id,
@@ -207,7 +211,7 @@ const AdminAppointments = () => {
                               )
                             }
                           >
-                            Cancel
+                            <FaRegCircleXmark className="w-6 h-6" />
                           </button>
                         </>
                       )}
@@ -240,9 +244,7 @@ const AppointmentDetails = ({
 
   return (
     <div>
-      <Button onClick={handleOpen} size="sm">
-        View Details
-      </Button>
+      <Button onClick={handleOpen}>View Details</Button>
       <Dialog open={isOpen} handler={handleOpen}>
         <DialogHeader>
           <Typography variant="h5">Appointment Details</Typography>
@@ -318,7 +320,7 @@ const UpdateSerivceCharge = ({ estimated_price, booking_id, status }) => {
     );
 
     if (res.ok) {
-      handleOpen()
+      handleOpen();
       toast.success("Total charge is updated");
       return;
     }
@@ -333,10 +335,10 @@ const UpdateSerivceCharge = ({ estimated_price, booking_id, status }) => {
         disabled={["rejected", "pending"].includes(status)}
         onClick={handleOpen}
       >
-        Update Total Charge
+        Update
       </Button>
       <Dialog open={open} handler={handleOpen}>
-        <DialogHeader>New Serice Charge</DialogHeader>
+        <DialogHeader>New Service Charge</DialogHeader>
 
         <DialogBody>
           <form id="amount-form" onSubmit={handleUpdateAmount}>

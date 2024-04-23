@@ -57,18 +57,17 @@ const ProductList = () => {
       <div className="relative h-screen ">
         {/* Background Image */}
         <div
-          className="absolute inset-0 mx-16 mt-3 mb-20 rounded-[80px]"
+          className="absolute inset-0 mx-16 mt-3 mb-28 rounded-[80px]"
           style={{ backgroundImage: "url('images/goldie.png')" }}
         >
-          <div className=" mt-56 space-y-2">
+          <div className=" mt-60 space-y-2">
             <Typography className="flex justify-end mr-20 space-x-3">
               <h1 className="text-5xl font-bold text-white mt-5">Treat Your</h1>
               <h1 className="text-6xl font-extrabold text-black ">
                 PAW PARTNER
               </h1>
             </Typography>
-            <Typography className=" text-5xl font-bold text-white text-center ml-28">
-              {" "}
+            <Typography className=" text-5xl font-bold text-white text-center ml-60">
               With The Best
             </Typography>
           </div>

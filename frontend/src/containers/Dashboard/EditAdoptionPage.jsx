@@ -7,7 +7,7 @@ import { Button, Input, Typography } from "@material-tailwind/react";
 
 const EditAdoptionPage = () => {
   const { adoptionID } = useParams();
-  
+
   const defaultAdoptionInfo = {
     name: "",
     description: "",
@@ -76,7 +76,7 @@ const EditAdoptionPage = () => {
       <AdminSideMenu />
 
       <div className="flex-1 px-9 pt-16">
-        <Link to="/admin-dashboard-products">
+        <Link to="/admin-dashboard-adoption">
           <Button>Go Back</Button>
         </Link>
 

@@ -77,21 +77,21 @@ const UserProfile = (userID) => {
             <Link to="/edit-profile"> Edit Profile</Link>
           </button>
           <button className="bg-blue-500 text-white shadow-inner hover:text-black bg-[#56A6B8] text-3xl px-4 py-3 rounded-[20px] mb-5">
-            <Link to={`/orders-list/${userID}`}>View Orders</Link>
+            <Link to="/orders-list">View Orders</Link>
           </button>
 
           <button
             className="bg-blue-500 text-white shadow-inner hover:text-black bg-[#56A6B8] text-3xl px-4 py-3 rounded-[20px] mb-5"
             disabled
           >
-            <Link to=""> Adoption History</Link>
+            <Link to="/adoption-history"> Adoption History</Link>
           </button>
 
           <button
             className="bg-blue-500 text-white shadow-inner hover:text-black  bg-[#56A6B8] text-3xl px-4 py-3 rounded-[20px] mb-5"
             disabled
           >
-            <Link to=""> Pet Details</Link>
+            <Link to="/pet-details"> Pet Details</Link>
           </button>
 
           <button
@@ -136,7 +136,7 @@ const UserProfile = (userID) => {
           )}
         </div>
         {/* Third div containing user details */}
-        <div className="flex flex-col items-start space-y-6 mr-60 w-[20%]">
+        <div className="flex flex-col items-start space-y-6 mr-60 w-[22%]">
           {/* Display email and phone number */}
           {profile && (
             <>
@@ -165,7 +165,7 @@ const UserProfile = (userID) => {
                 <p> {profile.address}</p>
               </div>
 
-              <div className="flex items-center text-2xl gap-4 mb-3">
+              <div className="flex items-start text-2xl gap-4 mb-3">
                 <p className="text-black text-2xl">Bio:</p>
                 <p> {profile.bio}</p>
               </div>
@@ -182,6 +182,6 @@ const UserProfile = (userID) => {
       </div>
     </div>
   );
-}
+};
 
 export default UserProfile;

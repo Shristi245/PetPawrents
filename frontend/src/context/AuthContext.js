@@ -97,8 +97,13 @@ export const AuthProvider = ({ children }) => {
       }),
     });
 
+    const resMsg = await response.json();
+
+    const errorMsg =
+      resMsg.mobile || resMsg.email || "An Error Occured " + response.status;
+
     if (response.status === 201) {
-      //   history.push("/pet");
+      history.push("/login");
       swal.fire({
         title: "Registration Completed.Enter your details to login.",
         icon: "success",
@@ -110,7 +115,7 @@ export const AuthProvider = ({ children }) => {
       });
     } else {
       swal.fire({
-        title: "An Error Occured " + response.status,
+        title: errorMsg,
         icon: "error",
         toast: true,
         timer: 6000,
@@ -120,51 +125,6 @@ export const AuthProvider = ({ children }) => {
       });
     }
   };
-
-  // const userProfile = async (email, password) => {
-  //   const response = await fetch("http://127.0.0.1:8000/jwt/token/", {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify({
-  //       email,
-  //       password,
-  //     }),
-  //   });
-  //   const data = await response.json();
-
-  //   localStorage.setItem("loginDetails", JSON.stringify(data));
-
-  //   if (response.status === 200) {
-  //     console.log("Logged In");
-  //     setAuthTokens(data);
-  //     setUser(jwt_decode(data.access));
-  //     localStorage.setItem("authTokens", JSON.stringify(data));
-  //     history.push("/");
-  //     swal.fire({
-  //       title: "Login Successful",
-  //       icon: "success",
-  //       toast: true,
-  //       timer: 6000,
-  //       position: "top-right",
-  //       timerProgressBar: true,
-  //       showConfirmButton: false,
-  //     });
-  //   } else {
-  //     console.log(response.status);
-  //     console.log("there was a server issue");
-  //     swal.fire({
-  //       title: "Username or password does not exists",
-  //       icon: "error",
-  //       toast: true,
-  //       timer: 6000,
-  //       position: "top-right",
-  //       timerProgressBar: true,
-  //       showConfirmButton: false,
-  //     });
-  //   }
-  // };
 
   const registerPet = async (petInfo) => {
     const response = await fetch("http://127.0.0.1:8000/pets/", {
@@ -178,7 +138,7 @@ export const AuthProvider = ({ children }) => {
       }),
     });
     if (response.ok) {
-      history.push("/login");
+      history.push("/profile");
       swal.fire({
         title: "Sucess",
         icon: "success",

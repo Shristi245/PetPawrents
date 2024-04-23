@@ -20,7 +20,7 @@ from .views import (
 from .views import UserProfileImageView
 
 router = DefaultRouter()
-router.register(r'pets', PetViewSet)#/pets/?user_id=<user_id>, where <user_id> is the ID of the user whose pets you want to retrieve.
+router.register(r'pets', PetViewSet, basename='pet')#/pets/?user_id=<user_id>, where <user_id> is the ID of the user whose pets you want to retrieve.
 
 app_name = "user"
 
@@ -34,6 +34,8 @@ urlpatterns = [
     path('reset-password/', ResetPassword.as_view(), name='resetpassword'),
     path('users/<int:user_id>/profile-image/', UserProfileImageView.as_view(), name='user-profile-image'),
     path('verify-otp/', VerifyOTP.as_view(), name='verify_otp'),
+    path('pets/by_user/<int:user_id>/', PetViewSet.as_view({'get': 'list_pets_by_user_id'}), name='pets_by_user'),
+
 
 
 ]

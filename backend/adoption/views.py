@@ -51,19 +51,19 @@ def view_details(request):
 
 
 
-@api_view(['POST'])
-def update_details(request, id):
-    print("Received primary key:", id)  # Print the received primary key for debugging
+@api_view(['PATCH'])
+def update_details(request, pk):
+    print("Received primary key:", pk)  # Print the received primary key for debugging
 
     try:
-        adoption = Adopt.objects.get(id=id)
+        item = Adopt.objects.get(pk=pk)
     except Adopt.DoesNotExist:
-        return Response({"error": "Adoption matching query does not exist."}, status=status.HTTP_404_NOT_FOUND)
+        return Response({"error": "Product matching query does not exist."}, status=status.HTTP_404_NOT_FOUND)
 
-    serializer = AdoptSerializer(instance=adoption, data=request.data)
+    serializer = AdoptSerializer(instance=item, data=request.data)
  
     if serializer.is_valid():
-        serializer.save()
+        serializer.save()   
         return Response(serializer.data)
     else:
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -88,7 +88,7 @@ def get_adoption_by_id(request, pk):
 def get_adoption_by_user_id(request, userID):
     try:
         adoptions = AdoptedPet.objects.filter(user_id=userID)
-        serializer = AdoptedPetSerializer(adoptions, many=True)
+        serializer = GETAdoptedPetSerializer(adoptions, many=True)
         return Response(serializer.data)
     except AdoptedPet.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)

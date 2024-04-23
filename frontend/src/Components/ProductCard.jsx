@@ -100,11 +100,13 @@ const ProductCard = ({ image, title, price, id, category, fetchProducts }) => {
             </span>
           </p>
         </div>
-        <Link to={`/product-details/${id}`}>
-          <button className=" text-blue underline text-center">
-            View Details...
-          </button>
-        </Link>
+        {location.pathname !== "/admin-dashboard-products" && (
+          <Link to={`/product-details/${id}`}>
+            <button className=" text-blue underline text-center">
+              View Details...
+            </button>
+          </Link>
+        )}
       </div>
 
       {location.pathname === "/admin-dashboard-products" ? (

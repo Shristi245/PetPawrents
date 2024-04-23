@@ -79,7 +79,7 @@ const OrderList = () => {
         <h1 className="text-4xl sticky top-0 bg-white py-3 ">Orders</h1>
         <div className="py-5 overflow-x-auto ">
           <div className="  text-xl flex-1">
-            <table className="w-full h-full border border-collapse">
+            <table className="w-full h-full border border-collapse ">
               <thead>
                 <tr>
                   <th className="px-4 py-2 border">Order ID</th>
@@ -131,19 +131,20 @@ const OrderList = () => {
               &#8203;
             </span>
             <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-              <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+              <div className="bg-white  px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                 <div className="sm:flex sm:items-start">
                   <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                    <h3 className="text-lg leading-6 font-medium text-gray-900">
+                    <h3 className="text-xl leading-6 font-bold text-gray-900 underline">
                       Order Items Details
                     </h3>
-                    <div className="mt-2">
+                    <div className="mt-3">
                       {selectedOrderItems.map((order, index) => (
-                        <div key={index} className="mb-2">
+                        <div key={index} className="mb-2 space-y-3 text-lg">
                           <p>Product Name: {order.product.title}</p>
                           <p>Quantity: {order.quantity}</p>
                           <p>
-                            Total Amount: {order.quantity * order.product.price}
+                            Total Amount: Rs.
+                            {order.quantity * order.product.price}
                           </p>
                           <p>Order ID: {order.order}</p>
                         </div>

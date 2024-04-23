@@ -99,7 +99,7 @@ function AppointmentBookingPage() {
       if (response.status === 201) {
         swal.fire({
           title: "Appointment Booked!",
-          text: "Your appointment has been successfully booked.",
+          text: "Your appointment is currently pending. Please wait to receive the status of your booking",
           icon: "success",
         });
         setBookingInfo(defaultBookingInfo);
@@ -319,7 +319,7 @@ function AppointmentBookingPage() {
                 name="estimatedPrice"
                 type="text"
                 value={`NPR ${bookingInfo.estimated_price}`}
-                className="mt-1 block w-full py-2 rounded shadow-sm border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                className="mt-1 block px-2 w-full py-2 rounded shadow-sm border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
             </div>
             <div className="col-span-2 mt-3">

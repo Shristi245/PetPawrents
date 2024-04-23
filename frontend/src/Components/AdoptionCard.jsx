@@ -126,7 +126,50 @@ const AdoptionCard = ({ image, id, name, description, fetchAdoptions }) => {
     }
   };
 
-  const handleDelete = () => null;
+  // Function to handle delete action
+  const handleDelete = async () => {
+    // Display confirmation modal
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete it!",
+    });
+
+    // If user confirms deletion, proceed with delete operation
+    if (result.isConfirmed) {
+      setLoading(true);
+      try {
+        // Make an API call to delete the product with the given ID
+        const response = await fetch(
+          `http://127.0.0.1:8000/adoption/${id}/delete`,
+          {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+              // Include any authentication headers if required
+            },
+          }
+        );
+
+        if (response.ok) {
+          fetchAdoptions();
+          console.log(`Animal detail deleted successfully`);
+          // Optionally, you can perform additional actions such as updating the UI
+        } else {
+          console.error("Failed to delete animal detail:", response.statusText);
+          // Handle error scenario, show error message or perform any other actions
+        }
+      } catch (error) {
+        console.error("Error deleting animal detail:", error);
+        // Handle error scenario, show error message or perform any other actions
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
 
   const handleAdoptionSubmit = async (adoptionID, aggreementID) => {
     try {
@@ -139,20 +182,23 @@ const AdoptionCard = ({ image, id, name, description, fetchAdoptions }) => {
         confirmButtonText: "Adopt",
         cancelButtonText: "Cancel",
         preConfirm: (date) => {
-          const currentDate = new Date();
-          const selectedDate = new Date(date);
-          if (currentDate >= selectedDate) {
-            Swal.fire({
-              icon: "error",
-              text: "Date Cannot Be in Past",
-              title: "Error",
-            });
-          }
           setAdoptionDate(date);
           return date;
         },
       });
       if (date) {
+        const currentDate = new Date();
+        const selectedDate = new Date(date);
+
+        if (currentDate >= selectedDate) {
+          Swal.fire({
+            icon: "error",
+            text: "Date Cannot Be in Past",
+            title: "Error",
+          });
+          return;
+        }
+
         const result = await Swal.fire({
           title: "Are you sure?",
           icon: "info",
@@ -247,7 +293,6 @@ const AdoptionCard = ({ image, id, name, description, fetchAdoptions }) => {
                 <h3 className="modal-title text-4xl  font-bold underline text-gray-900">
                   Legal Adoption Agreement
                 </h3>
-                lore
               </div>
               <div className="modal-body px-3 mt-7">
                 {/* Render AdoptionAgreementForm component with fetched agreement data */}
@@ -353,10 +398,8 @@ const AdoptionCard = ({ image, id, name, description, fetchAdoptions }) => {
                     </p>
                     {/* Add more fields as needed */}
                   </div>
-                  {/* Signature Section */}
-                  <div className="mb-4 mt-20  text-lg ml-4 flex justify-between">
-                    <p className=" font-semibold text-left">Signature: </p>
-                    <p className="font-semibold text-right">
+                  <div className="mb-4 mt-20  text-lg ml-4 justify-between">
+                    <p className="font-semibold text-left">
                       Date: {format(agreement_date, "dd MMM, yyyy")}
                     </p>
                   </div>

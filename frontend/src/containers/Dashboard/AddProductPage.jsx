@@ -1,4 +1,10 @@
-import { Button, Input, Typography } from "@material-tailwind/react";
+import {
+  Button,
+  Input,
+  Typography,
+  Select,
+  Option,
+} from "@material-tailwind/react";
 import React, { useState } from "react";
 import { Link } from "react-router-dom/cjs/react-router-dom.min";
 import { toast } from "react-toastify";
@@ -20,6 +26,7 @@ const AddProductPage = () => {
   const [productImgFileUrl, setProductImgFileUrl] = useState();
 
   const handleChange = (e) => {
+    console.log(e.target);
     const { name, value } = e.target;
     setProductInfo((prevInfo) => ({ ...prevInfo, [name]: value }));
   };
@@ -84,14 +91,25 @@ const AddProductPage = () => {
               value={productInfo.title}
               required
             />
-            <Input
+            <Select
               label="Product Category"
               name="category"
-              onChange={handleChange}
+              onChange={(value) => {
+                handleChange({ target: { name: "category", value } });
+              }}
               value={productInfo.category}
               required
-            />
+            >
+              <Option value="" disabled selected>
+                Select Category
+              </Option>
+              <Option value="food">Food</Option>
+              <Option value="clothes">Clothes</Option>
+              <Option value="toys">Toys</Option>
+              <Option value="cosmetics">Cosmetics</Option>
 
+              {/* Add more categories here */}
+            </Select>
             <Input
               label="Product Description"
               name="description"

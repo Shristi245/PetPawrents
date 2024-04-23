@@ -89,14 +89,14 @@ const AddAdoptionDetails = () => {
         <form onSubmit={submitHandler}>
           <div className="space-y-5 mt-5">
             <Input
-              label="Adoption Name"
+              label="Animal Name"
               name="name"
               onChange={handleChange}
               value={adoptionInfo.name}
               required
             />
             <Input
-              label="Adoption description"
+              label="Description about animal"
               name="description"
               onChange={handleChange}
               value={adoptionInfo.description}
@@ -113,7 +113,7 @@ const AddAdoptionDetails = () => {
 
             <div className="flex items-center">
               <div className="space-y-3">
-                <p>Add Adoption Image</p>
+                <p>Add Animal Image</p>
                 <input
                   type="file"
                   onChange={(e) => {

@@ -1,7 +1,7 @@
 import React, { useState, useContext } from "react";
 import { useHistory } from "react-router-dom";
 import AuthContext from "../context/AuthContext";
-
+import { Input } from "@material-tailwind/react";
 function PetRegisterPage() {
   const history = useHistory();
   const { registerPet } = useContext(AuthContext);
@@ -14,9 +14,42 @@ function PetRegisterPage() {
 
   const handleRegister = (e) => {
     e.preventDefault();
-    registerPet({ petname: petName, pettype: petType, age, height, weight });
-  };
 
+    // Validation for height
+    const heightPattern = /^\d+\s*feet$/i;
+    if (!heightPattern.test(height)) {
+      alert("Please enter the height in feet. For example, '4 feet'.");
+      return;
+    }
+
+    // Validation for weight
+    const weightPattern = /^\d+\s*kg$/i;
+    if (!weightPattern.test(weight)) {
+      alert("Please enter the weight in kilograms. For example, '40 kg'.");
+      return;
+    }
+
+    // Validation for age
+    const agePattern = /^\d+\s*years\s*old$/i;
+    if (!agePattern.test(age)) {
+      alert("Please enter the age in years. For example, '3 years old'.");
+      return;
+    }
+
+    // Extracting the numerical values from the strings
+    const heightValue = parseInt(height);
+    const weightValue = parseInt(weight);
+    const ageValue = parseInt(age);
+
+    // Proceed with registration if all validations pass
+    registerPet({
+      petname: petName,
+      pettype: petType,
+      age: ageValue,
+      height: heightValue,
+      weight: weightValue,
+    });
+  };
   const handleSubmit = (e) => {
     e.preventDefault();
     // Handle any general form submission actions here
@@ -41,95 +74,72 @@ function PetRegisterPage() {
 
         <div className="w-[60%] h-[110%] border p-5 shadow">
           <form onSubmit={handleSubmit} className="flex flex-col gap-y-3">
-            <h1 className="text-xl text-center">Pet Account Credentials</h1>
+            <h1 className="text-xl text-center mb-9">
+              Pet Account Credentials
+            </h1>
             {/*<!-- pet name input --> */}
             <div class="relative mb-2" data-te-input-wrapper-init>
-              <input
+              <Input
                 type="text"
                 class="peer block min-h-[auto] w-full rounded border-b bg-transparent px-3 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
                 id="exampleFormControlInput22"
                 name="petName"
+                label="Pet Name"
                 placeholder="Pet Name"
                 onChange={(e) => setPetName(e.target.value)}
               />
-              <label
-                for="exampleFormControlInput22"
-                class="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[2.15] text-neutral-400 transition-all duration-200 ease-out peer-focus:-translate-y-[1.15rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[te-input-state-active]:-translate-y-[1.15rem] peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-200 dark:peer-focus:text-primary"
-              >
-                Pet Name
-              </label>
             </div>
 
             {/* <!-- Pet type input --> */}
             <div class="relative mb-2" data-te-input-wrapper-init>
-              <input
+              <Input
                 type="text"
                 class="peer block min-h-[auto] w-full rounded border-b bg-transparent px-3 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
                 id="exampleFormControlInput22"
                 name="pet type"
+                label="Pet Type"
                 placeholder="Pet Type"
                 onChange={(e) => setPetType(e.target.value)}
               />
-              <label
-                for="exampleFormControlInput22"
-                class="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[2.15] text-neutral-400 transition-all duration-200 ease-out peer-focus:-translate-y-[1.15rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[te-input-state-active]:-translate-y-[1.15rem] peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-200 dark:peer-focus:text-primary"
-              >
-                Pet Type
-              </label>
             </div>
 
             {/* pet age input */}
             <div class="relative mb-2" data-te-input-wrapper-init>
-              <input
+              <Input
                 type="text"
                 class="peer block min-h-[auto] w-full rounded border-b bg-transparent px-3 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
                 id="exampleFormControlInput2"
                 name="age"
+                label="Age"
                 placeholder="Age"
                 onChange={(e) => setAge(e.target.value)}
               />
-              <label
-                for="exampleFormControlInput2"
-                class="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[2.15] text-neutral-400 transition-all duration-200 ease-out peer-focus:-translate-y-[1.15rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[te-input-state-active]:-translate-y-[1.15rem] peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-200 dark:peer-focus:text-primary"
-              >
-                Age
-              </label>
             </div>
 
             {/* <!-- pet height input --> */}
             <div class="relative mb-2" data-te-input-wrapper-init>
-              <input
+              <Input
                 type="text"
                 class="peer block min-h-[auto] w-full rounded border-b bg-transparent px-3 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
                 id="exampleFormControlInput22"
                 name="height"
+                label="Height"
                 placeholder="Height"
                 onChange={(e) => setHeight(e.target.value)}
               />
-              <label
-                for="exampleFormControlInput22"
-                class="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[2.15] text-neutral-400 transition-all duration-200 ease-out peer-focus:-translate-y-[1.15rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[te-input-state-active]:-translate-y-[1.15rem] peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-200 dark:peer-focus:text-primary"
-              >
-                Height
-              </label>
             </div>
 
             {/* <!-- pet weight input --> */}
             <div class="relative mb-2" data-te-input-wrapper-init>
-              <input
+              <Input
                 type="text"
                 class="peer block min-h-[auto] w-full rounded border-b bg-transparent px-3 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
                 id="exampleFormControlInput22"
                 name="weight"
+                label="Weight"
                 placeholder="Weight"
                 onChange={(e) => setWeight(e.target.value)}
               />
-              <label
-                for="exampleFormControlInput22"
-                class="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[2.15] text-neutral-400 transition-all duration-200 ease-out peer-focus:-translate-y-[1.15rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[te-input-state-active]:-translate-y-[1.15rem] peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-200 dark:peer-focus:text-primary"
-              >
-                Weight
-              </label>
             </div>
 
             <div className="login-button flex justify-center w-full my-3 hover:scale-110">

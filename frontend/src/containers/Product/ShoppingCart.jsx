@@ -116,7 +116,16 @@ export function ShoppingCart() {
   };
 
   const handleIncreaseQuantity = (product) => () => {
-    const newCartItems = setItemsToCart(product);
+    const newQuantity = product.quantity + 1;
+
+    // Limit the quantity to 3
+    if (newQuantity > 3) {
+      toast.warning("Maximum quantity reached (3 items)");
+      return;
+    }
+
+    const updatedProduct = { ...product, quantity: newQuantity };
+    const newCartItems = setItemsToCart(updatedProduct);
     setCartItems(newCartItems);
 
     toast.success("Quantity is increased");
@@ -125,10 +134,7 @@ export function ShoppingCart() {
   return (
     <div className="mx-auto flex max-w-3xl flex-col space-y-4 p-6 px-2 sm:p-10 sm:px-2">
       <h2 className="text-3xl font-bold">Your cart</h2>
-      <p className="mt-3 text-sm font-medium text-gray-700">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorum eius
-        repellat ipsam, sit praesentium incidunt.
-      </p>
+      <p className="mt-3 text-sm font-medium text-gray-700"></p>
 
       {cartItems?.length === 0 && (
         <div className="space-y-5">

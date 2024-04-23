@@ -134,6 +134,12 @@ class PetViewSet(viewsets.ModelViewSet):
     queryset = Pet.objects.all()
     serializer_class = PetSerializer
 
+    def list_pets_by_user_id(self, request, user_id):
+        # Get pets associated with the specified user ID
+        pets = Pet.objects.filter(user_id=user_id)
+        # Serialize the pets
+        serializer = PetSerializer(pets, many=True)
+        return Response(serializer.data)
     # def list(self, request, *args, **kwargs):
     #     user_id = request.query_params.get('user_id')
     #     if user_id:

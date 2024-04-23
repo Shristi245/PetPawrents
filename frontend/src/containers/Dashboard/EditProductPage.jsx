@@ -3,13 +3,20 @@ import { updloadImageToFirebase } from "../../utils";
 import { toast } from "react-toastify";
 import AdminSideMenu from "../../Components/AdminSideMenu";
 import { Link, useParams } from "react-router-dom/cjs/react-router-dom.min";
-import { Button, Input, Typography } from "@material-tailwind/react";
+import {
+  Button,
+  Input,
+  Typography,
+  Select,
+  Option,
+} from "@material-tailwind/react";
 
 const EditProductPage = () => {
   const { productID } = useParams();
   const defaultProductInfo = {
     title: "",
     category: "",
+    description: "",
     price: 0,
   };
 
@@ -90,11 +97,30 @@ const EditProductPage = () => {
               value={productInfo.title}
               required
             />
-            <Input
+            <Select
               label="Product Category"
               name="category"
-              onChange={handleChange}
+              onChange={(value) => {
+                handleChange({ target: { name: "category", value } });
+              }}
               value={productInfo.category}
+              required
+            >
+              <Option value="" disabled selected>
+                Select Category
+              </Option>
+              <Option value="food">Food</Option>
+              <Option value="clothes">Clothes</Option>
+              <Option value="toys">Toys</Option>
+              <Option value="cosmetics">Cosmetics</Option>
+
+              {/* Add more categories here */}
+            </Select>
+            <Input
+              label="Product Description"
+              name="description"
+              onChange={handleChange}
+              value={productInfo.description}
               required
             />
             <Input

@@ -22,6 +22,15 @@ const ChangePasswordPage = () => {
   const handleChangePassword = async () => {
     const user = getLogInDetailsFromLocalStorage();
     try {
+      // Validate new password strength
+      if (!isPasswordStrong(newPassword)) {
+        Swal.fire({
+          icon: "error",
+          title: "Password Strength Issue",
+          text: "New password does not meet the strength requirements. Please ensure it has a minimum length of 8 characters and includes at least one special character.",
+        });
+        return;
+      }
       const response = await axios.post(
         `http://localhost:8000/change-password/${user.id}/`,
         {
@@ -30,6 +39,7 @@ const ChangePasswordPage = () => {
           confirm_password: confirmPassword,
         }
       );
+
       console.log("Password changed successfully:", response.data);
       // Reset form fields
       setOldPassword("");
@@ -47,9 +57,19 @@ const ChangePasswordPage = () => {
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: error.response.data.detail,
+        text: "Password donot match",
       });
     }
+  };
+
+  const isPasswordStrong = (password) => {
+    //  strength requirements: minimum length of 8 characters and at least one special character
+    const minLength = 8;
+    const hasSpecialCharacter = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/.test(
+      password
+    );
+
+    return password.length >= minLength && hasSpecialCharacter;
   };
 
   return (

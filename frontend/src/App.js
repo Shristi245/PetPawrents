@@ -43,6 +43,7 @@ import OrderedItems from "./containers/Orders/OrderItemsbyID.jsx";
 import ChangePasswordPage from "./containers/ChangePassword.jsx";
 import PetDetailsPage from "./containers/PetDetails.jsx";
 import ProductDetails from "./containers/Product/ProductDescription.jsx";
+import AdoptionHistoryPage from "./containers/adoption/AdoptionHistory.jsx";
 const App = () => {
   return (
     <Router>
@@ -70,6 +71,11 @@ const App = () => {
             component={EditAdoptionPage}
             path="/edit-adoption/:adoptionID"
           />
+
+          <Route
+            component={EditAdoptionPage}
+            path="/edit-adoption/:adoptionID"
+          />
           <Route
             component={AdminAdoptionList}
             path="/admin-dashboard-adoption"
@@ -79,7 +85,7 @@ const App = () => {
             path="/admin-dashboard-adoption-history"
           />
           <Route component={OrderList} path="/admin-order-list" />
-          <Route component={OrderedItems} path="/orders-list/:userID" />
+          <Route component={OrderedItems} path="/orders-list" />
           {/* User Routes */}
           <Route component={EditProfile} path="/edit-profile" />
           <Route component={UserProfile} path="/profile" />
@@ -103,11 +109,10 @@ const App = () => {
           <Route component={ProductPage} path="/product" />
           <Route component={ShoppingCart} path="/cart" />
           <Route component={AdoptionDetails} path="/adoption" />
+          <Route component={AdoptionHistoryPage} path="/adoption-history" />
+
           <Route component={ReviewPage} path="/review" />
-          <Route
-            component={ProductDetails}
-            path="/product-details/:id"
-          />
+          <Route component={ProductDetails} path="/product-details/:id" />
 
           {/* Redirect to home for unknown paths */}
           <Redirect to="/" />

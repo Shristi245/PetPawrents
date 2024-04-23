@@ -38,7 +38,7 @@ const AdminAdoptionList = () => {
           {adoptions?.map((adoption) => (
             <AdoptionCard
               key={uuid()}
-              image={adoption.image}
+              image={adoption.image}  
               name={adoption.name}
               description={adoption.description}
               id={adoption.id}
