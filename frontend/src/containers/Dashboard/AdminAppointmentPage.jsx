@@ -107,9 +107,9 @@ const AdminAppointments = () => {
       <AdminSideMenu />
 
       {/* Main Content */}
-      <div className="flex-1  px-9 overflow-hidden ">
-        <div className="p-4 flex items-center justify-between">
-          {/* Search Bar */}
+      <div className="flex-1  px-9 overflow-hidden mt-8">
+        {/* <div className="p-4 flex items-center justify-between">
+          Search Bar
           <div className="relative  ">
             <input
               type="text"
@@ -127,7 +127,7 @@ const AdminAppointments = () => {
               </svg>
             </button>
           </div>
-        </div>
+        </div> */}
 
         {/* Main content starts here */}
         <h1 className="text-4xl ml-3  ">Appointments</h1>
@@ -145,6 +145,7 @@ const AdminAppointments = () => {
                   <th className="px-4 py-2 border">Phone</th>
                   <th className="px-4 py-2 border">Status</th>
                   <th className="px-4 py-2 border">Details</th>
+                  <th className="px-4 py-2 border">Amount</th>
                   <th className="px-4 py-2 border">Service Charge</th>
                   <th className="px-4 py-2 border">Requests</th>
                 </tr>
@@ -153,7 +154,7 @@ const AdminAppointments = () => {
                 {filteredUsers.map((appointment, index) => (
                   <tr key={index} className="border">
                     <td className="px-4 py-2 border">{index + 1}</td>
-                    <td className="px-4 py-2 border">
+                    <td className="px-9 py-2 border">
                       {appointment.user.first_name}
                       {appointment.user.last_name}
                     </td>
@@ -179,7 +180,12 @@ const AdminAppointments = () => {
                     </td>
 
                     <td className="px-4 py-2 border">
+                      {appointment.estimated_price}
+                    </td>
+
+                    <td className="px-4 py-2 border">
                       <UpdateSerivceCharge
+                        fetchAppointments={fetchAppointments}
                         booking_id={appointment.id}
                         estimated_price={appointment.estimated_price}
                         status={appointment.status}
@@ -244,7 +250,9 @@ const AppointmentDetails = ({
 
   return (
     <div>
-      <Button onClick={handleOpen}>View Details</Button>
+      <Button onClick={handleOpen} size="sm">
+        View Details
+      </Button>
       <Dialog open={isOpen} handler={handleOpen}>
         <DialogHeader>
           <Typography variant="h5">Appointment Details</Typography>
@@ -293,7 +301,12 @@ const AppointmentDetails = ({
   );
 };
 
-const UpdateSerivceCharge = ({ estimated_price, booking_id, status }) => {
+const UpdateSerivceCharge = ({
+  estimated_price,
+  booking_id,
+  status,
+  fetchAppointments,
+}) => {
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => setOpen(!open);
@@ -321,6 +334,7 @@ const UpdateSerivceCharge = ({ estimated_price, booking_id, status }) => {
 
     if (res.ok) {
       handleOpen();
+      fetchAppointments();
       toast.success("Total charge is updated");
       return;
     }

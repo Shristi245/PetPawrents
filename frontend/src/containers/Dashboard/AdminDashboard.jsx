@@ -9,6 +9,9 @@ import {
   faDog,
 } from "@fortawesome/free-solid-svg-icons";
 import CanvasJSReact from "@canvasjs/react-charts";
+import { getLogInDetailsFromLocalStorage } from "../../utils";
+import { toast } from "react-toastify";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 const { CanvasJSChart } = CanvasJSReact;
 
 const AdminDashboard = () => {
@@ -18,6 +21,17 @@ const AdminDashboard = () => {
   const [totalAdoptionDetails, setTotalAdoptionDetails] = useState(0);
   const [aggregatedData, setAggregatedData] = useState(null);
   const [bookingStatusData, setBookingStatusData] = useState([]);
+  const history = useHistory();
+  const userInfo = getLogInDetailsFromLocalStorage();
+
+  const isAdmin = userInfo?.user_type?.toLowerCase() === "admin";
+
+  useEffect(() => {
+    if (!isAdmin) {
+      toast.info("You do not have permission to access this page");
+      history.push("/");
+    }
+  }, [isAdmin]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -71,7 +85,7 @@ const AdminDashboard = () => {
       exportEnabled: true,
       theme: "dark2",
       title: {
-        text: "Product Analytics",
+        text: "Services Analytics",
       },
       data: [
         {
@@ -155,17 +169,17 @@ const AdminDashboard = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-8 mt-8">
+        <div className="justify-center">
           {/* Product Analytics Pie Chart */}
-          <div className="bg-gray-200 p-6 rounded-lg">
-            <h1 className="text-3xl font-bold">Count Per Services</h1>
+          <div className="p-6 mt-9 rounded-lg">
+            <h1 className="text-3xl font-bold mb-2">Count Per Services</h1>
             {aggregatedData && (
               <CanvasJSChart
                 options={getProductAnalyticsOptions(aggregatedData)}
               />
             )}
           </div>
-          {/* Booking Status Analytics Chart */}
+          {/* Booking Status Analytics Chart
           <div className="bg-gray-200 p-6 rounded-lg">
             <h1 className="text-3xl font-bold">Booking Status Analytics</h1>
             {bookingStatusData.length > 0 ? (
@@ -186,7 +200,7 @@ const AdminDashboard = () => {
             ) : (
               <p>No booking status data available.</p>
             )}
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

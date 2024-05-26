@@ -43,16 +43,12 @@ from django.contrib.auth.models import User
 from .serializers import (
     # PasswordChangeSerializer,
     PasswordResetConfirmSerializer,
-    # PasswordResetSerializer,
-    # ResendEmailVerificationCodeSrializer,
     TokenObtainPairSerializer,
     ChangePasswordSerializer,
     # ProfileSerializer,
     PetSerializer,
-    # ResetPasswordEmailSerializer,
     UserRegistrationSerializer,
     UserSerializer,
-    # VerirfyOtpSerializer,
 )
 
 from .serializers import VerifyAccountSerializer
@@ -73,7 +69,6 @@ class UserRegistrationView(CreateAPIView):
 
     serializer_class = UserRegistrationSerializer
     permission_classes = ()
-
     @sensitive_post_parameters_m
     def dispatch(self, *args, **kwargs):
         return super().dispatch(*args, **kwargs)
@@ -140,29 +135,7 @@ class PetViewSet(viewsets.ModelViewSet):
         # Serialize the pets
         serializer = PetSerializer(pets, many=True)
         return Response(serializer.data)
-    # def list(self, request, *args, **kwargs):
-    #     user_id = request.query_params.get('user_id')
-    #     if user_id:
-    #         pets = Pet.objects.filter(user_id=user_id)
-    #         serializer = self.get_serializer(pets, many=True)
-    #         return Response(serializer.data)
-    #     else:
-    #         return super().list(request, *args, **kwargs)
 
-
-
-# class PetListCreateAPIView(generics.ListCreateAPIView):
-#     queryset = Pet.objects.all()
-#     serializer_class = PetSerializer
-#     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-
-#     def perform_create(self, serializer):
-#         serializer.save(owner=self.request.user)
-
-# class PetDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
-#     queryset = Pet.objects.all()
-#     serializer_class = PetSerializer
-#     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 
 @api_view(['POST'])

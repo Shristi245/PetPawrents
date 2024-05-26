@@ -1,14 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import { setItemsToCart } from "../../utils";
+import { getLogInDetailsFromLocalStorage, setItemsToCart } from "../../utils";
 import { toast } from "react-toastify";
 
-const ProductDetails = ({ image, title, price, description, category }) => {
+const ProductDetails = () => {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
 
   const handleAddToCart = (item) => () => {
+    if (!getLogInDetailsFromLocalStorage()) {
+      toast.warning("Please log in to access this feature");
+      return;
+    }
+
     setItemsToCart(item);
     toast.success("Item is added to the cart");
   };
@@ -43,17 +48,10 @@ const ProductDetails = ({ image, title, price, description, category }) => {
             <h2 className="text-2xl font-semibold mb-4">{product.title}</h2>
             <p className="text-gray-700 mb-4">{product.description}</p>
             <p className="text-gray-700 mb-4">Category: {product.category}</p>
-            <p className="text-gray-700 mb-4">Price: ${product.price}</p>
+            <p className="text-gray-700 mb-4">Price: NRP.{product.price}</p>
             <button
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-              onClick={handleAddToCart({
-                image,
-                title,
-                price,
-                id,
-                description,
-                category,
-              })}
+              onClick={handleAddToCart(product)}
             >
               Add to Cart
             </button>

@@ -28,10 +28,6 @@ const AdoptionCard = ({ image, id, name, description, fetchAdoptions }) => {
 
   const [agreementInfo, setAgreementInfo] = useState(defaultAgreementInfo);
 
-  // const [agreementImgFile, setAgreementIgFile] = useState();
-
-  // const [agreementImgFileUrl, setAgreementImgFileUrl] = useState();
-
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
 
@@ -60,47 +56,101 @@ const AdoptionCard = ({ image, id, name, description, fetchAdoptions }) => {
         return;
       }
 
-      const agreementRes = await fetch(
-        "http://127.0.0.1:8000/agreement-forms/",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
+      try {
+        const { value: date } = await Swal.fire({
+          title: "Enter Adoption Date",
+          input: "date",
+          inputLabel: "Adoption Date",
+          inputPlaceholder: "Select a date",
+          showCancelButton: true,
+          confirmButtonText: "Adopt",
+          cancelButtonText: "Cancel",
+          preConfirm: (date) => {
+            setAdoptionDate(date);
+            return date;
           },
-          body: JSON.stringify({
-            adopter_name: agreementInfo.adopter_name,
-            contact_information: agreementInfo.contact_information,
-            permanent_address: agreementInfo.permanent_address,
-            temporary_address: agreementInfo.temporary_address,
-            agreement_date: agreement_date,
-            user: user.id,
-            adopt: petID,
-          }),
+        });
+        if (date) {
+          const currentDate = new Date();
+          const selectedDate = new Date(date);
+
+          if (currentDate >= selectedDate) {
+            Swal.fire({
+              icon: "error",
+              text: "Date Cannot Be in Past",
+              title: "Error",
+            });
+            return;
+          }
+
+          const result = await Swal.fire({
+            title: "Are you sure?",
+            icon: "info",
+            showCancelButton: true,
+            confirmButtonColor: "green",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, adopt it",
+          });
+          if (result.isConfirmed) {
+            const agreementRes = await storeAgreementDetailsInDB(petID);
+
+            if (!agreementRes.ok) {
+              Swal.fire({
+                title: "Error",
+                text: "Failed to store agreement details",
+                icon: "error",
+              });
+
+              return;
+            }
+
+            const agreementResData = await agreementRes.json();
+
+            await submitAdoptionDetails(petID, agreementResData.id);
+
+            Swal.fire({
+              title: "Success!",
+              text: "Please pick up your pet within the mentioned time",
+              icon: "success",
+            });
+            
+            setAdoptionDate("");
+            fetchAdoptions();
+            setShowAgreementModal(false); // Close the modal after successful adoption
+          }
         }
-      );
-
-      const agreementResData = await agreementRes.json();
-
-      console.log(agreementResData);
-
-      if (!agreementRes.ok) {
+      } catch (error) {
         Swal.fire({
-          title: "Error",
-          text: "Failed to store agreement details",
+          title: "Error!",
+          text: error.message,
           icon: "error",
         });
-
-        return;
       }
-
-      toast.success("Agreement details stored successfully");
-
-      handleAdoptionSubmit(petID, agreementResData.id);
 
       // handleAdoptionSubmit(agreementResData.id);
     } catch (error) {
       console.error("Error fetching agreement data:", error.message);
     }
+  };
+
+  const storeAgreementDetailsInDB = async (petID) => {
+    const agreementRes = await fetch("http://127.0.0.1:8000/agreement-forms/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        adopter_name: agreementInfo.adopter_name,
+        contact_information: agreementInfo.contact_information,
+        permanent_address: agreementInfo.permanent_address,
+        temporary_address: agreementInfo.temporary_address,
+        agreement_date: agreement_date,
+        user: user.id,
+        adopt: petID,
+      }),
+    });
+
+    return agreementRes;
   };
 
   const submitAdoptionDetails = async (adoptionID, aggreementID) => {
@@ -168,63 +218,6 @@ const AdoptionCard = ({ image, id, name, description, fetchAdoptions }) => {
       } finally {
         setLoading(false);
       }
-    }
-  };
-
-  const handleAdoptionSubmit = async (adoptionID, aggreementID) => {
-    try {
-      const { value: date } = await Swal.fire({
-        title: "Enter Adoption Date",
-        input: "date",
-        inputLabel: "Adoption Date",
-        inputPlaceholder: "Select a date",
-        showCancelButton: true,
-        confirmButtonText: "Adopt",
-        cancelButtonText: "Cancel",
-        preConfirm: (date) => {
-          setAdoptionDate(date);
-          return date;
-        },
-      });
-      if (date) {
-        const currentDate = new Date();
-        const selectedDate = new Date(date);
-
-        if (currentDate >= selectedDate) {
-          Swal.fire({
-            icon: "error",
-            text: "Date Cannot Be in Past",
-            title: "Error",
-          });
-          return;
-        }
-
-        const result = await Swal.fire({
-          title: "Are you sure?",
-          icon: "info",
-          showCancelButton: true,
-          confirmButtonColor: "green",
-          cancelButtonColor: "#d33",
-          confirmButtonText: "Yes, adopt it",
-        });
-        if (result.isConfirmed) {
-          await submitAdoptionDetails(adoptionID, aggreementID);
-          Swal.fire({
-            title: "Success!",
-            text: "Please pick up your pet within the mentioned time",
-            icon: "success",
-          });
-          setAdoptionDate("");
-          fetchAdoptions();
-          setShowAgreementModal(false); // Close the modal after successful adoption
-        }
-      }
-    } catch (error) {
-      Swal.fire({
-        title: "Error!",
-        text: error.message,
-        icon: "error",
-      });
     }
   };
 

@@ -11,8 +11,9 @@ const AdoptionHistoryPage = () => {
     const fetchAdoptionRecords = async () => {
       try {
         const response = await axios.get(
-          `http://127.0.0.1:8000/adoption/user/${user.id}}`
+          `http://127.0.0.1:8000/adoption/user/${user.id}`
         ); // Assuming your backend API endpoint for adoption records
+
         setAdoptionRecords(response.data);
       } catch (error) {
         console.error("Error fetching adoption records:", error);
@@ -23,41 +24,45 @@ const AdoptionHistoryPage = () => {
   }, []);
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-11">
       <h1 className="text-2xl font-bold mb-4">Adoption History</h1>
-      <table className="w-full border-collapse border border-gray-400">
-        <thead>
-          <tr className="bg-gray-200">
-            <th className="border border-gray-400 px-4 py-2">Animal ID</th>
-            <th className="border border-gray-400 px-4 py-2">Animal Name</th>
-            <th className="border border-gray-400 px-4 py-2">User</th>
-            <th className="border border-gray-400 px-4 py-2">Email</th>
-            <th className="border border-gray-400 px-4 py-2">Adopted Date</th>
-          </tr>
-        </thead>
-        <tbody>
-          {adoptionRecords.map((record) => (
-            <tr key={record.id}>
-              <td className="border border-gray-400 px-4 py-2">
-                {record.adopt.id}
-              </td>
-              <td className="border border-gray-400 px-4 py-2">
-                {record.adopt.name}
-              </td>
-              <td className="border border-gray-400 px-4 py-2">
-                {record.user.first_name}
-                {record.user.last_name}
-              </td>
-              <td className="border border-gray-400 px-4 py-2">
-                {record.user.email}
-              </td>
-              <td className="border border-gray-400 px-4 py-2">
-                {record.adoptedDate}
-              </td>
+      {adoptionRecords.length === 0 ? (
+        <p className="text-xl text-center border py-3">No adoption records found.</p>
+      ) : (
+        <table className="w-full border-collapse border border-gray-400">
+          <thead>
+            <tr className="bg-gray-200">
+              <th className="border border-gray-400 px-4 py-2">Animal ID</th>
+              <th className="border border-gray-400 px-4 py-2">Animal Name</th>
+              <th className="border border-gray-400 px-4 py-2">User</th>
+              <th className="border border-gray-400 px-4 py-2">Email</th>
+              <th className="border border-gray-400 px-4 py-2">Adopted Date</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {adoptionRecords.map((record) => (
+              <tr key={record.id}>
+                <td className="border border-gray-400 px-4 py-2 text-center">
+                  {record.adopt.id}
+                </td>
+                <td className="border border-gray-400 px-4 py-2 text-center">
+                  {record.adopt.name}
+                </td>
+                <td className="border border-gray-400 px-4 py-2 text-center">
+                  {record.user.first_name}
+                  {record.user.last_name}
+                </td>
+                <td className="border border-gray-400 px-4 py-2 text-center">
+                  {record.user.email}
+                </td>
+                <td className="border border-gray-400 px-4 py-2 text-center">
+                  {record.adopted_date}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
     </div>
   );
 };

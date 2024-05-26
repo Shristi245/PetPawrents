@@ -1,9 +1,10 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import AuthContext from "../context/AuthContext";
 // import { useHistory } from 'react-router-dom';
 import { Input } from "@material-tailwind/react";
-import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
-
+import { Link } from "react-router-dom";
+import { getLogInDetailsFromLocalStorage } from "../utils";
+import { useHistory } from "react-router-dom";
 function Register() {
   const [first_name, setFirstname] = useState("");
   const [last_name, setLastname] = useState("");
@@ -15,6 +16,12 @@ function Register() {
 
   const { registerUser } = useContext(AuthContext);
 
+  useEffect(() => {
+    const isUserLoggedIn = getLogInDetailsFromLocalStorage();
+    if (isUserLoggedIn) {
+      history.push("/");
+    }
+  }, []);
   const handleUserRegistration = async (e) => {
     e.preventDefault();
 
@@ -147,7 +154,7 @@ function Register() {
               </div>
 
               <div className="text-center">
-                Already have an account? <a href="/login">Login</a>
+                Already have an account? <Link to="/login">Login</Link>
               </div>
             </form>
           </div>

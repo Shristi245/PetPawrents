@@ -102,14 +102,6 @@ const AddAdoptionDetails = () => {
               value={adoptionInfo.description}
               required
             />
-            {/* <Input
-              label="Updated_date"
-              name="updated_Date"
-              type="date"
-              onChange={handleChange}
-              value={adoptionInfo.updated_date}
-              required
-            /> */}
 
             <div className="flex items-center">
               <div className="space-y-3">

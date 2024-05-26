@@ -197,10 +197,10 @@ export const AuthProvider = ({ children }) => {
   const logoutUser = () => {
     setAuthTokens(null);
     setUser(null);
-    localStorage.removeItem("authTokens");
+    localStorage.removeItem("loginDetails");
     history.push("/login");
     swal.fire({
-      title: "YOu have been logged out...",
+      title: "You have been logged out...",
       icon: "success",
       toast: true,
       timer: 6000,
@@ -208,6 +208,7 @@ export const AuthProvider = ({ children }) => {
       timerProgressBar: true,
       showConfirmButton: false,
     });
+    localStorage.removeItem("cartItems");
   };
 
   const contextData = {

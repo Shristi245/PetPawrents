@@ -10,7 +10,7 @@ from django.utils.html import strip_tags
 
 
 
-@api_view(['GET', 'POST'])
+@api_view(['GET', 'POST']) #booking an appointment and getting all the list.
 def booking_list(request):
     if request.method == 'GET':
         bookings = Booking.objects.all()

@@ -44,6 +44,7 @@ import ChangePasswordPage from "./containers/ChangePassword.jsx";
 import PetDetailsPage from "./containers/PetDetails.jsx";
 import ProductDetails from "./containers/Product/ProductDescription.jsx";
 import AdoptionHistoryPage from "./containers/adoption/AdoptionHistory.jsx";
+import ProtectRoutes from "./Components/ProtectRoutes.jsx";
 const App = () => {
   return (
     <Router>
@@ -51,70 +52,79 @@ const App = () => {
         <Navbar />
         <ToastContainer position="bottom-right" />
         <Switch>
-          {/* Admin Routes */}
-          <Route component={AdminDashboard} path="/admin-dashboard" />
-          <Route component={UserList} path="/admin-dashboard-users" />
-          <Route
-            component={EditUser}
-            path="/admin-dashboard-edituser/:userId"
-          />
-          {/* Admin Product Routes */}
-          <Route
-            component={AdminProductList}
-            path="/admin-dashboard-products"
-          />
-          <Route component={AddProductPage} path="/add-product" />
-          <Route component={EditProductPage} path="/edit-product/:productID" />
-          {/* Admin Adoption Routes */}
-          <Route component={AddAdoptionDetails} path="/add-adoption" />
-          <Route
-            component={EditAdoptionPage}
-            path="/edit-adoption/:adoptionID"
-          />
-
-          <Route
-            component={EditAdoptionPage}
-            path="/edit-adoption/:adoptionID"
-          />
-          <Route
-            component={AdminAdoptionList}
-            path="/admin-dashboard-adoption"
-          />
-          <Route
-            component={AdoptionHistoryList}
-            path="/admin-dashboard-adoption-history"
-          />
-          <Route component={OrderList} path="/admin-order-list" />
-          <Route component={OrderedItems} path="/orders-list" />
-          {/* User Routes */}
-          <Route component={EditProfile} path="/edit-profile" />
-          <Route component={UserProfile} path="/profile" />
-          <Route component={BookAppointment} path="/book-appointment" />
-          <Route component={AdminAppointments} path="/admin-appointment" />
-
-          {/* Common Routes */}
           <Route component={Home} path="/" exact />
           <Route component={Login} path="/login" />
           <Route component={Register} path="/register" />
           <Route component={PetRegisterPage} path="/pet" />
-          <Route component={PetDetailsPage} path="/pet-details" />
           <Route component={About} path="/about" />
           <Route component={Service} path="/services" />
           <Route component={ResetPassword} path="/reset-password" />
           <Route component={ConfirmPassword} path="/confirm-password" />
-          <Route component={ChangePasswordPage} path="/change-password" />
-
           <Route component={Contact} path="/contact" />
-          <Route component={Donation} path="/donation" />
           <Route component={ProductPage} path="/product" />
-          <Route component={ShoppingCart} path="/cart" />
-          <Route component={AdoptionDetails} path="/adoption" />
-          <Route component={AdoptionHistoryPage} path="/adoption-history" />
-
-          <Route component={ReviewPage} path="/review" />
           <Route component={ProductDetails} path="/product-details/:id" />
 
-          {/* Redirect to home for unknown paths */}
+          <ProtectRoutes>
+            {/* Admin Routes */}
+            <Route component={AdminDashboard} path="/admin-dashboard" />
+            <Route component={UserList} path="/admin-dashboard-users" />
+            <Route
+              component={EditUser}
+              path="/admin-dashboard-edituser/:userId"
+            />
+            {/* Admin Product Routes */}
+            <Route
+              component={AdminProductList}
+              path="/admin-dashboard-products"
+            />
+            <Route component={AddProductPage} path="/add-product" />
+            <Route
+              component={EditProductPage}
+              path="/edit-product/:productID"
+            />
+            {/* Admin Adoption Routes */}
+            <Route component={AddAdoptionDetails} path="/add-adoption" />
+            <Route
+              component={EditAdoptionPage}
+              path="/edit-adoption/:adoptionID"
+            />
+
+            <Route
+              component={EditAdoptionPage}
+              path="/edit-adoption/:adoptionID"
+            />
+            <Route
+              component={AdminAdoptionList}
+              path="/admin-dashboard-adoption"
+            />
+            <Route
+              component={AdoptionHistoryList}
+              path="/admin-dashboard-adoption-history"
+            />
+            <Route component={OrderList} path="/admin-order-list" />
+            <Route component={OrderedItems} path="/orders-list" />
+            {/* User Routes */}
+            <Route component={EditProfile} path="/edit-profile" />
+            <Route component={UserProfile} path="/profile" />
+            <Route component={BookAppointment} path="/book-appointment" />
+            <Route component={AdminAppointments} path="/admin-appointment" />
+
+            {/* Common Routes */}
+
+            <Route component={PetDetailsPage} path="/pet-details" />
+
+            <Route component={ChangePasswordPage} path="/change-password" />
+
+            <Route component={Donation} path="/donation" />
+
+            <Route component={ShoppingCart} path="/cart" />
+            <Route component={AdoptionDetails} path="/adoption" />
+            <Route component={AdoptionHistoryPage} path="/adoption-history" />
+
+            <Route component={ReviewPage} path="/review" />
+
+            {/* Redirect to home for unknown paths */}
+          </ProtectRoutes>
           <Redirect to="/" />
         </Switch>
 

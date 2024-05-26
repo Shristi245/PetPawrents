@@ -39,34 +39,39 @@ const PetDetails = () => {
   return (
     <div className="max-w-md mx-auto">
       {pet ? (
-        <>
-          <div className="text-2xl font-bold mb-4">{pet.petname}</div>
-          <div>
+        <div className="container mx-auto bg-white shadow-2xl space-y-5 text-xl my-11 rounded-lg border px-11 py-5">
+          <div className="text-2xl font-bold mb-4 text-center underline">
+            {pet.petname}'s Profile
+          </div>
+          <div className="flex space-x-3">
             <label className="block text-gray-700 font-bold mb-2">
               Pet Type:
             </label>
             <p>{pet.pettype}</p>
           </div>
-          <div>
+          <div className="flex space-x-3">
             <label className="block text-gray-700 font-bold mb-2">Age:</label>
-            <p>{pet.age}</p>
+            <p>{pet.age} years old</p>
           </div>
-          <div>
+          <div className="flex space-x-3">
             <label className="block text-gray-700 font-bold mb-2">
               Height:
             </label>
-            <p>{pet.height}</p>
+            <p>{pet.height} feet</p>
           </div>
-          <div>
+          <div className="flex space-x-3">
             <label className="block text-gray-700 font-bold mb-2">
               Weight:
             </label>
-            <p>{pet.weight}</p>
+            <p>{pet.weight} kg</p>
           </div>
-        </>
+        </div>
       ) : (
-        <div className="text-center py-20">
-          <p>No pet found for the user.</p>
+        <div className="text-center py-2 rounded-lg  mb-12 bg-cover">
+          <img src="images/woohoo.png" alt="" />
+          <p className="text-2xl text-black ">
+            No pet details found for the user.
+          </p>
           <Link to="/pet">
             <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
               Create My Pet Profile

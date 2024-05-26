@@ -14,9 +14,6 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ["id", "first_name", "last_name", "email", "username", "mobile", "password", "user_type", "bio", "image", "address" ]
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
-    # Add otp_code field if needed
-    # otp_code = serializers.CharField(read_only=True)
-
     class Meta:
         model = User
         fields = ["first_name", "last_name", "email", "username", "mobile", "password"]
@@ -28,7 +25,6 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         email = data.get("email")
         password = data.get("password")
         mobile = data.get("mobile")
-
 
         # Check if email is already registered
         if User.objects.filter(email=email).exists():
@@ -79,23 +75,17 @@ class TokenObtainPairSerializer(serializers.Serializer):
         password = attrs.get("password")
         is_email = True if "@" in email else False
 
-        if email and password:
-            user = authenticate(
-                request=self.context.get("request"), username=email, password=password
-            )
-            if not user:
-                msg = _("Unable to log in with provided credentials.")
-                raise serializers.ValidationError(msg, code="authorization")
-            # if is_email and not user.email_verified:
-            #     msg = _("Email is not verified. New verification code has been sent.")
-            #     send_email_verification_code(self.context.get("request"), user)
-            #     raise serializers.ValidationError(
-            #         {"detail": msg, "email_verified": False}, code="authorization"
-            #     )
-        else:
+        if not email or not password:
             msg = _('Must include "email/mobile" and "password".')
             raise serializers.ValidationError(msg, code="authorization")
-        
+
+        user = authenticate(
+            request=self.context.get("request"), username=email, password=password
+        )
+
+        if not user:
+            msg = _("Unable to log in with provided credentials.")
+            raise serializers.ValidationError(msg, code="authorization")
 
         refresh = self.get_token(user)
         response = {

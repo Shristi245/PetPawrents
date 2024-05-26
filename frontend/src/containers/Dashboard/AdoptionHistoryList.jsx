@@ -5,6 +5,7 @@ import { useDebounce } from "../../utils";
 import Swal from "sweetalert2";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 import { IconButton } from "@material-tailwind/react";
+import { format } from "date-fns";
 
 const AdminAdoptionHistory = () => {
   const [adoptions, setAdoptions] = useState([]);
@@ -82,23 +83,6 @@ const AdminAdoptionHistory = () => {
       console.error("Error fetching agreement details:", error);
     }
   };
-  //   useEffect(() => {
-  //     const _searchText = debouncedSearchText.toLowerCase();
-  //     const _filteredUsers = adoptions.filter(
-  //       ({ user, pet_type, service, status }) => {
-  //         const { email, phone, full_name } = user;
-  //         return (
-  //           email.toLowerCase().includes(_searchText) ||
-  //           phone.toLowerCase().includes(_searchText) ||
-  //           full_name.toLowerCase().includes(_searchText) ||
-  //           pet_type.toLowerCase().includes(_searchText) ||
-  //           service.toLowerCase().includes(_searchText) ||
-  //           status.toLowerCase().includes(_searchText)
-  //         );
-  //       }
-  //     );
-  // setFilteredUsers(_filteredUsers);
-  //   }, [debouncedSearchText, appointments]);
 
   return (
     <div className="flex overflow-hidden mb-32 h-screen">
@@ -106,9 +90,9 @@ const AdminAdoptionHistory = () => {
       <AdminSideMenu />
 
       {/* Main Content */}
-      <div className="flex-1  px-9 overflow-hidden">
-        <div className="p-4 flex items-center justify-between">
-          {/* Search Bar */}
+      <div className="flex-1  px-9 overflow-hidden mt-8">
+        {/* <div className="p-4 flex items-center justify-between">
+          Search Bar
           <div className="relative  ">
             <input
               type="text"
@@ -126,7 +110,7 @@ const AdminAdoptionHistory = () => {
               </svg>
             </button>
           </div>
-        </div>
+        </div>   */}
 
         {/* Main content starts here */}
         <h1 className="text-4xl ml-3">Adoption History</h1>
@@ -154,13 +138,13 @@ const AdminAdoptionHistory = () => {
 
                     <td className="px-4 py-2 border">{adoption.adopt.name}</td>
                     <td className="px-4 py-2 border">
-                      {adoption.user.last_name}
+                      {adoption.user.first_name}
                       {adoption.user.last_name}
                     </td>
                     <td className="px-4 py-2 border">{adoption.user.email}</td>
                     <td className="px-4 py-2 border">
-                      {adoption.adopted_date}
-                    </td> 
+                      {format(adoption.adopted_date, "dd MMM, yyyy")}
+                    </td>
                     <td className="px-4 py-2 border">{adoption.status}</td>
                     <td>
                       <div className="flex gap-x-2 pl-2">
@@ -191,94 +175,108 @@ const AdminAdoptionHistory = () => {
             </table>
           </div>
           {showModal && (
-            <div className="fixed z-10 inset-0 overflow-y-auto">
-              <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-                <div
-                  className="fixed inset-0 transition-opacity"
-                  aria-hidden="true"
-                >
-                  <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
+            <div className="fixed z-10 inset-0 overflow-y-auto flex items-center justify-center">
+              <div className="modal-overlay absolute w-full h-full bg-gray-500 opacity-75 "></div>
+              <div className="h-screen py-7 z-50 overflow-y-auto w-[50%] bg-white">
+                <div className="text-right ">
+                  <button
+                    className="text-2xl border border-black bg-red-400 mr-3 px-2 text-white"
+                    onClick={() => setShowModal(false)}
+                  >
+                    &times;
+                  </button>
                 </div>
-                <span
-                  className="hidden sm:inline-block sm:align-middle sm:h-screen"
-                  aria-hidden="true"
-                >
-                  &#8203;
-                </span>
-                <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-                  <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                    <div className="sm:flex sm:items-start">
-                      <div className="text-center sm:mt-0 sm:ml-4 sm:text-left">
-                        <h3 className="text-lg leading-6 font-medium text-gray-900">
-                          Legal Adoption Agreement
-                        </h3>
-                        <div className="mt-4">
-                          {selectedAgreementForm.map((agreement, index) => (
-                            <React.Fragment key={index}>
-                              <p className="mb-2">
-                                This Adoption Agreement is entered into on{" "}
-                                {agreement.agreement_date}, by and between:
-                              </p>
-                              <p className="mb-2">
-                                Party of the Second Part:{" "}
-                                {agreement.adopter_name}
-                              </p>
-                              <p className="mb-4">
-                                Both parties agree to the following terms and
-                                conditions:
-                              </p>
-                              {/* Replace with agreement details */}
-                              <div>
-                                <p>
-                                  <strong>User ID:</strong> {agreement.user.id}
-                                </p>
-                                <p>
-                                  <strong>Animal ID:</strong>{" "}
-                                  {agreement.adopt.id}
-                                </p>
-                                <p>
-                                  <strong>Animal Name:</strong>{" "}
-                                  {agreement.adopt.name}
-                                </p>
-                                <p>
-                                  <strong>Adopter Name:</strong>{" "}
-                                  {agreement.adopter_name}
-                                </p>
-                                <p>
-                                  <strong>Contact:</strong>{" "}
-                                  {agreement.contact_information}
-                                </p>
-                                <p>
-                                  <strong>Permanent Address:</strong>{" "}
-                                  {agreement.permanent_address}
-                                </p>
-                                <p>
-                                  <strong>Temporary Address:</strong>{" "}
-                                  {agreement.temporary_address}
-                                </p>
-                                {/* Add more fields as needed */}
-                              </div>
-                              {/* Signature Section */}
-                              <div className="mb-4">
-                                <p className="mb-1">
-                                  Signature: ___________________________________
-                                </p>
-                                <p>Date: _____________________________</p>
-                              </div>
-                            </React.Fragment>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
+
+                <div className="modal-content">
+                  <div className="modal-header">
+                    <h3 className="modal-title text-4xl text-center font-bold underline text-gray-900">
+                      Legal Adoption Agreement
+                    </h3>
                   </div>
-                  <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                    <button
-                      onClick={() => setShowModal(false)}
-                      type="button"
-                      className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm"
-                    >
-                      Close
-                    </button>
+                  <div className="modal-body px-3 mt-7">
+                    {/* Render AdoptionAgreementForm component with fetched agreement data */}
+                    {selectedAgreementForm.map((agreement) => (
+                      <>
+                        <p className="mb-2"></p>
+
+                        <div className="text-left text-black mt-5 bg-blue px-3 rounded-lg py-3">
+                          <div className="mb-4 text-lg flex space-x-2">
+                            <p className="text-white">
+                              Mr/Mrs. {agreement.adopter_name}
+                            </p>
+                            <p>agreed to the following terms and conditions:</p>
+                          </div>
+                          <p className="mb-4">
+                            1. I agree to adopt the mentioned pet from Pet
+                            Pawrents.
+                          </p>
+                          <p className="mb-4">
+                            2. I understand that this adoption is a lifelong
+                            commitment, and I agree to provide proper care,
+                            attention, and love to the pet.
+                          </p>
+                          <p className="mb-4">
+                            3. I agree to provide a safe and suitable
+                            environment for the pet to live in.
+                          </p>
+                          <p className="mb-4">
+                            4. I agree to provide proper veterinary care,
+                            including vaccinations, deworming, and annual
+                            check-ups.
+                          </p>
+                          <p className="mb-4">
+                            5. I understand that I am responsible for all costs
+                            associated with the pet's care, including but not
+                            limited to food, grooming, and medical expenses.
+                          </p>
+                          <p className="mb-4">
+                            6. I agree to license the pet in accordance with
+                            local laws and regulations.
+                          </p>
+                          <p className="mb-4">
+                            7. I understand that if, for any reason, I am unable
+                            to keep the pet, I will return it to Pet Pawrents
+                            and not abandon it or surrender it to a third party.
+                          </p>
+                          <p className="mb-4">
+                            8. I agree to allow Pet Pawrents to conduct periodic
+                            check-ins to ensure the pet's well-being.
+                          </p>
+                        </div>
+
+                        {/* Replace with agreement details */}
+                        <div className="text-left ml-5 mt-5 text-xl ">
+                          <p>
+                            <strong>Animal ID:</strong> {agreement.adopt.id}
+                          </p>
+                          <p>
+                            <strong>Animal Name:</strong> {agreement.adopt.name}
+                          </p>
+                          <p>
+                            <strong>Adopter Name:</strong>{" "}
+                            {agreement.adopter_name}
+                          </p>
+                          <p>
+                            <strong>Contact:</strong>{" "}
+                            {agreement.contact_information}
+                          </p>
+                          <p>
+                            <strong>Permanent Address:</strong>{" "}
+                            {agreement.permanent_address}
+                          </p>
+                          <p>
+                            <strong>Temporary Address:</strong>{" "}
+                            {agreement.temporary_address}
+                          </p>
+                          <div className="mb-4 mt-1 text-lg  justify-between">
+                            <p className="font-semibold text-right">
+                              Date:
+                              {format(agreement.agreement_date, "dd MMM, yyyy")}
+                            </p>
+                          </div>
+                        </div>
+                      </>
+                    ))}
                   </div>
                 </div>
               </div>

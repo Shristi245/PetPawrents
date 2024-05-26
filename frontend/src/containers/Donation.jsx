@@ -41,7 +41,7 @@ const DonationPage = () => {
         });
 
         if (res.ok) {
-          toast.success("Thank you for your suport :)");
+          toast.success("Thank you for your support :)");
           return;
         }
 
@@ -61,8 +61,8 @@ const DonationPage = () => {
 
   return (
     <div className="flex justify-center items-center h-screen">
-      <div className="max-w-5xl p-8 h-[80%] border rounded-[30px] flex">
-        <div className="w-[80%]  mr-2 bg-white">
+      <div className="max-w-5xl p-8 h-[70%] border rounded-[30px] flex">
+        <div className="w-[80%]  bg-white">
           <h1 className="text-4xl font-bold mb-4">DONATE NOW!!!</h1>
           <div className="flex space-x-3">
             <h1 className="text-3xl mb-4"> PETPAWRENTS </h1>
@@ -78,16 +78,16 @@ const DonationPage = () => {
           <br />
           <h1>How to donate</h1>
           <p className="text-lg mb-4 w-[70%]">
-            To make a donation, Scan the QR code with your smartphone camera to
-            access our donation page instantly. Your support is greatly
+            To make a donation, Click on the donate button to access a khalti
+            page for making donation instantly. Your support is greatly
             appreciated!
           </p>
         </div>
-        <div className="w-[30%] ml-20">
+        <div className="w-[30%]">
           <img
-            src="images/esewa.png"
+            src="images/khalti.png"
             alt="esewa"
-            className="w-[80%] ml-7"
+            className="w-[100%] mt-3"
           ></img>
           <p className="text-center text-2xl">
             <button

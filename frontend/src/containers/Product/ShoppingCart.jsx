@@ -1,4 +1,12 @@
-import { Alert, Button } from "@material-tailwind/react";
+import {
+  Alert,
+  Button,
+  Dialog,
+  DialogBody,
+  DialogFooter,
+  DialogHeader,
+  Input,
+} from "@material-tailwind/react";
 import KhaltiCheckout from "khalti-checkout-web";
 import { Trash } from "lucide-react";
 import React, { useEffect, useState } from "react";
@@ -17,6 +25,12 @@ import {
 import { generalConfig } from "../Checkout/CheckoutConfig";
 
 export function ShoppingCart() {
+  const [addressDialog, setAddressDialog] = useState(false);
+
+  const handleOpen = () => setAddressDialog(!addressDialog);
+
+  const [address, setAddress] = useState();
+
   const khaltiConfig = {
     productUrl: "http://localhost:3000/cart",
     eventHandler: {
@@ -41,6 +55,7 @@ export function ShoppingCart() {
             paid_amount,
             user: user.id,
             order_items: cartItems,
+            address,
           }),
         });
 
@@ -52,10 +67,11 @@ export function ShoppingCart() {
         }
 
         toast.success(
-          "Order placed successfully. The currior will deliver the items soon"
+          "Order placed successfully. The courier will deliver the items soon"
         );
         setCartItems([]);
         clearCart();
+        handleOpen();
 
         await fetch("http://127.0.0.1:8000/transactions/create/", {
           method: "POST",
@@ -85,6 +101,11 @@ export function ShoppingCart() {
   let checkout = new KhaltiCheckout({ ...generalConfig, ...khaltiConfig });
 
   const handleCheckout = () => {
+    if (!address) {
+      toast.error("Address is required");
+      return;
+    }
+
     const orderTotal = calculateOrderTotal();
 
     if (orderTotal < 200) {
@@ -113,6 +134,7 @@ export function ShoppingCart() {
 
     const newCartItems = decreaseQuantity(id);
     setCartItems(newCartItems);
+    toast.success("Quantity is decreased");
   };
 
   const handleIncreaseQuantity = (product) => () => {
@@ -133,12 +155,31 @@ export function ShoppingCart() {
 
   return (
     <div className="mx-auto flex max-w-3xl flex-col space-y-4 p-6 px-2 sm:p-10 sm:px-2">
-      <h2 className="text-3xl font-bold">Your cart</h2>
+      <Dialog handler={handleOpen} open={addressDialog}>
+        <DialogHeader>Enter Delivery address</DialogHeader>
+        <DialogBody>
+          <Input
+            label="Address"
+            onChange={(e) => setAddress(e.target.value)}
+            value={address}
+          />
+        </DialogBody>
+
+        <DialogFooter className="space-x-4">
+          <Button onClick={handleCheckout}>Checkout</Button>
+
+          <Button onClick={handleOpen} color="red" variant="text">
+            Cancel
+          </Button>
+        </DialogFooter>
+      </Dialog>
+
+      <h2 className="text-3xl font-bold">My cart</h2>
       <p className="mt-3 text-sm font-medium text-gray-700"></p>
 
       {cartItems?.length === 0 && (
         <div className="space-y-5">
-          <Alert color="blue">No Items in the carrt</Alert>
+          <Alert color="blue">No Items in the cart</Alert>
           <div>
             <Link to="/product">
               <Button>Browse Products</Button>
@@ -231,7 +272,7 @@ export function ShoppingCart() {
             <button
               type="button"
               className="rounded-md border border-black px-3 py-2 text-sm font-semibold text-black shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
-              onClick={handleCheckout}
+              onClick={handleOpen}
             >
               Checkout
             </button>

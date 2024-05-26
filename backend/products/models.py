@@ -27,6 +27,7 @@ class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     total_amount= models.FloatField()
     paid_amount = models.FloatField()
+    address= models.CharField(max_length=100, null= True)
     status = models.CharField(max_length=100, default="Not Delivered")
 
 

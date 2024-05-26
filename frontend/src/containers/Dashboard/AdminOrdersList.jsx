@@ -26,19 +26,7 @@ const OrderList = () => {
     fetchOrders();
   }, []);
 
-  // useEffect(() => {
-  //   const _searchText = debouncedSearchText.toLowerCase();
-  //   const _filteredOrders = orders.filter((order) => {
-  //     return (
-  //       order.user.first_name.toLowerCase().includes(_searchText) ||
-  //       order.user.last_name.toLowerCase().includes(_searchText) ||
-  //       order.user.email.toLowerCase().includes(_searchText) ||
-  //       order.user.username.toLowerCase().includes(_searchText) ||
-  //       order.user.mobile.toLowerCase().includes(_searchText)
-  //     );
-  //   });
-  //   setFilteredOrders(_filteredOrders);
-  // }, [debouncedSearchText, orders]);
+
 
   const handleItemsDetails = async (orderID) => {
     try {
@@ -96,7 +84,7 @@ const OrderList = () => {
                   <tr key={order.id} className="border">
                     <td className="px-4 py-2 border">{order.id}</td>
                     <td className="px-4 py-2 border">{`${order.user.first_name} ${order.user.last_name}`}</td>
-                    <td className="px-4 py-2 border">{order.user.address}</td>
+                    <td className="px-4 py-2 border">{order.address}</td>
                     <td className="px-4 py-2 border">{order.user.mobile}</td>
                     <td className="px-4 py-2 border">{order.total_amount}</td>
                     <td className="px-4 py-2 border">{order.paid_amount}</td>

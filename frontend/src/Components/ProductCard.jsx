@@ -2,7 +2,7 @@ import { useLocation } from "react-router-dom";
 import { Link } from "react-router-dom/cjs/react-router-dom";
 import Swal from "sweetalert2";
 import React, { useState } from "react";
-import { setItemsToCart } from "../utils";
+import { getLogInDetailsFromLocalStorage, setItemsToCart } from "../utils";
 import { toast } from "react-toastify";
 import { FiEdit, FiTrash2 } from "react-icons/fi"; // Importing edit and delete icons from react-icons/fi
 
@@ -12,6 +12,11 @@ const ProductCard = ({ image, title, price, id, category, fetchProducts }) => {
   const [showCartIcon, setShowCartIcon] = useState(false);
 
   const handleAddToCart = (item) => () => {
+    if (!getLogInDetailsFromLocalStorage()) {
+      toast.warning("Please log in to access this feature");
+      return;
+    }
+
     setItemsToCart(item);
     toast.success("Item is added to the cart");
   };

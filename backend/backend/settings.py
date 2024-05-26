@@ -72,7 +72,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
     'user.apps.UserConfig',
-    'core.apps.CoreConfig',
     'transaction.apps.TransactionConfig',
     'adoption.apps.AdoptionConfig',
     'booking.apps.BookingConfig',
