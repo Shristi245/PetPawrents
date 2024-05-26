@@ -332,6 +332,9 @@ function AppointmentBookingPage() {
             </div>
           </div>
         </form>
+        <p className="text-right w-full mt-5 text-white">
+          Note: The price may vary according to taken services.
+        </p>
       </div>
     </div>
   );

@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { getLogInDetailsFromLocalStorage } from "../../utils";
+import { format } from "date-fns";
 const AdoptionHistoryPage = () => {
   const [adoptionRecords, setAdoptionRecords] = useState([]);
   const user = getLogInDetailsFromLocalStorage();
@@ -27,7 +28,9 @@ const AdoptionHistoryPage = () => {
     <div className="container mx-auto px-4 py-11">
       <h1 className="text-2xl font-bold mb-4">Adoption History</h1>
       {adoptionRecords.length === 0 ? (
-        <p className="text-xl text-center border py-3">No adoption records found.</p>
+        <p className="text-xl text-center border py-3">
+          No adoption records found.
+        </p>
       ) : (
         <table className="w-full border-collapse border border-gray-400">
           <thead>
@@ -56,7 +59,7 @@ const AdoptionHistoryPage = () => {
                   {record.user.email}
                 </td>
                 <td className="border border-gray-400 px-4 py-2 text-center">
-                  {record.adopted_date}
+                    {format(new Date(record.adopted_date), "dd-MM-yyyy")}
                 </td>
               </tr>
             ))}
