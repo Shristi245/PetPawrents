@@ -4,6 +4,8 @@
 **Project** **Overview**
 
 
+
+
 **Name**: Pet Pawrents
 
 
@@ -14,6 +16,9 @@
 
 
 **Goal**: To provide a comprehensive experience for pet owners, integrating grooming services alongside veterinary care and facilitating pet adoption and donations.
+
+
+
 
 
 
@@ -49,6 +54,8 @@ Khalti Payment Integration
 
 
 
+
+
 ****Project**** ****UI**** ****Design****
 
 Home Page
@@ -72,7 +79,7 @@ Products Page
 Sign up
 
 
-![Uploading Screenshot 2024-04-17 142754.png…]()
+![Screenshot 2024-04-17 111041](https://github.com/Shristi245/PetPawrents/assets/137707294/fa3a47ee-b851-4039-be50-db585ab3c37f)
 
 
 
