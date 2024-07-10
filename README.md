@@ -1,21 +1,53 @@
 ****Pet**** ****Pawrents**** ****-**** ****Pet**** ****Grooming**** ****Web**** ****Application****
 
+
 **Project** **Overview**
+
+
 **Name**: Pet Pawrents
+
+
 **Description**: A comprehensive web application designed to streamline appointment booking services, marketplace, adoption, and donations.
+
+
 **Client**: Bhim Dahal, a skilled veterinary professional
+
+
 **Goal**: To provide a comprehensive experience for pet owners, integrating grooming services alongside veterinary care and facilitating pet adoption and donations.
 
+
+
 ****Key**** ****Features****
+
+
 User-Friendly Interface: Intuitive design for easy navigation and appointment scheduling.
+
+
 Accessibility: Web-based application accessible from desktops.
+
+
 User Profile Management: includes order, pet and adoption details
+
+
 Grooming Services: Booking and management of grooming sessions with multiple service options.
+
+
 Veterinary Care: Integration of veterinary services, including vaccinations and health check-ups.
+
+
 Adoption and Donation Center: Unique platform for pet adoption and donations, promoting animal welfare.
+
+
 Notification System: Email notifications for appointments, and updates.
+
+
 Marketplace: Platform for pet-related products and services.
+
+
 Khalti Payment Integration
+
+
+
 
 ****Project**** ****UI**** ****Design****
 
