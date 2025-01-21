@@ -1,3 +1,14 @@
+Guide:
+change the path to petpawrents/backend
+step 1: setup a env ---> python -m venv venv
+step 2: install the requirements --> pip install -r requirements.txt
+step 3 : connect to the local database 
+step 4: migrate and run the server 
+py manage.py migrate
+py manage.py runserver 
+
+The database connection details are contained in settings.py 
+
 ****Pet**** ****Pawrents**** ****-**** ****Pet**** ****Grooming**** ****Web**** ****Application****
 
 
